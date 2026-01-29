@@ -4,10 +4,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class PingController {
+public class HomeController {
 
-    @GetMapping("/ping")
-    public String ping() {
-        return "Spring Boot is running!";
+    @GetMapping("/")
+    public String home() {
+        return "BasicAPI is running!";
     }
 }

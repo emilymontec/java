@@ -2,7 +2,14 @@ package com.api.BasicAPI.controller;
 
 import com.api.BasicAPI.model.Usuario;
 import com.api.BasicAPI.repository.UsuarioRepository;
+import com.api.BasicAPI.dto.UsuarioRequestDTO;
 
+import com.api.BasicAPI.service.UsuarioService;
+import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,49 +18,40 @@ import java.util.List;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService service;
 
-    public UsuarioController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioController(UsuarioService service) {
+        this.service = service;
     }
 
-    // CREATE
-    @PostMapping
-    public Usuario crearUsuario(@RequestBody Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
-
-    // READ ALL
     @GetMapping
-    public List<Usuario> listarUsuarios() {
-        return usuarioRepository.findAll();
+    public Page<Usuario> listar(Pageable pageable) {
+        return service.listar(pageable);
     }
 
-    // READ BY ID
     @GetMapping("/{id}")
-    public Usuario obtenerUsuario(@PathVariable Long id) {
-        return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado 💀"));
+    public ResponseEntity<Usuario> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerPorId(id));
     }
 
-    // UPDATE
+    @PostMapping
+    public ResponseEntity<Usuario> crear(@Valid @RequestBody UsuarioRequestDTO dto) {
+        Usuario usuario = new Usuario(dto.getNombre(), dto.getEmail());
+        return ResponseEntity.ok(service.crear(usuario));
+    }
+
     @PutMapping("/{id}")
-    public Usuario actualizarUsuario(
+    public ResponseEntity<Usuario> actualizar(
             @PathVariable Long id,
-            @RequestBody Usuario usuario) {
-
-        Usuario existente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no existe bro"));
-
-        existente.setNombre(usuario.getNombre());
-        existente.setEmail(usuario.getEmail());
-
-        return usuarioRepository.save(existente);
+            @Valid @RequestBody UsuarioRequestDTO dto
+    ) {
+        Usuario usuario = new Usuario(dto.getNombre(), dto.getEmail());
+        return ResponseEntity.ok(service.actualizar(id, usuario));
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
-    public void eliminarUsuario(@PathVariable Long id) {
-        usuarioRepository.deleteById(id);
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }
