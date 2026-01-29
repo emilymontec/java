@@ -1,7 +1,6 @@
 package com.api.BasicAPI.controller;
 
 import com.api.BasicAPI.model.Usuario;
-import com.api.BasicAPI.repository.UsuarioRepository;
 import com.api.BasicAPI.dto.UsuarioRequestDTO;
 
 import com.api.BasicAPI.service.UsuarioService;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
