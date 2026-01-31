@@ -4,10 +4,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class HomeController {
+public class ExampleController {
 
-    @GetMapping("/")
-    public String home() {
-        return "Basic API is running!";
+    @GetMapping("/example")
+    public String example() {
+        return "This is an example endpoint!";
     }
 }
