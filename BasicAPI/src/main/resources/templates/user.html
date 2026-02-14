@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>BasicAPI - My Profile</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 400px; }
+        .profile-header { text-align: center; margin-bottom: 2rem; }
+        .avatar { width: 80px; height: 80px; background-color: #007bff; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; margin: 0 auto 1rem; }
+        h1 { margin: 0; color: #333; }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .label { color: #888; }
+        .value { font-weight: bold; color: #333; }
+        .btn-back { display: block; text-align: center; margin-top: 2rem; color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="profile-header">
+            <div class="avatar" th:text="${#strings.substring(username,0,1).toUpperCase()}">U</div>
+            <h1 th:text="${username}">Username</h1>
+            <p>User Profile Information</p>
+        </div>
+        <div class="info-row">
+            <span class="label">Roles:</span>
+            <span class="value" th:text="${roles}">ROLE_USER</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Status:</span>
+            <span class="value" style="color: #28a745;">Active</span>
+        </div>
+        <a href="/" class="btn-back">&larr; Back to Home</a>
+    </div>
+</body>
+</html>
