@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YellowChat | Mensajes</title>
+    <style>
+        /* Estilos replicados del diseño de referencia */
+        :root {
+    --primary-color: #FFD700;
+    --primary-light: #FFF4B0;
+    --bg-color: #f4f4f9;
+    --text-dark: #333;
+    --text-light: #fff;
+    --sidebar-bg: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-container {
+    width: 90vw;
+    height: 85vh;
+    display: flex;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.sidebar { display: none; }
+
+.sidebar-header {
+    padding: 20px;
+    background-color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.logo span {
+    font-weight: 300;
+}
+
+.chat-window {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fafafa;
+}
+
+.chat-header {
+    padding: 15px 25px;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    background: #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+    color: #555;
+}
+
+.messages-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    max-width: 60%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+.message.received {
+    align-self: flex-start;
+    background: #e9e9eb;
+}
+
+.message.sent {
+    align-self: flex-end;
+    background: var(--primary-color);
+    color: var(--text-dark);
+}
+
+.time {
+    font-size: 0.7rem;
+    display: block;
+    margin-top: 5px;
+    opacity: 0.6;
+}
+
+.chat-input {
+    padding: 20px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid #eee;
+    border-radius: 25px;
+    outline: none;
+    background: #f9f9f9;
+}
+
+.send-btn {
+    background: var(--primary-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.send-btn:hover {
+    transform: scale(1.05);
+}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <div class="logo">Yellow<span>Chat</span></div>
+            </header>
+            <div style="padding: 15px;">
+                <label style="font-size: 0.8rem;color:#777;">Tu nombre (autor)</label>
+                <input id="authorInput" type="text" placeholder="Anónimo" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;">
+            </div>
+        </aside>
+
+        <!-- Muro público (vista messages) -->
+        <main class="chat-window">
+            <header class="chat-header">
+                <div class="user-details"><h3>Muro de Mensajes</h3></div>
+            </header>
+
+            <section class="composer" style="padding:20px;background:#fff;border-bottom:1px solid #eee;display:grid;grid-template-columns:1fr auto;gap:10px;">
+                <div class="fields" style="display:grid;gap:10px;">
+                    <input id="authorInput" type="text" placeholder="Tu nombre (Autor)" style="padding:12px 14px;border:1px solid #ddd;border-radius:10px;">
+                    <input id="messageInput" type="text" placeholder="Escribe algo para el muro..." autocomplete="off" style="padding:12px 14px;border:1px solid #ddd;border-radius:10px;">
+                </div>
+                <button id="sendBtn" class="send-btn">Publicar</button>
+            </section>
+
+            <div class="messages-container" id="messagesContainer"></div>
+
+            <!-- Área de entrada -->
+            <footer class="chat-input">
+                <input id="messageInput" type="text" placeholder="Escribe un mensaje aquí..." autocomplete="off">
+                <button id="sendBtn" class="send-btn">Enviar</button>
+            </footer>
+        </main>
+    </div>
+    <script>
+        const API_URL = '/messages';
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const authorInput = document.getElementById('authorInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        async function loadMessages() {
+            try {
+                const res = await fetch(API_URL, { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) throw new Error('No se pudieron obtener mensajes');
+                renderMessages(await res.json());
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function renderMessages(list) {
+            const currentAuthor = (authorInput.value || '').trim();
+            messagesContainer.innerHTML = '';
+            list.forEach(m => {
+                const isMine = currentAuthor && m.author && m.author === currentAuthor;
+                const el = document.createElement('div');
+                el.className = 'message ' + (isMine ? 'sent' : 'received');
+                el.innerHTML = '<p><strong>' + (m.author || 'Anónimo') + ':</strong> ' + (m.content || '') + '</p>';
+                messagesContainer.appendChild(el);
+            });
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const content = (messageInput.value || '').trim();
+            const author = (authorInput.value || '').trim();
+            if (!content) return;
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ content, author })
+                });
+                if (!res.ok) throw new Error('No se pudo enviar el mensaje');
+                messageInput.value = '';
+                await loadMessages();
+            } catch (e) {
+                console.error(e);
+                alert('Error al enviar el mensaje');
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keydown', ev => { if (ev.key === 'Enter') sendMessage(); });
+        loadMessages();
+        setInterval(loadMessages, 5000);
+    </script>
+</body>
+</html>

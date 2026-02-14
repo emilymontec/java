@@ -1,22 +1,31 @@
 package com.example.messages.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controlador para la ruta raíz.
- * Proporciona un mensaje de bienvenida simple.
+ * Encargado de servir la página principal index.html.
  */
-@RestController
+@Controller
 public class HomeController {
 
     /**
-     * Endpoint raíz que devuelve un mensaje de bienvenida.
+     * Endpoint raíz que sirve la plantilla index.html ubicada en resources/templates.
      * 
-     * @return String de bienvenida.
+     * @return El nombre de la vista (index).
      */
     @GetMapping("/")
     public String home() {
-        return "Welcome to PublicWall!";
+        return "index";
     }
+     
+     /**
+      * Endpoint HTML para la ruta /messages.
+      * Sirve la vista messages.html cuando el cliente solicita HTML.
+      */
+     @GetMapping(value = "/messages")
+     public String messagesPage() {
+         return "messages";
+     }
 }

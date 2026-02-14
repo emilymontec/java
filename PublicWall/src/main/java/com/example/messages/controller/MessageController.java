@@ -24,7 +24,7 @@ public class MessageController {
      * 
      * @return Lista de objetos Message
      */
-    @GetMapping
+    @GetMapping(produces = "application/json")
     public List<Message> getMessages() {
         return service.getAllMessages();
     }
