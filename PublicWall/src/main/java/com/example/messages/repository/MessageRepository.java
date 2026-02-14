@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Repositorio JPA para la entidad Message.
- * Proporciona métodos CRUD básicos automáticamente.
+ * Al extender JpaRepository, Spring Data JPA genera automáticamente
+ * la implementación con métodos como save(), findAll(), findById(),
+ * deleteById(), etc.
  */
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    
+    // No es necesario escribir código aquí para operaciones CRUD básicas.
 }
