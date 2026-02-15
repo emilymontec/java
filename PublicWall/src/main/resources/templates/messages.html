@@ -1,195 +1,305 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YellowChat | Mensajes</title>
+    <title>PublicWall | Gestión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Estilos replicados del diseño de referencia */
         :root {
-    --primary-color: #FFD700;
-    --primary-light: #FFF4B0;
-    --bg-color: #f4f4f9;
-    --text-dark: #333;
-    --text-light: #fff;
-    --sidebar-bg: #ffffff;
-}
+            --primary: #FACC15;
+            --bg: #ffffff;
+            --text: #171717;
+            --muted: #737373;
+            --border: #e5e5e5;
+            --error: #ef4444;
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-body {
-    background-color: var(--bg-color);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
 
-.app-container {
-    width: 90vw;
-    height: 85vh;
-    display: flex;
-    background: white;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    border-radius: 12px;
-    overflow: hidden;
-}
+        /* Layout */
+        .sidebar {
+            width: 300px;
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
 
-.sidebar { display: none; }
+        .main-content {
+            flex: 1;
+            padding: 2rem 5%;
+            overflow-y: auto;
+        }
 
-.sidebar-header {
-    padding: 20px;
-    background-color: var(--primary-color);
-    font-weight: bold;
-    font-size: 1.2rem;
-}
+        .logo {
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text);
+        }
 
-.logo span {
-    font-weight: 300;
-}
+        .logo i {
+            color: var(--primary);
+            fill: var(--primary);
+        }
 
-.chat-window {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    background-color: #fafafa;
-}
+        /* Form */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-.chat-header {
-    padding: 15px 25px;
-    background: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-}
+        label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
 
-.user-details {
-    display: flex;
-    align-items: center;
-}
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            outline: none;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
 
-.avatar {
-    width: 45px;
-    height: 45px;
-    background: #ddd;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    font-weight: bold;
-    color: #555;
-}
+        input:focus,
+        textarea:focus {
+            border-color: var(--primary);
+        }
 
-.messages-container {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+        textarea {
+            height: 120px;
+            resize: none;
+        }
 
-.message {
-    max-width: 60%;
-    padding: 10px 15px;
-    border-radius: 15px;
-    font-size: 0.95rem;
-    position: relative;
-}
+        .btn {
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
 
-.message.received {
-    align-self: flex-start;
-    background: #e9e9eb;
-}
+        .btn-primary {
+            background: var(--primary);
+            color: var(--text);
+        }
 
-.message.sent {
-    align-self: flex-end;
-    background: var(--primary-color);
-    color: var(--text-dark);
-}
+        .btn:hover {
+            opacity: 0.8;
+        }
 
-.time {
-    font-size: 0.7rem;
-    display: block;
-    margin-top: 5px;
-    opacity: 0.6;
-}
+        /* Feed */
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            display: block;
+        }
 
-.chat-input {
-    padding: 20px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        .messages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
 
-.chat-input input {
-    flex: 1;
-    padding: 12px 20px;
-    border: 1px solid #eee;
-    border-radius: 25px;
-    outline: none;
-    background: #f9f9f9;
-}
+        .message-card {
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
 
-.send-btn {
-    background: var(--primary-color);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
 
-.send-btn:hover {
-    transform: scale(1.05);
-}
+        .msg-author {
+            font-weight: 600;
+        }
+
+        .msg-date {
+            color: var(--muted);
+        }
+
+        .msg-content {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .msg-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-link {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .action-link:hover {
+            color: var(--text);
+        }
+
+        .action-link.delete:hover {
+            color: var(--error);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 0.8rem 1.2rem;
+            background: var(--text);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 200;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <header class="sidebar-header">
-                <div class="logo">Yellow<span>Chat</span></div>
-            </header>
-            <div style="padding: 15px;">
-                <label style="font-size: 0.8rem;color:#777;">Tu nombre (autor)</label>
-                <input id="authorInput" type="text" placeholder="Anónimo" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;">
+    <aside class="sidebar">
+        <a href="/" class="logo">
+            <i data-lucide="square" style="transform: rotate(45deg);"></i>
+            PublicWall
+        </a>
+
+        <div class="form-group">
+            <label>Autor</label>
+            <input type="text" id="authorInput" placeholder="Tu nombre">
+        </div>
+
+        <div class="form-group">
+            <label>Mensaje</label>
+            <textarea id="messageInput" placeholder="¿Qué estás pensando?"></textarea>
+        </div>
+
+        <button id="sendBtn" class="btn btn-primary">
+            Publicar
+            <i data-lucide="arrow-right" style="width: 16px;"></i>
+        </button>
+    </aside>
+
+    <main class="main-content">
+        <span class="section-label">Tus Publicaciones / Gestión</span>
+        <div class="messages-list" id="messagesContainer">
+            <!-- Messages -->
+        </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3 style="font-weight: 800; text-transform: uppercase; font-size: 0.9rem;">Editar Mensaje</h3>
+            <div class="form-group">
+                <label>Autor</label>
+                <input type="text" id="editAuthor">
             </div>
-        </aside>
-
-        <!-- Muro público (vista messages) -->
-        <main class="chat-window">
-            <header class="chat-header">
-                <div class="user-details"><h3>Muro de Mensajes</h3></div>
-            </header>
-
-            <section class="composer" style="padding:20px;background:#fff;border-bottom:1px solid #eee;display:grid;grid-template-columns:1fr auto;gap:10px;">
-                <div class="fields" style="display:grid;gap:10px;">
-                    <input id="authorInput" type="text" placeholder="Tu nombre (Autor)" style="padding:12px 14px;border:1px solid #ddd;border-radius:10px;">
-                    <input id="messageInput" type="text" placeholder="Escribe algo para el muro..." autocomplete="off" style="padding:12px 14px;border:1px solid #ddd;border-radius:10px;">
-                </div>
-                <button id="sendBtn" class="send-btn">Publicar</button>
-            </section>
-
-            <div class="messages-container" id="messagesContainer"></div>
-
-            <!-- Área de entrada -->
-            <footer class="chat-input">
-                <input id="messageInput" type="text" placeholder="Escribe un mensaje aquí..." autocomplete="off">
-                <button id="sendBtn" class="send-btn">Enviar</button>
-            </footer>
-        </main>
+            <div class="form-group">
+                <label>Contenido</label>
+                <textarea id="editContent"></textarea>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-primary" id="saveEditBtn" style="flex: 1;">Guardar</button>
+                <button class="btn" onclick="closeModal()" style="border: 1px solid var(--border);">Cancelar</button>
+            </div>
+        </div>
     </div>
+
+    <div id="toast" class="toast"></div>
+
     <script>
         const API_URL = '/messages';
         const messagesContainer = document.getElementById('messagesContainer');
@@ -197,52 +307,133 @@ body {
         const authorInput = document.getElementById('authorInput');
         const sendBtn = document.getElementById('sendBtn');
 
+        let editingId = null;
+
         async function loadMessages() {
             try {
                 const res = await fetch(API_URL, { headers: { 'Accept': 'application/json' } });
-                if (!res.ok) throw new Error('No se pudieron obtener mensajes');
-                renderMessages(await res.json());
+                const data = await res.json();
+                renderMessages(data);
             } catch (e) {
-                console.error(e);
+                showToast('Error al conectar');
             }
         }
 
         function renderMessages(list) {
-            const currentAuthor = (authorInput.value || '').trim();
             messagesContainer.innerHTML = '';
-            list.forEach(m => {
-                const isMine = currentAuthor && m.author && m.author === currentAuthor;
-                const el = document.createElement('div');
-                el.className = 'message ' + (isMine ? 'sent' : 'received');
-                el.innerHTML = '<p><strong>' + (m.author || 'Anónimo') + ':</strong> ' + (m.content || '') + '</p>';
-                messagesContainer.appendChild(el);
+            const sorted = Array.isArray(list) ? list.slice().sort((a, b) => (b.id || 0) - (a.id || 0)) : [];
+
+            if (sorted.length === 0) {
+                messagesContainer.innerHTML = '<p style="color:var(--muted)">Sin publicaciones.</p>';
+                return;
+            }
+
+            const df = new Intl.DateTimeFormat('es-ES', {
+                day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
             });
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            sorted.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'message-card';
+                card.innerHTML = `
+                    <div class="msg-header">
+                        <span class="msg-author">${escapeHtml(m.author)}</span>
+                        <span class="msg-date">${m.createdAt ? df.format(new Date(m.createdAt)) : 'Reciente'}</span>
+                    </div>
+                    <p class="msg-content">${escapeHtml(m.content)}</p>
+                    <div class="msg-actions">
+                        <span class="action-link" onclick="openEditModal(${m.id}, '${escapeQuote(m.author)}', '${escapeQuote(m.content)}')">Editar</span>
+                        <span class="action-link delete" onclick="deleteMessage(${m.id})">Eliminar</span>
+                    </div>
+                `;
+                messagesContainer.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return 'Anónimo';
+            return str.replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+        }
+
+        function escapeQuote(str) {
+            if (!str) return '';
+            return str.replace(/'/g, "\\'");
         }
 
         async function sendMessage() {
-            const content = (messageInput.value || '').trim();
-            const author = (authorInput.value || '').trim();
-            if (!content) return;
+            const content = messageInput.value.trim();
+            const author = authorInput.value.trim();
+
+            if (!author || !content) return showToast('Completa los campos');
+
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ content, author })
                 });
-                if (!res.ok) throw new Error('No se pudo enviar el mensaje');
+                if (!res.ok) throw new Error();
                 messageInput.value = '';
+                showToast('Publicado');
                 await loadMessages();
             } catch (e) {
-                console.error(e);
-                alert('Error al enviar el mensaje');
+                showToast('Error al publicar');
             }
         }
 
+        async function deleteMessage(id) {
+            if (!confirm('¿Eliminar?')) return;
+            try {
+                const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                showToast('Eliminado');
+                await loadMessages();
+            } catch (e) {
+                showToast('Error');
+            }
+        }
+
+        function openEditModal(id, author, content) {
+            editingId = id;
+            document.getElementById('editAuthor').value = author;
+            document.getElementById('editContent').value = content;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingId = null;
+        }
+
+        document.getElementById('saveEditBtn').addEventListener('click', async () => {
+            const author = document.getElementById('editAuthor').value.trim();
+            const content = document.getElementById('editContent').value.trim();
+
+            try {
+                const res = await fetch(`${API_URL}/${editingId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ author, content })
+                });
+                closeModal();
+                showToast('Actualizado');
+                await loadMessages();
+            } catch (e) {
+                showToast('Error');
+            }
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        }
+
         sendBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keydown', ev => { if (ev.key === 'Enter') sendMessage(); });
         loadMessages();
-        setInterval(loadMessages, 5000);
+        lucide.createIcons();
     </script>
 </body>
+
 </html>

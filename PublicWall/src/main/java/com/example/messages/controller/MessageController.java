@@ -3,6 +3,7 @@ package com.example.messages.controller;
 import com.example.messages.model.Message;
 import com.example.messages.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -48,8 +49,13 @@ public class MessageController {
      * @return El mensaje guardado
      */
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public Message createMessage(@RequestBody Message message) {
-        return service.saveMessage(message);
+    public ResponseEntity<?> createMessage(@RequestBody Message message) {
+        try {
+            Message saved = service.saveMessage(message);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     /**

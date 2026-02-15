@@ -31,6 +31,21 @@ public class Message {
     private String author;
 
     /**
+     * Fecha y hora en que se creó el mensaje.
+     */
+    @Column(nullable = false, updatable = false)
+    private java.time.LocalDateTime createdAt;
+
+    /**
+     * Método que se ejecuta antes de persistir la entidad.
+     * Asigna la fecha y hora actual automáticamente.
+     */
+    @PrePersist
+    protected void onCreate() {
+        createdAt = java.time.LocalDateTime.now();
+    }
+
+    /**
      * Constructor predeterminado sin argumentos.
      * Es obligatorio para que JPA pueda instanciar la entidad.
      */
@@ -89,5 +104,23 @@ public class Message {
      */
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    /**
+     * Obtiene la fecha de creación del mensaje.
+     * 
+     * @return La fecha y hora.
+     */
+    public java.time.LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Establece la fecha de creación del mensaje.
+     * 
+     * @param createdAt La fecha y hora.
+     */
+    public void setCreatedAt(java.time.LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

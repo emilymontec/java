@@ -1,382 +1,222 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PublicWall</title>
+    <title>PublicWall | Minimal Feed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Paleta y variables del diseño de referencia */
         :root {
-    --primary-color: #FFD700; /* Amarillo Oro */
-    --primary-light: #FFF4B0;
-    --bg-color: #f4f4f9;
-    --text-dark: #333;
-    --text-light: #fff;
-    --sidebar-bg: #ffffff;
-}
-
-/* Reset y tipografía base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Contenedor principal centrado */
-body {
-    background-color: var(--bg-color);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Shell de la app */
-.app-container {
-    width: 90vw;
-    height: 85vh;
-    display: flex;
-    background: white;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-/* Sidebar oculto en modo muro */
-.sidebar { display: none; }
-
-.sidebar-header {
-    padding: 20px;
-    background-color: var(--primary-color);
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.logo span {
-    font-weight: 300;
-}
-
-.search-bar {
-    padding: 15px;
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    outline: none;
-}
-
-.chat-list {
-    flex: 1;
-    overflow-y: auto;
-}
-
-.chat-item {
-    display: flex;
-    padding: 15px;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.chat-item:hover {
-    background-color: var(--primary-light);
-}
-
-.chat-item.active {
-    background-color: #fff9db;
-    border-right: 4px solid var(--primary-color);
-}
-
-.avatar {
-    width: 45px;
-    height: 45px;
-    background: #ddd;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    font-weight: bold;
-    color: #555;
-}
-
-/* Chat Window */
-.chat-window {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    background-color: #fafafa;
-}
-
-.chat-header {
-    padding: 15px 25px;
-    background: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-}
-
-.user-details {
-    display: flex;
-    align-items: center;
-}
-
-.messages-container {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.message {
-    max-width: 60%;
-    padding: 10px 15px;
-    border-radius: 15px;
-    font-size: 0.95rem;
-    position: relative;
-}
-
-.message.received {
-    align-self: flex-start;
-    background: #e9e9eb;
-}
-
-.message.sent {
-    align-self: flex-end;
-    background: var(--primary-color);
-    color: var(--text-dark);
-}
-
-.time {
-    font-size: 0.7rem;
-    display: block;
-    margin-top: 5px;
-    opacity: 0.6;
-}
-
-/* Input Area */
-.chat-input {
-    padding: 20px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.chat-input input {
-    flex: 1;
-    padding: 12px 20px;
-    border: 1px solid #eee;
-    border-radius: 25px;
-    outline: none;
-    background: #f9f9f9;
-}
-
-.send-btn {
-    background: var(--primary-color);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.send-btn:hover {
-    transform: scale(1.05);
-}
-/* Estilos de muro (feed en tarjetas) */
-.composer {
-    padding: 20px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-}
-.composer .fields {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-}
-.composer input, .composer textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    outline: none;
-    background: #fff;
-}
-.composer textarea { min-height: 80px; resize: vertical; }
-.feed {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
-.post {
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-.post-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-}
-.post-avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--primary-light);
-    color: var(--text-dark);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700;
-}
-.post-author { font-weight: 600; color: #333; }
-.post-content { color: #444; line-height: 1.4; word-wrap: break-word; }
-    </style>
-</head>
-<body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <header class="sidebar-header">
-                <div class="logo">Public<span>Wall</span></div>
-            </header>
-            <div class="search-bar">
-                <input type="text" placeholder="Buscar conversación...">
-            </div>
-            <div style="padding: 0 15px 10px;">
-                <label style="font-size: 0.8rem;color:#777;">Tu nombre (autor)</label>
-                <input id="authorInput" type="text" placeholder="Anónimo" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;">
-            </div>
-            <div class="chat-list">
-                <div class="chat-item active">
-                    <div class="avatar">JS</div>
-                    <div class="chat-info">
-                        <h4>Juan Segovia</h4>
-                        <p>¡Ese diseño se ve genial!</p>
-                    </div>
-                </div>
-                <div class="chat-item">
-                    <div class="avatar">MA</div>
-                    <div class="chat-info">
-                        <h4>María Alarcón</h4>
-                        <p>¿Nos vemos a las 5?</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Muro público -->
-        <main class="chat-window">
-            <header class="chat-header">
-                <div class="user-details"><h3>Muro Público</h3></div>
-            </header>
-
-            <!-- Editor de publicación -->
-            <section class="composer">
-                <div class="fields">
-                    <input id="authorInput" type="text" placeholder="Tu nombre (Autor)">
-                    <textarea id="messageInput" placeholder="Escribe algo para el muro..."></textarea>
-                </div>
-                <button id="sendBtn" class="send-btn">Publicar</button>
-            </section>
-
-            <!-- Feed de publicaciones -->
-            <div class="feed" id="messagesContainer"></div>
-        </main>
-    </div>
-    <script>
-        // URL base de la API REST
-        const API_URL = '/messages';
-        // Referencias a elementos del DOM
-        const messagesContainer = document.getElementById('messagesContainer');
-        const messageInput = document.getElementById('messageInput');
-        const authorInput = document.getElementById('authorInput');
-        const sendBtn = document.getElementById('sendBtn');
-
-        // Carga los mensajes desde el backend
-        async function loadMessages() {
-            try {
-                const res = await fetch(API_URL, { headers: { 'Accept': 'application/json' } });
-                if (!res.ok) throw new Error('No se pudieron obtener mensajes');
-                const data = await res.json();
-                renderMessages(data);
-            } catch (e) {
-                console.error(e);
-            }
+            --primary: #FACC15;
+            /* Amarillo Vibrante */
+            --bg: #ffffff;
+            --text: #171717;
+            --muted: #737373;
+            --border: #e5e5e5;
         }
 
-        // Dibuja los mensajes en la vista
-        function renderMessages(list) {
-            const currentAuthor = (authorInput.value || '').trim();
-            messagesContainer.innerHTML = '';
-            const sorted = Array.isArray(list) ? list.slice().sort((a,b) => (b.id||0)-(a.id||0)) : [];
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo i {
+            color: var(--primary);
+            fill: var(--primary);
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--text);
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        header.hero {
+            padding: 4rem 5% 6rem;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .feed-container {
+            padding: 2rem 5%;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .feed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .post-item {
+            max-width: 600px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .author-name {
+            font-weight: 600;
+        }
+
+        .post-date {
+            color: var(--muted);
+        }
+
+        .post-text {
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        footer {
+            padding: 4rem 5%;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <i data-lucide="square" style="transform: rotate(45deg);"></i>
+            PublicWall
+        </div>
+        <a href="/messages" class="btn btn-primary">Escribir</a>
+    </nav>
+
+    <header class="hero">
+        <h1>Muro abierto. ideas claras.</h1>
+        <p>Un espacio simple para compartir lo que piensas con el resto del mundo.</p>
+        <a href="/messages" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1rem;">Empezar</a>
+    </header>
+
+    <main class="feed-container">
+        <span class="section-label">Reciente</span>
+        <div class="feed-list" id="publicFeed">
+            <!-- Posts -->
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 PublicWall. Menos es más.
+    </footer>
+
+    <script>
+        const API_URL = '/messages';
+        const publicFeed = document.getElementById('publicFeed');
+
+        async function loadPublicFeed() {
+            try {
+                const res = await fetch(API_URL, { headers: { 'Accept': 'application/json' } });
+                const data = await res.json();
+                renderFeed(data);
+            } catch (e) { console.error(e); }
+        }
+
+        function renderFeed(list) {
+            publicFeed.innerHTML = '';
+            const sorted = Array.isArray(list) ? list.slice().sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 10) : [];
+            const df = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' });
+
             sorted.forEach(m => {
-                const initials = (m.author || 'Anónimo').trim().split(/\s+/).map(s => s[0]).slice(0,2).join('').toUpperCase();
-                const isMine = currentAuthor && m.author && m.author === currentAuthor;
-                const card = document.createElement('article');
-                card.className = 'post';
-                card.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-avatar">${initials || 'A'}</div>
-                        <div class="post-author">${escapeHtml(m.author || 'Anónimo')}</div>
+                const item = document.createElement('div');
+                item.className = 'post-item';
+                item.innerHTML = `
+                    <div class="post-meta">
+                        <span class="author-name">${escapeHtml(m.author)}</span>
+                        <span class="post-date">• ${m.createdAt ? df.format(new Date(m.createdAt)) : 'Hoy'}</span>
                     </div>
-                    <div class="post-content">${escapeHtml(m.content || '')}</div>
+                    <p class="post-text">${escapeHtml(m.content)}</p>
                 `;
-                messagesContainer.appendChild(card);
+                publicFeed.appendChild(item);
             });
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            lucide.createIcons();
         }
 
         function escapeHtml(str) {
-            return str.replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+            if (!str) return 'Anónimo';
+            return str.replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
         }
 
-        // Envía un nuevo mensaje al backend
-        async function sendMessage() {
-            const content = (messageInput.value || '').trim();
-            const author = (authorInput.value || '').trim();
-            if (!content) return;
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ content, author })
-                });
-                if (!res.ok) throw new Error('No se pudo enviar el mensaje');
-                messageInput.value = '';
-                await loadMessages();
-            } catch (e) {
-                console.error(e);
-                alert('Error al enviar el mensaje');
-            }
-        }
-
-        // Eventos de UI
-        sendBtn.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keydown', (ev) => {
-            if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') sendMessage();
-        });
-        // Carga inicial y refresco periódico
-        loadMessages();
-        setInterval(loadMessages, 5000);
+        loadPublicFeed();
+        setInterval(loadPublicFeed, 20000);
+        lucide.createIcons();
     </script>
 </body>
+
 </html>

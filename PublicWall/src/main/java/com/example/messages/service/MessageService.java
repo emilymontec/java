@@ -45,6 +45,15 @@ public class MessageService {
      * @return El mensaje guardado con su ID generado
      */
     public Message saveMessage(Message message) {
+        if (message == null) {
+            throw new IllegalArgumentException("El mensaje no puede ser nulo");
+        }
+        if (message.getAuthor() == null || message.getAuthor().trim().isEmpty()) {
+            throw new IllegalArgumentException("El autor es obligatorio");
+        }
+        if (message.getContent() == null || message.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("El contenido no puede estar vacío");
+        }
         return repository.save(message);
     }
 
