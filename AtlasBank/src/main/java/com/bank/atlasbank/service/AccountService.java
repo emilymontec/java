@@ -1,17 +1,24 @@
-package com.bank.atlas_bank.service;
+package com.bank.atlasbank.service;
 
-import com.bank.atlas_bank.model.Account;
-import com.bank.atlas_bank.model.Customer;
-import com.bank.atlas_bank.model.Transaction;
-import com.bank.atlas_bank.repository.AccountRepository;
-import com.bank.atlas_bank.repository.CustomerRepository;
-import com.bank.atlas_bank.repository.TransactionRepository;
+import com.bank.atlasbank.model.Account;
+import com.bank.atlasbank.model.Customer;
+import com.bank.atlasbank.model.Transaction;
+import com.bank.atlasbank.repository.AccountRepository;
+import com.bank.atlasbank.repository.CustomerRepository;
+import com.bank.atlasbank.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Servicio de dominio para operaciones sobre cuentas bancarias.
+ * <p>
+ * Centraliza la lógica de negocio para creación de cuentas, depósitos, retiros,
+ * transferencias y consulta de balance, garantizando consistencia mediante
+ * transacciones.
+ */
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -20,6 +27,14 @@ public class AccountService {
     private final TransactionRepository transactionRepository;
     private final CustomerRepository customerRepository;
 
+    /**
+     * Crea una nueva cuenta asociada a un cliente existente.
+     *
+     * @param accountNumber  número único de cuenta
+     * @param customerId     identificador del cliente propietario
+     * @param initialBalance balance inicial; si es nulo se asume cero
+     * @return cuenta persistida en la base de datos
+     */
     @Transactional
     public Account createAccount(String accountNumber, Long customerId, BigDecimal initialBalance) {
         Customer customer = customerRepository.findById(customerId)
@@ -40,6 +55,12 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    /**
+     * Aplica un depósito al balance de una cuenta y registra la transacción.
+     *
+     * @param accountNumber número de cuenta destino
+     * @param amount        monto a depositar
+     */
     @Transactional
     public void deposit(String accountNumber, BigDecimal amount) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
@@ -58,6 +79,13 @@ public class AccountService {
         );
     }
 
+    /**
+     * Realiza un retiro desde una cuenta, validando fondos suficientes y
+     * registrando la transacción.
+     *
+     * @param accountNumber número de cuenta origen
+     * @param amount        monto a retirar
+     */
     @Transactional
     public void withdraw(String accountNumber, BigDecimal amount) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
@@ -81,6 +109,14 @@ public class AccountService {
         );
     }
 
+    /**
+     * Transfiere fondos entre dos cuentas, registrando transacciones de salida y
+     * entrada.
+     *
+     * @param fromAccount cuenta origen
+     * @param toAccount   cuenta destino
+     * @param amount      monto a transferir
+     */
     @Transactional
     public void transfer(String fromAccount, String toAccount, BigDecimal amount) {
         Account origin = accountRepository.findByAccountNumber(fromAccount)
@@ -119,6 +155,12 @@ public class AccountService {
         );
     }
 
+    /**
+     * Obtiene el balance actual de una cuenta.
+     *
+     * @param accountNumber número de cuenta a consultar
+     * @return balance de la cuenta o cero si no tiene valor almacenado
+     */
     @Transactional(readOnly = true)
     public BigDecimal getBalance(String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)

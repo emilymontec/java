@@ -1,8 +1,12 @@
-package com.bank.atlas_bank.model;
+package com.bank.atlasbank.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+
+/**
+ * Entidad que representa una cuenta bancaria de un cliente.
+ */
 @Entity
 @Data
 @NoArgsConstructor
