@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS | Inicio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primario: #15803d;
+            --primario-soft: #f0fdf4;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-texto: #4b5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--blanco);
+            color: var(--negro);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            border-bottom: 1px solid var(--gris-borde);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--primario);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        main {
+            padding: 5% 8%;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--gris-texto);
+            margin-bottom: 24px;
+        }
+
+        .info-card {
+            border: 1px solid var(--gris-borde);
+            padding: 18px;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-nav {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: var(--gris-texto);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .sidebar-nav a:hover {
+            color: var(--primario);
+            padding-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">ATLAS / <span style="font-weight: 300; color: var(--gris-texto);">INICIO</span></div>
+    <div class="user-info">
+        <span id="client-name" style="font-size: 0.85rem; font-weight: 600;"></span>
+        <div class="avatar" id="client-avatar"></div>
+    </div>
+</header>
+
+<main>
+    <h1 class="section-title">Bienvenido a Atlas</h1>
+    <p class="section-subtitle">Desde aquí puedes navegar a tus cuentas, transferencias y otros módulos.</p>
+
+    <div class="info-card">
+        <p>Utiliza el menú para acceder a las operaciones disponibles. El diseño de todos los módulos mantiene la misma línea visual que tu dashboard principal.</p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="/panel/cliente">Ir al dashboard</a>
+        <a href="/panel/cliente/cuentas">Ir a cuentas</a>
+        <a href="/panel/cliente/transferencias">Ir a transferencias</a>
+        <a href="#" id="logout-link" style="color: #ef4444;">Cerrar sesión segura</a>
+    </nav>
+</main>
+
+<script>
+    function ensureAuthenticated() {
+        const token = sessionStorage.getItem("atlasAuth");
+        if (!token) {
+            window.location.href = "/";
+            return null;
+        }
+        return token;
+    }
+
+    function setupClientHeader() {
+        const name = sessionStorage.getItem("atlasUser") || "";
+        const nameEl = document.getElementById("client-name");
+        const avatarEl = document.getElementById("client-avatar");
+        if (nameEl) {
+            nameEl.textContent = name || "Cliente ATLAS";
+        }
+        if (avatarEl) {
+            const initials = name ? name.split(" ").map(p => p.charAt(0)).join("").substring(0, 2).toUpperCase() : "AT";
+            avatarEl.textContent = initials;
+        }
+    }
+
+    function setupLogout() {
+        const link = document.getElementById("logout-link");
+        if (!link) return;
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            sessionStorage.removeItem("atlasAuth");
+            sessionStorage.removeItem("atlasUser");
+            sessionStorage.removeItem("atlasRoles");
+            window.location.href = "/";
+        });
+    }
+
+    (function init() {
+        const token = ensureAuthenticated();
+        if (!token) return;
+        setupClientHeader();
+        setupLogout();
+    }());
+</script>
+
+</body>
+</html>

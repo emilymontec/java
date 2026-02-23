@@ -1,6 +1,7 @@
 package com.bank.atlasbank.controller;
 
 import com.bank.atlasbank.model.Account;
+import com.bank.atlasbank.model.Transaction;
 import com.bank.atlasbank.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.List;
 import java.math.BigDecimal;
 
 /**
@@ -19,27 +23,21 @@ import java.math.BigDecimal;
  * dinero entre cuentas.
  */
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("")
 @RequiredArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
 
-    /**
-     * Crea una nueva cuenta para un cliente existente.
-     *
-     * @param accountNumber  número único de cuenta
-     * @param customerId     identificador del cliente propietario
-     * @param initialBalance balance inicial opcional de la cuenta
-     * @return la cuenta creada con su información persistida
-     */
-    @PostMapping
+    @PostMapping("/accounts")
     public ResponseEntity<Account> createAccount(
-            @RequestParam String accountNumber,
             @RequestParam Long customerId,
-            @RequestParam(required = false) BigDecimal initialBalance
+            @RequestParam(required = false) BigDecimal initialBalance,
+            @RequestParam String type,
+            @RequestParam String currency,
+            @RequestParam(required = false) BigDecimal interestRate
     ) {
-        Account account = accountService.createAccount(accountNumber, customerId, initialBalance);
+        Account account = accountService.createAccount(customerId, initialBalance, type, currency, interestRate);
         return ResponseEntity.ok(account);
     }
 
@@ -49,7 +47,7 @@ public class AccountController {
      * @param accountNumber número de cuenta a consultar
      * @return balance disponible en la cuenta
      */
-    @GetMapping("/{accountNumber}/balance")
+    @GetMapping("/accounts/{accountNumber}/balance")
     public ResponseEntity<BigDecimal> getBalance(@PathVariable String accountNumber) {
         BigDecimal balance = accountService.getBalance(accountNumber);
         return ResponseEntity.ok(balance);
@@ -62,12 +60,15 @@ public class AccountController {
      * @param amount        monto a depositar
      * @return mensaje de confirmación de la operación
      */
-    @PostMapping("/{accountNumber}/deposit")
+    @PostMapping("/transactions/deposit")
     public ResponseEntity<String> deposit(
-            @PathVariable String accountNumber,
-            @RequestParam BigDecimal amount) {
+            @RequestParam String accountNumber,
+            @RequestParam BigDecimal amount,
+            @RequestParam(required = false) String requestId,
+            HttpServletRequest request) {
 
-        accountService.deposit(accountNumber, amount);
+        String source = request.getRemoteAddr();
+        accountService.deposit(accountNumber, amount, requestId, source);
         return ResponseEntity.ok("Depósito exitoso");
     }
 
@@ -78,12 +79,15 @@ public class AccountController {
      * @param amount        monto a retirar
      * @return mensaje de confirmación de la operación
      */
-    @PostMapping("/{accountNumber}/withdraw")
+    @PostMapping("/transactions/withdraw")
     public ResponseEntity<String> withdraw(
-            @PathVariable String accountNumber,
-            @RequestParam BigDecimal amount) {
+            @RequestParam String accountNumber,
+            @RequestParam BigDecimal amount,
+            @RequestParam(required = false) String requestId,
+            HttpServletRequest request) {
 
-        accountService.withdraw(accountNumber, amount);
+        String source = request.getRemoteAddr();
+        accountService.withdraw(accountNumber, amount, requestId, source);
         return ResponseEntity.ok("Retiro exitoso");
     }
 
@@ -95,14 +99,70 @@ public class AccountController {
      * @param amount      monto a transferir
      * @return mensaje de confirmación de la operación
      */
-    @PostMapping("/transfer")
+    @PostMapping("/transactions/transfer/internal")
     public ResponseEntity<String> transfer(
             @RequestParam String fromAccount,
             @RequestParam String toAccount,
-            @RequestParam BigDecimal amount
+            @RequestParam BigDecimal amount,
+            @RequestParam(required = false) String requestId,
+            HttpServletRequest request
     ) {
 
-        accountService.transfer(fromAccount, toAccount, amount);
+        String source = request.getRemoteAddr();
+        accountService.transfer(fromAccount, toAccount, amount, requestId, source);
         return ResponseEntity.ok("Transferencia realizada");
+    }
+
+    @PostMapping("/transactions/transfer/external")
+    public ResponseEntity<String> externalTransfer(
+            @RequestParam String accountNumber,
+            @RequestParam BigDecimal amount,
+            @RequestParam(required = false) String requestId,
+            HttpServletRequest request
+    ) {
+        String source = request.getRemoteAddr();
+        accountService.externalTransfer(accountNumber, amount, requestId, source);
+        return ResponseEntity.ok("Transferencia externa realizada");
+    }
+
+    @PostMapping("/admin/accounts/{accountNumber}/status")
+    public ResponseEntity<String> changeStatus(
+            @PathVariable String accountNumber,
+            @RequestParam String status
+    ) {
+        accountService.changeStatus(accountNumber, status);
+        return ResponseEntity.ok("Estado de cuenta actualizado");
+    }
+
+    @PostMapping("/admin/accounts/{accountNumber}/interest/apply")
+    public ResponseEntity<String> applyInterest(
+                                                @PathVariable String accountNumber,
+                                                @RequestParam(required = false) String requestId,
+                                                HttpServletRequest request) {
+        String source = request.getRemoteAddr();
+        accountService.applyInterest(accountNumber, requestId, source);
+        return ResponseEntity.ok("Interés aplicado");
+    }
+
+    @GetMapping("/admin/transactions")
+    public ResponseEntity<List<Transaction>> getGlobalTransactions(@RequestParam(required = false) LocalDate date) {
+        List<Transaction> transactions = accountService.getGlobalTransactions(date);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/admin/report")
+    public ResponseEntity<AccountService.FinancialReport> getFinancialReport(@RequestParam(required = false) LocalDate date) {
+        AccountService.FinancialReport report = accountService.getFinancialReport(date);
+        return ResponseEntity.ok(report);
+    }
+
+    @PostMapping("/admin/transactions/{transactionId}/revert")
+    public ResponseEntity<String> reverseTransaction(
+            @PathVariable Long transactionId,
+            @RequestParam(required = false) String requestId,
+            HttpServletRequest request) {
+        String source = request.getRemoteAddr();
+        accountService.reverseTransaction(transactionId, requestId, source);
+        return ResponseEntity.ok("Operación revertida");
     }
 }

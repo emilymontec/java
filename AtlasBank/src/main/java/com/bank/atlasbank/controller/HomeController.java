@@ -18,7 +18,7 @@ public class HomeController {
      *
      * @return mensaje plano confirmando que AtlasBank está en ejecución
      */
-    @GetMapping("/")
+    @GetMapping("/health")
     public ResponseEntity<String> home() {
         return ResponseEntity.ok("AtlasBank is running...");
     }

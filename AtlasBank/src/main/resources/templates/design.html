@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS | Master Design Kit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primario: #15803d;
+            --primario-soft: #f0fdf4;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-texto: #4b5563;
+            --error: #dc2626;
+        }
+
+        /* 1. RESET & BASE */
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        body { background: var(--blanco); color: var(--negro); -webkit-font-smoothing: antialiased; line-height: 1.5; }
+        
+        /* 2. UTILIDADES DE ESTRUCTURA (GRID BRUTALISTA) */
+        .grid-container { display: grid; grid-template-columns: repeat(12, 1fr); border-bottom: 1px solid var(--gris-borde); }
+        .col-6 { grid-column: span 6; border-right: 1px solid var(--gris-borde); padding: 60px 5%; }
+        .col-4 { grid-column: span 4; border-right: 1px solid var(--gris-borde); padding: 40px 5%; }
+        .col-12 { grid-column: span 12; padding: 60px 5%; }
+        .no-border { border: none !important; }
+
+        /* 3. NAVEGACIÓN */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 5%; border-bottom: 1px solid var(--gris-borde);
+            position: sticky; top: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 100;
+        }
+        .logo { font-weight: 600; font-size: 1.3rem; letter-spacing: -1px; color: var(--primario); text-decoration: none; }
+        .nav-links a { text-decoration: none; color: var(--negro); margin-left: 35px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
+
+        /* 4. FORMULARIOS & INPUTS */
+        .form-group { margin-bottom: 30px; }
+        label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; color: var(--primario); }
+        
+        input[type="text"], input[type="email"], input[type="password"], select, textarea {
+            width: 100%; padding: 15px; border: 1px solid var(--gris-borde);
+            background: var(--primario-soft); font-size: 1rem; color: var(--negro);
+            outline: none; transition: 0.3s; border-radius: 0; /* Cuadrado para estilo brutalista */
+        }
+        input:focus { border-color: var(--primario); background: var(--blanco); }
+
+        /* 5. BOTONES */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 18px 35px; border: 1px solid var(--negro); background: var(--negro);
+            color: var(--blanco); text-decoration: none; font-weight: 600;
+            text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;
+            transition: 0.3s; cursor: pointer;
+        }
+        .btn:hover { background: var(--primario); border-color: var(--primario); }
+        
+        .btn-outline { background: transparent; color: var(--negro); }
+        .btn-outline:hover { background: var(--negro); color: var(--blanco); }
+
+        .circle-btn {
+            width: 160px; height: 160px; border-radius: 50%;
+            background: var(--primario); color: var(--blanco);
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; text-decoration: none; font-weight: 600;
+            transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1); border: none;
+        }
+        .circle-btn:hover { transform: scale(1.05) rotate(5deg); background: var(--negro); }
+
+        /* 6. TABLAS (Manejo de datos) */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 20px; border-bottom: 2px solid var(--negro); font-size: 0.75rem; text-transform: uppercase; }
+        td { padding: 20px; border-bottom: 1px solid var(--gris-borde); font-size: 0.9rem; }
+        tr:hover { background: var(--primario-soft); }
+
+        /* 7. FOOTER */
+        footer {
+            padding: 100px 5% 40px; position: relative; overflow: hidden;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            border-top: 1px solid var(--gris-borde);
+        }
+        .footer-bg-text { 
+            font-size: 12vw; font-weight: 600; color: var(--primario-soft); 
+            position: absolute; bottom: -2vw; left: -1vw; z-index: -1; letter-spacing: -10px; pointer-events: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .col-6, .col-4 { grid-column: span 12; border-right: none; border-bottom: 1px solid var(--gris-borde); }
+            footer { flex-direction: column; align-items: flex-start; gap: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">ATLAS</a>
+        <div class="nav-links">
+            <a href="#">Banca</a>
+            <a href="#">Proyectos</a>
+            <a href="#" style="color: var(--primario);">Mi Cuenta</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="grid-container">
+            <div class="col-6">
+                <span style="color: var(--primario); font-weight: 600;">[ DASHBOARD / 2026 ]</span>
+                <h1 style="font-size: clamp(3rem, 6vw, 5rem); line-height: 0.9; margin: 30px 0; letter-spacing: -3px;">GESTIÓN<br>ÉTICA.</h1>
+                <p style="color: var(--gris-texto); max-width: 400px;">Panel central de operaciones para la gestión de activos regenerativos y trazabilidad de impacto.</p>
+            </div>
+            <div class="col-6 no-border" style="background: var(--primario-soft); display: flex; align-items: center; justify-content: center;">
+                <div class="circle-btn">NUEVA<br>OPERACIÓN</div>
+            </div>
+        </section>
+
+        <section class="grid-container">
+            <div class="col-6">
+                <h2 style="margin-bottom: 40px; text-transform: uppercase; letter-spacing: -1px;">Registro de Activos</h2>
+                <form>
+                    <div class="form-group">
+                        <label>Nombre del Proyecto</label>
+                        <input type="text" placeholder="Ej. Reforestación Amazonas">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Impacto</label>
+                        <select>
+                            <option>Carbono Neutral</option>
+                            <option>Energía Limpia</option>
+                            <option>Agua Potable</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Inversión Inicial (USD)</label>
+                        <input type="text" placeholder="0.00">
+                    </div>
+                    <button type="submit" class="btn">Confirmar Registro</button>
+                    <button type="button" class="btn btn-outline" style="margin-left: 10px;">Cancelar</button>
+                </form>
+            </div>
+
+            <div class="col-6 no-border">
+                <h2 style="margin-bottom: 40px; text-transform: uppercase; letter-spacing: -1px;">Últimos Movimientos</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Concepto</th>
+                            <th>Estado</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#882</td>
+                            <td>Bono de Carbono VCU</td>
+                            <td style="color: var(--primario); font-weight: 600;">Completado</td>
+                            <td>$1,250.00</td>
+                        </tr>
+                        <tr>
+                            <td>#881</td>
+                            <td>Solar Farm S-21</td>
+                            <td style="color: var(--gris-texto);">Pendiente</td>
+                            <td>$4,800.00</td>
+                        </tr>
+                        <tr>
+                            <td>#879</td>
+                            <td>Liquidación Mensual</td>
+                            <td style="color: var(--primario); font-weight: 600;">Completado</td>
+                            <td>$890.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="grid-container">
+            <div class="col-4">
+                <span style="font-size: 0.7rem; font-weight: 600;">[ KPI 01 ]</span>
+                <h4 style="margin: 15px 0;">Impacto Ambiental</h4>
+                <p style="font-size: 2.5rem; font-weight: 600; color: var(--primario);">-12.5t <small style="font-size: 1rem; color: var(--negro);">CO2</small></p>
+            </div>
+            <div class="col-4">
+                <span style="font-size: 0.7rem; font-weight: 600;">[ KPI 02 ]</span>
+                <h4 style="margin: 15px 0;">Rendimiento Anual</h4>
+                <p style="font-size: 2.5rem; font-weight: 600;">+5.8%</p>
+            </div>
+            <div class="col-4 no-border">
+                <span style="font-size: 0.7rem; font-weight: 600;">[ KPI 03 ]</span>
+                <h4 style="margin: 15px 0;">Certificación</h4>
+                <p style="font-size: 1.2rem; font-weight: 600; text-transform: uppercase; margin-top: 15px;">B-Corp Gold ✨</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-bg-text">BV. SYSTEM</div>
+        <div style="font-size: 0.8rem; color: var(--gris-texto); font-weight: 500;">
+            © 2026 BV. SYSTEM. OPERACIONES CERTIFICADAS B-CORP.
+        </div>
+        <div class="nav-links">
+            <a href="#" style="margin-left: 20px;">LinkedIn</a>
+            <a href="#" style="margin-left: 20px;">Instagram</a>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -17,3 +17,6 @@ public class AtlasBankApplication {
 	}
 
 }
+
+// Para ejecutar: .\mvnw.cmd spring-boot:run
+// En la raiz del proyecto (donde se encuentra el archivo pom.xml)

@@ -24,4 +24,11 @@ public class Customer {
 
     @Email
     private String email;
+
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String documentId;
+
+    @NotBlank
+    private String status;
 }

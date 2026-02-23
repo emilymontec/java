@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS ADMIN | Gestión de usuarios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primario: #15803d;
+            --primario-soft: #f0fdf4;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-texto: #4b5563;
+            --error: #b91c1c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--blanco);
+            color: var(--negro);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+        }
+
+        .shell {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px 20px 32px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-left h1 {
+            font-size: 1.6rem;
+            letter-spacing: -1px;
+        }
+
+        .header-left span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--gris-texto);
+        }
+
+        .header-right {
+            font-size: 0.75rem;
+            color: var(--gris-texto);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 24px;
+        }
+
+        aside {
+            border-right: 1px solid var(--gris-borde);
+            padding-right: 16px;
+            font-size: 0.85rem;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--gris-texto);
+            margin-bottom: 8px;
+        }
+
+        .menu-group {
+            margin-bottom: 24px;
+        }
+
+        .menu-link {
+            display: block;
+            padding: 6px 0;
+            color: var(--negro);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .menu-link.active {
+            color: var(--primario);
+            font-weight: 600;
+        }
+
+        main {
+            font-size: 0.9rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+        }
+
+        .page-header h2 {
+            font-size: 1.2rem;
+        }
+
+        .page-header span {
+            font-size: 0.8rem;
+            color: var(--gris-texto);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .card {
+            background: var(--blanco);
+            border: 1px solid var(--gris-borde);
+            padding: 16px 16px 18px;
+        }
+
+        .card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .card small {
+            font-size: 0.75rem;
+            color: var(--gris-texto);
+        }
+
+        .form-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            color: var(--primario);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gris-borde);
+            font-size: 0.9rem;
+            background: var(--primario-soft);
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primario);
+            background: var(--blanco);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .actions {
+            margin-top: 14px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        button {
+            border: 1px solid var(--negro);
+            background: var(--negro);
+            color: var(--blanco);
+            padding: 12px 22px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--primario);
+            border-color: var(--primario);
+        }
+
+        button.secondary {
+            background: transparent;
+            color: var(--negro);
+        }
+
+        button.secondary:hover {
+            background: var(--negro);
+            color: var(--blanco);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 0.8rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--gris-borde);
+        }
+
+        th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gris-texto);
+            border-bottom: 2px solid var(--negro);
+        }
+
+        tr:hover {
+            background: var(--primario-soft);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            border: 1px solid var(--gris-borde);
+        }
+
+        .badge-ok {
+            border-color: var(--primario);
+            color: var(--primario);
+            background: var(--primario-soft);
+        }
+
+        .badge-off {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .helper {
+            font-size: 0.7rem;
+            color: var(--gris-texto);
+            margin-top: 6px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--gris-texto);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--primario);
+        }
+    </style>
+</head>
+<body>
+
+<div class="shell">
+    <header class="header">
+        <div class="header-left">
+            <h1>ATLAS ADMIN</h1>
+            <span>Gestión de usuarios y clientes</span>
+        </div>
+        <div class="header-right">
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span>Conectado a clúster Atlas-Beta</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <div class="menu-group">
+                <div class="section-label">Panel</div>
+                <a href="/panel/admin" class="menu-link">Visión general</a>
+            </div>
+            <div class="menu-group">
+                <div class="section-label">Clientes y usuarios</div>
+                <a href="/panel/admin/usuarios" class="menu-link active">Gestión de usuarios</a>
+                <a href="/panel/admin/estado-clientes" class="menu-link">Estado de clientes</a>
+            </div>
+            <div class="menu-group">
+                <div class="section-label">Cuentas y operaciones</div>
+                <a href="/panel/admin" class="menu-link">Monitor de transacciones</a>
+                <a href="/panel/admin" class="menu-link">Operaciones sobre cuentas</a>
+            </div>
+        </aside>
+
+        <main>
+            <div class="page-header">
+                <div>
+                    <h2>Gestión de usuarios</h2>
+                    <span>Alta y edición de clientes Atlas.</span>
+                </div>
+            </div>
+
+            <div class="grid">
+                <section class="card">
+                    <h3>Nuevo cliente</h3>
+                    <small>Crear registro base en Atlas para asociar cuentas.</small>
+
+                    <form id="form-create">
+                        <div class="form-grid">
+                            <div>
+                                <label for="create-name">Nombre completo</label>
+                                <input id="create-name" type="text" placeholder="Ej. Lucía Fernández">
+                            </div>
+                            <div>
+                                <label for="create-email">Correo</label>
+                                <input id="create-email" type="email" placeholder="nombre@dominio.com">
+                            </div>
+                            <div>
+                                <label for="create-document">Documento</label>
+                                <input id="create-document" type="text" placeholder="NIF / RFC / ID local">
+                            </div>
+                            <div class="full-width">
+                                <label>Estado inicial</label>
+                                <input type="text" value="Activo (establecido por el sistema)" disabled>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button type="button" class="secondary" id="create-reset">Limpiar</button>
+                            <button type="submit">Registrar cliente</button>
+                        </div>
+                    </form>
+                    <div class="helper" id="create-helper"></div>
+                </section>
+
+                <section class="card">
+                    <h3>Editar datos de cliente</h3>
+                    <small>Actualizar nombre, correo y documento de un cliente existente.</small>
+
+                    <form id="form-update">
+                        <div class="form-grid">
+                            <div>
+                                <label for="update-id">ID interno</label>
+                                <input id="update-id" type="number" placeholder="ID Atlas">
+                            </div>
+                            <div>
+                                <label for="update-name">Nombre completo</label>
+                                <input id="update-name" type="text" placeholder="Nombre actualizado">
+                            </div>
+                            <div>
+                                <label for="update-email">Correo</label>
+                                <input id="update-email" type="email" placeholder="correo@dominio.com">
+                            </div>
+                            <div>
+                                <label for="update-document">Documento</label>
+                                <input id="update-document" type="text" placeholder="Documento actualizado">
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button type="submit">Guardar cambios</button>
+                        </div>
+                    </form>
+                    <div class="helper" id="update-helper"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    function ensureAdminAuthenticated() {
+        const token = sessionStorage.getItem("atlasAuth");
+        const rolesRaw = sessionStorage.getItem("atlasRoles");
+        if (!token || !rolesRaw) {
+            window.location.href = "/";
+            return null;
+        }
+        try {
+            const roles = JSON.parse(rolesRaw);
+            if (!Array.isArray(roles) || !roles.includes("ROLE_EXECUTIVE")) {
+                window.location.href = "/";
+                return null;
+            }
+        } catch (_) {
+            window.location.href = "/";
+            return null;
+        }
+        return token;
+    }
+
+    function setupCreateForm(token) {
+        const form = document.getElementById("form-create");
+        const helper = document.getElementById("create-helper");
+        const resetBtn = document.getElementById("create-reset");
+        if (!form || !helper) return;
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            helper.textContent = "";
+            const name = document.getElementById("create-name").value.trim();
+            const email = document.getElementById("create-email").value.trim();
+            const documentId = document.getElementById("create-document").value.trim();
+            if (!name || !email || !documentId) {
+                helper.textContent = "Nombre, correo y documento son obligatorios.";
+                return;
+            }
+            try {
+                const response = await fetch("/admin/customers", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Basic " + token
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        documentId: documentId
+                    })
+                });
+                if (!response.ok) {
+                    helper.textContent = "No se pudo registrar el cliente.";
+                    return;
+                }
+                helper.textContent = "Cliente registrado correctamente.";
+            } catch (_) {
+                helper.textContent = "Error al conectar con el servicio de clientes.";
+            }
+        });
+
+        if (resetBtn) {
+            resetBtn.addEventListener("click", function () {
+                form.reset();
+                helper.textContent = "";
+            });
+        }
+    }
+    
+    function setupUpdateForm(token) {
+        const form = document.getElementById("form-update");
+        const helper = document.getElementById("update-helper");
+        if (!form || !helper) return;
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            helper.textContent = "";
+            const id = document.getElementById("update-id").value.trim();
+            const name = document.getElementById("update-name").value.trim();
+            const email = document.getElementById("update-email").value.trim();
+            const documentId = document.getElementById("update-document").value.trim();
+            if (!id || !name || !email || !documentId) {
+                helper.textContent = "ID, nombre, correo y documento son obligatorios.";
+                return;
+            }
+            try {
+                const url = "/admin/customers/" + encodeURIComponent(id);
+                const response = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Basic " + token
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        documentId: documentId
+                    })
+                });
+                if (!response.ok) {
+                    helper.textContent = "No se pudo actualizar el cliente.";
+                    return;
+                }
+                helper.textContent = "Datos del cliente actualizados correctamente.";
+            } catch (_) {
+                helper.textContent = "Error al actualizar los datos del cliente.";
+            }
+        });
+    }
+
+    (function init() {
+        const token = ensureAdminAuthenticated();
+        if (!token) return;
+        setupCreateForm(token);
+        setupUpdateForm(token);
+    }());
+</script>
+
+</body>
+</html>
