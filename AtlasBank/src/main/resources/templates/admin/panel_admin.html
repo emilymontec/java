@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATLAS ADMIN | Control Total</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ATLAS BANK | Admin Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
-            --primario-suave: #dcfce7;
-            --fondo: #f9fafb;
+            --primario-soft: #f0fdf4;
             --negro: #111827;
             --blanco: #ffffff;
-            --texto-suave: #6b7280;
-            --borde: #e5e7eb;
-            --alerta: #b91c1c;
+            --gris-borde: #e5e7eb;
+            --gris-texto: #4b5563;
         }
 
         * {
@@ -25,581 +24,372 @@
         }
 
         body {
-            background: var(--fondo);
+            background: #f3f4f6;
             color: var(--negro);
-            font-size: 13px;
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
         }
 
-        header {
+        /* TOP NAV */
+        nav {
             background: var(--negro);
             color: white;
-            padding: 12px 28px;
+            padding: 0 5%;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid var(--primario);
         }
 
-        .sys-status {
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            color: var(--primario);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .admin-wrapper {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            min-height: calc(100vh - 48px);
-        }
-
-        aside {
-            border-right: 1px solid var(--borde);
-            padding: 24px 20px;
-            font-size: 0.85rem;
-            background: var(--blanco);
-        }
-
-        .menu-label {
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            color: var(--texto-suave);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .menu-group {
-            margin-bottom: 24px;
-        }
-
-        .menu-link {
-            display: block;
-            padding: 6px 0;
-            color: var(--negro);
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
             text-decoration: none;
-            font-size: 0.85rem;
+            color: white;
         }
 
-        .menu-link:hover {
+        .brand span {
             color: var(--primario);
         }
 
-        section {
-            padding: 32px 32px 40px;
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            border-bottom-color: var(--primario);
+        }
+
+        /* HEADER */
+        .page-header {
+            background: white;
+            border-bottom: 1px solid var(--gris-borde);
+            padding: 25px 5%;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--negro);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-bottom: 32px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
-            background: var(--blanco);
-            border: 1px solid var(--borde);
-            padding: 16px 16px 18px;
+            background: white;
+            border: 1px solid var(--negro);
+            padding: 20px;
         }
 
-        .stat-card small {
-            color: var(--texto-suave);
-            text-transform: uppercase;
-            font-size: 0.65rem;
+        .stat-label {
+            font-size: 0.7rem;
             font-weight: 700;
-        }
-
-        .stat-card p {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-top: 6px;
-        }
-
-        .table-section {
-            background: var(--blanco);
-            border: 1px solid var(--borde);
-            margin-bottom: 24px;
-        }
-
-        .table-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--borde);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .table-header h2 {
-            font-size: 0.95rem;
+            color: var(--gris-texto);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--negro);
+            margin-top: 5px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* CARDS */
+        .card {
+            background: white;
+            border: 1px solid var(--negro);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--gris-borde);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primario);
+            letter-spacing: 0.5px;
+        }
+
+        /* TABLES */
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
         }
 
         th {
-            background: var(--fondo);
             text-align: left;
-            padding: 10px 20px;
-            font-size: 0.7rem;
+            padding: 12px 10px;
+            border-bottom: 2px solid var(--negro);
+            font-size: 0.75rem;
             text-transform: uppercase;
-            color: var(--texto-suave);
-            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--fondo);
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--gris-borde);
+            font-size: 0.85rem;
         }
 
-        .btn-action {
-            padding: 6px 12px;
-            border: 1px solid var(--negro);
-            background: none;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
+        /* FORMS */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        .btn-action.approve {
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--negro);
+            background: #f9fafb;
+            font-size: 0.9rem;
+            outline: none;
+            border-radius: 0;
+        }
+
+        input:focus {
             border-color: var(--primario);
-            color: var(--primario);
+            background: white;
         }
 
-        .btn-action.approve:hover {
-            background: var(--primario);
-            color: white;
-        }
-
-        .btn-action.simulate {
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--negro);
             background: var(--negro);
             color: white;
-            border-color: var(--negro);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        .simulation-panel {
-            background: var(--primario-suave);
-            border: 1px dashed var(--primario);
-            padding: 20px;
-            margin-top: 20px;
+        .btn:hover {
+            background: var(--primario);
+            border-color: var(--primario);
         }
 
-        .sim-form {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
+        @media (max-width: 1100px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .sim-form input {
-            padding: 8px;
-            border: 1px solid var(--primario);
-            outline: none;
-            flex: 1;
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <div>ATLAS ADMINISTRATION / CORE_SYSTEM_v4</div>
-    <div class="sys-status">● SISTEMA OPERATIVO : 20 FEB 2026</div>
-</header>
+    <nav>
+        <a href="/panel/admin" class="brand">ATLAS<span>BANK</span> <small
+                style="font-size: 0.6rem; margin-left:10px; opacity:0.6;">ADMIN_CORE</small></a>
+        <div class="nav-links">
+            <a href="/panel/admin" class="active">Visión Global</a>
+            <a href="/panel/admin/usuarios">Gestión Clientes</a>
+            <a href="/panel/admin/estado-clientes">Auditoría</a>
+        </div>
+        <a href="/" style="color: #9ca3af; font-size: 0.85rem; text-decoration: none;">Salir</a>
+    </nav>
 
-<div class="admin-wrapper">
-    <aside>
-        <div class="menu-group">
-            <span class="menu-label">Panel</span>
-            <a href="/panel/admin" class="menu-link">Visión general</a>
-        </div>
-        <div class="menu-group">
-            <span class="menu-label">Clientes y usuarios</span>
-            <a href="/panel/admin/usuarios" class="menu-link">Gestión de usuarios</a>
-            <a href="/panel/admin/estado-clientes" class="menu-link">Estado de clientes</a>
-        </div>
-        <div class="menu-group">
-            <span class="menu-label">Cuentas y operaciones</span>
-            <a href="/panel/admin" class="menu-link">Monitor de transacciones</a>
-            <a href="/panel/admin" class="menu-link">Operaciones sobre cuentas</a>
-        </div>
-    </aside>
+    <div class="page-header">
+        <h1>Centro de Monitoreo Global</h1>
+    </div>
 
-    <section>
+    <div class="container">
         <div class="stats-grid">
-            <div class="stat-card"><small>Créditos 24h</small><p id="stat-credits">-</p></div>
-            <div class="stat-card"><small>Débitos 24h</small><p id="stat-debits">-</p></div>
-            <div class="stat-card"><small>Neto 24h</small><p id="stat-net">-</p></div>
-            <div class="stat-card"><small>Transacciones 24h</small><p id="stat-count">-</p></div>
-        </div>
-
-        <div class="table-section">
-            <div class="table-header">
-                <h2>Cuentas Pendientes de Aprobación</h2>
+            <div class="stat-card">
+                <span class="stat-label">Ingresos 24h</span>
+                <div class="stat-val" id="stat-credits">$0</div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Email</th>
-                        <th>Fecha Registro</th>
-                        <th>Documentación</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="pending-accounts-body">
-                    <tr>
-                        <td colspan="5" style="font-size:0.8rem; color: var(--gris-texto);">Sin cuentas pendientes de aprobación.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="table-section">
-            <div class="table-header">
-                <h2>Últimas Transacciones (Monitor Global)</h2>
+            <div class="stat-card">
+                <span class="stat-label">Egresos 24h</span>
+                <div class="stat-val" id="stat-debits">$0</div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Cuenta</th>
-                        <th>Tipo</th>
-                        <th>Monto</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="transactions-body">
-                    <tr>
-                        <td colspan="5" style="font-size:0.8rem; color: var(--gris-texto);">Cargando transacciones...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="simulation-panel">
-            <h3 style="color: var(--primario); font-size: 0.8rem; text-transform: uppercase;">Simulador de Inyección de Capital (Sandbox)</h3>
-            <p style="font-size: 0.75rem; color: var(--primario); margin-top: 5px;">Utilice esta herramienta para simular depósitos entrantes para pruebas.</p>
-            <div class="sim-form">
-                <input type="text" id="sim-account" placeholder="Número de cuenta">
-                <input type="number" id="sim-amount" placeholder="Monto $0.00" step="0.01" min="0">
-                <button class="btn-action simulate" id="sim-submit">Ejecutar Depósito</button>
+            <div class="stat-card">
+                <span class="stat-label">Balance Neto</span>
+                <div class="stat-val" id="stat-net" style="color: var(--primario);">$0</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Operaciones</span>
+                <div class="stat-val" id="stat-count">0</div>
             </div>
         </div>
 
-        <div class="table-section" style="margin-top: 30px;">
-            <div class="table-header">
-                <h2>Operaciones sobre cuentas (Admin)</h2>
+        <div class="main-grid">
+            <div class="card">
+                <div class="card-header"><span class="card-title">Monitor de Flujos (Últimos 10)</span></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cuenta</th>
+                            <th>Tipo</th>
+                            <th style="text-align: right;">Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-body">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px;">Sincronizando flujo de red...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div style="padding: 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px;">
-                <div>
-                    <p style="font-size:0.8rem; font-weight:600; margin-bottom:8px;">Crear nueva cuenta</p>
-                    <div style="display:flex; flex-direction:column; gap:8px;">
-                        <input type="number" id="acc-customer-id" placeholder="ID de cliente" style="padding:8px; border:1px solid var(--gris-borde);">
-                        <input type="text" id="acc-type" placeholder="Tipo de cuenta (ej. AHORROS)" style="padding:8px; border:1px solid var(--gris-borde);">
-                        <input type="text" id="acc-currency" placeholder="Moneda (ej. COP)" style="padding:8px; border:1px solid var(--gris-borde);">
-                        <input type="number" id="acc-initial" placeholder="Saldo inicial (opcional)" step="0.01" min="0" style="padding:8px; border:1px solid var(--gris-borde);">
-                        <input type="number" id="acc-interest" placeholder="Tasa interés % (opcional)" step="0.01" min="0" style="padding:8px; border:1px solid var(--gris-borde);">
-                        <button class="btn-action approve" id="acc-create-btn">Crear cuenta</button>
-                        <div id="acc-create-helper" style="font-size:0.75rem; color: var(--gris-texto);"></div>
+
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Sandbox de Inyección</span></div>
+                    <div class="form-group">
+                        <label>Cuenta Destino</label>
+                        <input type="text" id="sim-account" placeholder="Nº CUENTA">
                     </div>
+                    <div class="form-group">
+                        <label>Monto</label>
+                        <input type="number" id="sim-amount" placeholder="0.00">
+                    </div>
+                    <button class="btn" id="sim-submit">Ejecutar Depósito</button>
                 </div>
 
-                <div>
-                    <p style="font-size:0.8rem; font-weight:600; margin-bottom:8px;">Estado de cuenta e interés</p>
-                    <div style="display:flex; flex-direction:column; gap:8px;">
-                        <input type="text" id="acc-number-status" placeholder="Número de cuenta" style="padding:8px; border:1px solid var(--gris-borde);">
-                        <select id="acc-status" style="padding:8px; border:1px solid var(--gris-borde);">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Acciones de Seguridad</span></div>
+                    <div class="form-group">
+                        <label>Nº Cuenta</label>
+                        <input type="text" id="acc-number-status" placeholder="Nº CUENTA">
+                    </div>
+                    <div class="form-group">
+                        <label>Nuevo Estado</label>
+                        <select id="acc-status">
                             <option value="ACTIVE">Activo</option>
                             <option value="BLOCKED">Bloqueado</option>
                             <option value="CLOSED">Cerrado</option>
                         </select>
-                        <button class="btn-action" id="acc-status-btn">Actualizar estado</button>
-                        <button class="btn-action simulate" id="acc-interest-btn">Aplicar interés</button>
-                        <div id="acc-status-helper" style="font-size:0.75rem; color: var(--gris-texto);"></div>
+                    </div>
+                    <button class="btn" style="background: transparent; color: var(--negro);"
+                        id="acc-status-btn">Actualizar Registro</button>
+                    <div id="acc-status-helper"
+                        style="margin-top:15px; font-weight:700; font-size:0.7rem; color: var(--primario); text-align:center;">
                     </div>
                 </div>
             </div>
-            <div style="padding: 0 20px 20px; border-top:1px solid var(--gris-borde); margin-top:10px; display:flex; flex-direction:column; gap:8px;">
-                <p style="font-size:0.8rem; font-weight:600;">Revertir operación</p>
-                <div style="display:flex; gap:10px; max-width:380px;">
-                    <input type="number" id="tx-revert-id" placeholder="ID de transacción" style="flex:1; padding:8px; border:1px solid var(--gris-borde);">
-                    <button class="btn-action" id="tx-revert-btn">Revertir</button>
-                </div>
-                <div id="tx-revert-helper" style="font-size:0.75rem; color: var(--gris-texto);"></div>
-            </div>
         </div>
-    </section>
-</div>
+    </div>
 
-<script>
-    function ensureAdminAuthenticated() {
-        const token = sessionStorage.getItem("atlasAuth");
-        const rolesRaw = sessionStorage.getItem("atlasRoles");
-        if (!token || !rolesRaw) {
-            window.location.href = "/";
-            return null;
+    <script>
+        function ensureAdminAuthenticated() {
+            const token = sessionStorage.getItem("atlasAuth");
+            const roles = JSON.parse(sessionStorage.getItem("atlasRoles") || "[]");
+            if (!token || !roles.includes("ROLE_EXECUTIVE")) { window.location.href = "/"; return null; }
+            return token;
         }
-        try {
-            const roles = JSON.parse(rolesRaw);
-            if (!Array.isArray(roles) || !roles.includes("ROLE_EXECUTIVE")) {
-                window.location.href = "/";
-                return null;
-            }
-        } catch (_) {
-            window.location.href = "/";
-            return null;
-        }
-        return token;
-    }
 
-    function formatMoney(value) {
-        if (value == null) return "-";
-        if (typeof value === "number") {
-            return "$" + value.toFixed(2);
-        }
-        return value;
-    }
-
-    async function loadReport(token) {
-        try {
-            const response = await fetch("/admin/report", {
-                headers: {
-                    "Authorization": "Basic " + token
-                }
-            });
-            if (!response.ok) {
-                return;
-            }
-            const data = await response.json();
-            const creditsEl = document.getElementById("stat-credits");
-            const debitsEl = document.getElementById("stat-debits");
-            const netEl = document.getElementById("stat-net");
-            const countEl = document.getElementById("stat-count");
-            if (creditsEl) creditsEl.textContent = formatMoney(data.totalCredits);
-            if (debitsEl) debitsEl.textContent = formatMoney(data.totalDebits);
-            if (netEl) netEl.textContent = formatMoney(data.net);
-            if (countEl) countEl.textContent = data.transactionCount != null ? String(data.transactionCount) : "-";
-        } catch (_) {
-        }
-    }
-
-    async function loadTransactions(token) {
-        const body = document.getElementById("transactions-body");
-        if (!body) return;
-        body.innerHTML = '<tr><td colspan="5" style="font-size:0.8rem; color: var(--gris-texto);">Cargando transacciones...</td></tr>';
-        const today = new Date();
-        const dateParam = today.toISOString().slice(0, 10);
-        try {
-            const response = await fetch("/admin/transactions?date=" + encodeURIComponent(dateParam), {
-                headers: {
-                    "Authorization": "Basic " + token
-                }
-            });
-            if (!response.ok) {
-                body.innerHTML = '<tr><td colspan="5" style="font-size:0.8rem; color: var(--alerta);">No se pudo cargar el monitor de transacciones.</td></tr>';
-                return;
-            }
-            const data = await response.json();
-            if (!Array.isArray(data) || data.length === 0) {
-                body.innerHTML = '<tr><td colspan="5" style="font-size:0.8rem; color: var(--gris-texto);">Sin transacciones registradas para hoy.</td></tr>';
-                return;
-            }
-            body.innerHTML = "";
-            data.slice(0, 10).forEach(function (t) {
-                const tr = document.createElement("tr");
-                const amount = t.amount;
-                const status = t.status || "";
-                const type = t.type || "";
-                const accountNumber = t.account && t.account.accountNumber ? t.account.accountNumber : "";
-                tr.innerHTML =
-                    "<td>" + (t.id != null ? t.id : "") + "</td>" +
-                    "<td>" + accountNumber + "</td>" +
-                    "<td>" + type + "</td>" +
-                    "<td>" + formatMoney(amount) + "</td>" +
-                    "<td><small>" + status + "</small></td>";
-                body.appendChild(tr);
-            });
-        } catch (_) {
-            body.innerHTML = '<tr><td colspan="5" style="font-size:0.8rem; color: var(--alerta);">Error al cargar transacciones.</td></tr>';
-        }
-    }
-
-    function setupSimulator(token) {
-        const accountInput = document.getElementById("sim-account");
-        const amountInput = document.getElementById("sim-amount");
-        const button = document.getElementById("sim-submit");
-        if (!accountInput || !amountInput || !button) return;
-        button.addEventListener("click", async function () {
-            const accountNumber = accountInput.value.trim();
-            const amount = amountInput.value.trim();
-            if (!accountNumber || !amount) {
-                return;
-            }
+        async function loadReport(token) {
             try {
-                const url = "/transactions/deposit?accountNumber=" + encodeURIComponent(accountNumber) + "&amount=" + encodeURIComponent(amount);
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Basic " + token
-                    }
-                });
-                if (!response.ok) {
-                    alert("No se pudo ejecutar el depósito de prueba.");
-                    return;
+                const response = await fetch("/admin/report", { headers: { "Authorization": "Basic " + token } });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("stat-credits").textContent = "$" + data.totalCredits.toLocaleString();
+                    document.getElementById("stat-debits").textContent = "$" + data.totalDebits.toLocaleString();
+                    document.getElementById("stat-net").textContent = "$" + data.net.toLocaleString();
+                    document.getElementById("stat-count").textContent = data.transactionCount || "0";
                 }
-                alert("Depósito de prueba ejecutado correctamente.");
-                amountInput.value = "";
-            } catch (_) {
-                alert("Error al ejecutar el depósito de prueba.");
-            }
-        });
-    }
-
-    function setupAccountAdminOperations(token) {
-        const createBtn = document.getElementById("acc-create-btn");
-        const createHelper = document.getElementById("acc-create-helper");
-        if (createBtn && createHelper) {
-            createBtn.addEventListener("click", async function () {
-                createHelper.textContent = "";
-                const customerId = document.getElementById("acc-customer-id").value.trim();
-                const type = document.getElementById("acc-type").value.trim();
-                const currency = document.getElementById("acc-currency").value.trim();
-                const initial = document.getElementById("acc-initial").value.trim();
-                const interest = document.getElementById("acc-interest").value.trim();
-                if (!customerId || !type || !currency) {
-                    createHelper.textContent = "Cliente, tipo y moneda son obligatorios.";
-                    return;
-                }
-                const params = new URLSearchParams();
-                params.append("customerId", customerId);
-                params.append("type", type);
-                params.append("currency", currency);
-                if (initial) params.append("initialBalance", initial);
-                if (interest) params.append("interestRate", interest);
-                try {
-                    const response = await fetch("/accounts?" + params.toString(), {
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Basic " + token
-                        }
-                    });
-                    if (!response.ok) {
-                        createHelper.textContent = "No se pudo crear la cuenta.";
-                        return;
-                    }
-                    createHelper.textContent = "Cuenta creada correctamente.";
-                } catch (_) {
-                    createHelper.textContent = "Error al conectar con el servicio de cuentas.";
-                }
-            });
+            } catch (_) { }
         }
 
-        const statusBtn = document.getElementById("acc-status-btn");
-        const interestBtn = document.getElementById("acc-interest-btn");
-        const statusHelper = document.getElementById("acc-status-helper");
-        const numberInput = document.getElementById("acc-number-status");
-
-        if (statusBtn && statusHelper && numberInput) {
-            statusBtn.addEventListener("click", async function () {
-                statusHelper.textContent = "";
-                const accountNumber = numberInput.value.trim();
-                const status = document.getElementById("acc-status").value;
-                if (!accountNumber) {
-                    statusHelper.textContent = "Indica el número de cuenta.";
-                    return;
-                }
-                try {
-                    const url = "/admin/accounts/" + encodeURIComponent(accountNumber) + "/status?status=" + encodeURIComponent(status);
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Basic " + token
-                        }
+        async function loadTransactions(token) {
+            const body = document.getElementById("transactions-body");
+            try {
+                const date = new Date().toISOString().slice(0, 10);
+                const response = await fetch("/admin/transactions?date=" + date, { headers: { "Authorization": "Basic " + token } });
+                if (response.ok) {
+                    const data = await response.json();
+                    body.innerHTML = "";
+                    data.slice(0, 10).forEach(t => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `<td>${t.id}</td><td>${t.account?.accountNumber || '--'}</td><td>${t.type}</td><td style="text-align:right; font-weight:700;">$${t.amount.toLocaleString()}</td><td>${t.status}</td>`;
+                        body.appendChild(tr);
                     });
-                    if (!response.ok) {
-                        statusHelper.textContent = "No se pudo actualizar el estado de la cuenta.";
-                        return;
-                    }
-                    statusHelper.textContent = "Estado de cuenta actualizado correctamente.";
-                } catch (_) {
-                    statusHelper.textContent = "Error al actualizar el estado de la cuenta.";
                 }
-            });
+            } catch (_) { }
         }
 
-        if (interestBtn && statusHelper && numberInput) {
-            interestBtn.addEventListener("click", async function () {
-                statusHelper.textContent = "";
-                const accountNumber = numberInput.value.trim();
-                if (!accountNumber) {
-                    statusHelper.textContent = "Indica el número de cuenta.";
-                    return;
-                }
-                try {
-                    const url = "/admin/accounts/" + encodeURIComponent(accountNumber) + "/interest/apply";
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Basic " + token
-                        }
-                    });
-                    if (!response.ok) {
-                        statusHelper.textContent = "No se pudo aplicar el interés.";
-                        return;
-                    }
-                    statusHelper.textContent = "Interés aplicado correctamente.";
-                } catch (_) {
-                    statusHelper.textContent = "Error al aplicar el interés.";
-                }
+        (function init() {
+            const token = ensureAdminAuthenticated();
+            if (!token) return;
+            loadReport(token);
+            loadTransactions(token);
+
+            document.getElementById("sim-submit").addEventListener("click", async () => {
+                const acc = document.getElementById("sim-account").value;
+                const amt = document.getElementById("sim-amount").value;
+                const res = await fetch(`/transactions/deposit?accountNumber=${acc}&amount=${amt}`, { method: "POST", headers: { "Authorization": "Basic " + token } });
+                if (res.ok) { alert("INYECCIÓN COMPLETADA"); location.reload(); }
             });
-        }
 
-        const revertBtn = document.getElementById("tx-revert-btn");
-        const revertHelper = document.getElementById("tx-revert-helper");
-        const revertIdInput = document.getElementById("tx-revert-id");
-
-        if (revertBtn && revertHelper && revertIdInput) {
-            revertBtn.addEventListener("click", async function () {
-                revertHelper.textContent = "";
-                const txId = revertIdInput.value.trim();
-                if (!txId) {
-                    revertHelper.textContent = "Indica el ID de la transacción.";
-                    return;
-                }
-                try {
-                    const url = "/admin/transactions/" + encodeURIComponent(txId) + "/revert";
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Basic " + token
-                        }
-                    });
-                    if (!response.ok) {
-                        revertHelper.textContent = "No se pudo revertir la operación.";
-                        return;
-                    }
-                    revertHelper.textContent = "Operación revertida correctamente.";
-                } catch (_) {
-                    revertHelper.textContent = "Error al revertir la operación.";
-                }
+            document.getElementById("acc-status-btn").addEventListener("click", async () => {
+                const h = document.getElementById("acc-status-helper");
+                const num = document.getElementById("acc-number-status").value;
+                const st = document.getElementById("acc-status").value;
+                const res = await fetch(`/admin/accounts/${num}/status?status=${st}`, { method: "POST", headers: { "Authorization": "Basic " + token } });
+                h.textContent = res.ok ? "REGISTRO ACTUALIZADO" : "ERROR DE SISTEMA";
             });
-        }
-    }
-
-    (function initAdmin() {
-        const token = ensureAdminAuthenticated();
-        if (!token) return;
-        loadReport(token);
-        loadTransactions(token);
-        setupSimulator(token);
-        setupAccountAdminOperations(token);
-    }());
-</script>
-
+        }());
+    </script>
 </body>
+
 </html>

@@ -1,202 +1,187 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATLAS | Acceso Seguro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ATLAS BANK | Acceso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
+            --primario-soft: #f0fdf4;
             --negro: #111827;
             --blanco: #ffffff;
             --gris-borde: #e5e7eb;
-            --gris-texto: #6b7280;
-            --fondo: #f9fafb;
+            --gris-texto: #4b5563;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
         body {
-            background: var(--fondo);
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
+            background: var(--primario-soft);
+            color: var(--negro);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .login-card {
-            background: var(--blanco);
+        .login-container {
             width: 100%;
-            max-width: 450px;
-            border: 1px solid var(--gris-borde);
-            padding: 60px 50px;
-            position: relative;
+            max-width: 400px;
+            background: var(--blanco);
+            border: 1px solid var(--negro);
+            padding: 40px;
         }
 
-        .login-card::before {
-            content: "";
-            position: absolute;
-            top: -1px; left: -1px;
-            width: 100%; height: 4px;
-            background: var(--primario);
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
         .brand {
+            font-size: 1.5rem;
             font-weight: 600;
-            font-size: 1.2rem;
             letter-spacing: -1px;
-            margin-bottom: 40px;
             color: var(--negro);
-            display: flex; justify-content: space-between;
+            margin-bottom: 10px;
+            display: block;
         }
 
-        .brand span { color: var(--primario); font-size: 0.8rem; letter-spacing: 1px; }
+        .brand span {
+            color: var(--primario);
+        }
 
-        h1 { font-size: 2rem; font-weight: 600; letter-spacing: -1.5px; margin-bottom: 10px; }
-        p.subtitle { color: var(--gris-texto); font-size: 0.9rem; margin-bottom: 35px; }
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--gris-texto);
+            margin-bottom: 20px;
+        }
 
-        .form-group { margin-bottom: 25px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
 
         label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 8px;
             color: var(--negro);
         }
 
         input {
             width: 100%;
-            padding: 15px;
-            border: 1px solid var(--gris-borde);
-            font-size: 1rem;
+            padding: 12px;
+            border: 1px solid var(--negro);
+            background: var(--blanco);
+            font-size: 0.95rem;
             outline: none;
-            transition: 0.3s;
+            border-radius: 0;
         }
 
         input:focus {
             border-color: var(--primario);
-            background: var(--fondo);
+            box-shadow: 4px 4px 0px var(--primario-soft);
         }
 
-        .btn-login {
+        .btn {
             width: 100%;
-            padding: 18px;
-            background: var(--primario);
-            color: white;
-            border: none;
+            padding: 14px;
+            background: var(--negro);
+            color: var(--blanco);
+            border: 1px solid var(--negro);
             font-weight: 600;
-            font-size: 0.9rem;
             text-transform: uppercase;
+            font-size: 0.85rem;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
             margin-top: 10px;
         }
 
-        .btn-login:hover {
-            background: var(--negro);
-            transform: translateY(-2px);
+        .btn:hover {
+            background: var(--primario);
+            border-color: var(--primario);
         }
 
-        .login-footer {
+        .footer-info {
             margin-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-        }
-
-        .login-footer a {
-            text-decoration: none;
+            text-align: center;
+            font-size: 0.7rem;
             color: var(--gris-texto);
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .login-footer a:hover { color: var(--primario); }
-
-        .bg-text {
-            position: absolute;
-            font-size: 20vw;
-            font-weight: 600;
-            color: rgba(0,0,0,0.02);
-            z-index: -1;
-            bottom: -5vw;
-            left: -2vw;
-            pointer-events: none;
-            letter-spacing: -1vw;
+            border-top: 1px solid var(--gris-borde);
+            padding-top: 20px;
         }
     </style>
 </head>
+
 <body>
 
-<div class="bg-text">ATLAS</div>
+    <div class="login-container">
+        <div class="header">
+            <a href="/" class="brand">ATLAS<span>BANK</span></a>
+            <h1>Banca Corporativa</h1>
+        </div>
 
-<div class="login-card">
-    <div class="brand">
-        ATLAS <span>SYSTEM</span>
+        <form id="login-form">
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" id="user" placeholder="Ingrese su ID" required autofocus>
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="pass" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn">Iniciar Sesión</button>
+        </form>
+
+        <div class="footer-info">
+            SISTEMA DE ACCESO SEGURO ATLAS v4.2<br>
+            OPERADO POR ATLAS FINANCIAL GROUP
+        </div>
     </div>
 
-    <h1>Acceso al sistema</h1>
-    <p class="subtitle">Introduce tus credenciales para continuar.</p>
-
-    <form id="login-form">
-        <div class="form-group">
-            <label for="user">Usuario</label>
-            <input type="text" id="user" placeholder="ej. carlos.sustentable" required>
-        </div>
-
-        <div class="form-group">
-            <label for="pass">Contraseña</label>
-            <input type="password" id="pass" placeholder="••••••••" required>
-        </div>
-
-        <button type="submit" class="btn-login">Verificar Identidad</button>
-    </form>
-
-    <div class="login-footer">
-        <a href="#">¿Olvidaste tu Contraseña?</a>
-</div>
-
-<script>
-    const form = document.getElementById("login-form");
-    const userInput = document.getElementById("user");
-    const passInput = document.getElementById("pass");
-
-    form.addEventListener("submit", async function (event) {
-        event.preventDefault();
-        const username = userInput.value.trim();
-        const password = passInput.value;
-        if (!username || !password) {
-            return;
-        }
-        const token = btoa(username + ":" + password);
-        try {
-            const response = await fetch("/auth/login", {
-                method: "GET",
-                headers: {
-                    "Authorization": "Basic " + token
+    <script>
+        const form = document.getElementById("login-form");
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const username = document.getElementById("user").value.trim();
+            const password = document.getElementById("pass").value;
+            const token = btoa(username + ":" + password);
+            try {
+                const response = await fetch("/auth/login", {
+                    method: "GET",
+                    headers: { "Authorization": "Basic " + token }
+                });
+                if (!response.ok) {
+                    alert("Credenciales inválidas.");
+                    return;
                 }
-            });
-            if (!response.ok) {
-                alert("Credenciales inválidas o acceso no autorizado.");
-                return;
-            }
-            const data = await response.json();
-            const roles = data.roles || [];
-            sessionStorage.setItem("atlasAuth", token);
-            sessionStorage.setItem("atlasUser", data.username || username);
-            sessionStorage.setItem("atlasRoles", JSON.stringify(roles));
-            if (roles.includes("ROLE_EXECUTIVE")) {
-                window.location.href = "/panel/admin";
-            } else {
-                window.location.href = "/panel/cliente";
-            }
-        } catch (e) {
-            alert("Error al conectar con el servidor.");
-        }
-    });
-</script>
+                const data = await response.json();
+                sessionStorage.setItem("atlasAuth", token);
+                sessionStorage.setItem("atlasUser", data.username || username);
+                sessionStorage.setItem("atlasRoles", JSON.stringify(data.roles || []));
 
+                if (data.roles && data.roles.includes("ROLE_EXECUTIVE")) {
+                    window.location.href = "/panel/admin";
+                } else {
+                    window.location.href = "/panel/cliente/inicio";
+                }
+            } catch (e) {
+                alert("Error de conexión con el banco.");
+            }
+        });
+    </script>
 </body>
+
 </html>

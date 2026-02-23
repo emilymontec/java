@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATLAS | Transferencias</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ATLAS BANK | Transferencias</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
@@ -23,353 +24,269 @@
         }
 
         body {
-            background: var(--blanco);
+            background: #f9fafb;
             color: var(--negro);
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
         }
 
-        header {
+        nav {
+            background: var(--negro);
+            color: white;
+            padding: 0 5%;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
+            border-bottom: 2px solid var(--primario);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            background: var(--primario);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            text-decoration: none;
             color: white;
+        }
+
+        .brand span {
+            color: var(--primario);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            border-bottom-color: var(--primario);
+        }
+
+        .page-header {
+            background: white;
+            border-bottom: 1px solid var(--gris-borde);
+            padding: 25px 5%;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
             font-weight: 600;
-            font-size: 0.8rem;
+            color: var(--negro);
         }
 
-        main {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        .transfer-grid {
             display: grid;
-            grid-template-columns: 1.4fr 0.6fr;
-            min-height: calc(100vh - 76px);
-        }
-
-        .main-panel {
-            padding: 5% 8%;
-            border-right: 1px solid var(--gris-borde);
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--gris-texto);
-            margin-bottom: 24px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
         }
 
         .card {
-            border: 1px solid var(--gris-borde);
-            padding: 16px 16px 18px;
+            background: white;
+            border: 1px solid var(--negro);
+            padding: 30px;
         }
 
-        .card h3 {
-            font-size: 0.95rem;
-            margin-bottom: 4px;
+        .card-header {
+            border-bottom: 1px solid var(--gris-borde);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
 
-        .card small {
-            font-size: 0.8rem;
-            color: var(--gris-texto);
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primario);
+            letter-spacing: 0.5px;
         }
 
-        .card form {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .form-group {
+            margin-bottom: 25px;
         }
 
         label {
-            font-size: 0.7rem;
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--gris-texto);
+            margin-bottom: 10px;
         }
 
         input {
-            padding: 8px 10px;
-            border: 1px solid var(--gris-borde);
-            font-size: 0.85rem;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--negro);
+            background: white;
+            font-size: 0.95rem;
+            outline: none;
+            border-radius: 0;
         }
 
-        button {
-            align-self: flex-end;
-            padding: 8px 14px;
-            border: 1px solid var(--primario);
-            background: var(--primario);
+        input:focus {
+            border-color: var(--primario);
+            background: var(--primario-soft);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--negro);
+            background: var(--negro);
             color: white;
-            font-size: 0.75rem;
+            font-weight: 600;
+            font-size: 0.8rem;
             text-transform: uppercase;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primario);
+            border-color: var(--primario);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--negro);
         }
 
         .helper {
             font-size: 0.75rem;
-            color: var(--gris-texto);
-            margin-top: 4px;
-        }
-
-        .side-panel {
-            background-color: var(--primario-soft);
-            padding: 10% 12%;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        .side-card {
-            background: var(--blanco);
-            border: 1px solid var(--gris-borde);
-            padding: 18px;
-            font-size: 0.85rem;
-        }
-
-        .sidebar-nav {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .sidebar-nav a {
-            text-decoration: none;
-            color: var(--gris-texto);
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-
-        .sidebar-nav a:hover {
+            margin-top: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
             color: var(--primario);
-            padding-left: 5px;
+            text-align: center;
         }
 
-        @media (max-width: 1024px) {
-            main {
+        @media (max-width: 800px) {
+            .transfer-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .main-panel {
-                border-right: none;
-                border-bottom: 1px solid var(--gris-borde);
             }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <div class="logo">ATLAS / <span style="font-weight: 300; color: var(--gris-texto);">TRANSFERENCIAS</span></div>
-    <div class="user-info">
-        <span id="client-name" style="font-size: 0.85rem; font-weight: 600;"></span>
-        <div class="avatar" id="client-avatar"></div>
+    <nav>
+        <a href="/panel/cliente/inicio" class="brand">ATLAS<span>BANK</span></a>
+        <div class="nav-links">
+            <a href="/panel/cliente">Resumen</a>
+            <a href="/panel/cliente/cuentas">Cuentas</a>
+            <a href="/panel/cliente/transferencias" class="active">Transferir</a>
+            <a href="/panel/cliente/tarjetas">Tarjetas</a>
+            <a href="/panel/cliente/movimientos">Historial</a>
+        </div>
+        <a href="/" style="color: #9ca3af; font-size: 0.85rem; text-decoration: none;">Cerrar Sesión</a>
+    </nav>
+
+    <div class="page-header">
+        <h1>Centro de Transferencias</h1>
     </div>
-</header>
 
-<main>
-    <section class="main-panel">
-        <h1 class="section-title">Transferencias</h1>
-        <p class="section-subtitle">Movimientos de saldo entre tus cuentas Atlas y destinos externos.</p>
-
-        <div class="form-grid">
-            <section class="card">
-                <h3>Transferencia interna</h3>
-                <small>Entre dos cuentas Atlas.</small>
-
+    <div class="container">
+        <div class="transfer-grid">
+            <div class="card">
+                <div class="card-header"><span class="card-title">Transferencia Interna (Inter-Atlas)</span></div>
                 <form id="form-internal">
-                    <div>
-                        <label for="int-from">Cuenta origen</label>
-                        <input id="int-from" type="text" placeholder="Cuenta origen">
+                    <div class="form-group">
+                        <label>Cuenta Origen</label>
+                        <input id="int-from" type="text" placeholder="Nº CUENTA">
                     </div>
-                    <div>
-                        <label for="int-to">Cuenta destino</label>
-                        <input id="int-to" type="text" placeholder="Cuenta destino">
+                    <div class="form-group">
+                        <label>Cuenta Destino</label>
+                        <input id="int-to" type="text" placeholder="Nº CUENTA">
                     </div>
-                    <div>
-                        <label for="int-amount">Monto</label>
-                        <input id="int-amount" type="number" placeholder="Monto" step="0.01" min="0">
+                    <div class="form-group">
+                        <label>Monto a Enviar</label>
+                        <input id="int-amount" type="number" placeholder="0.00" step="0.01">
                     </div>
-                    <button type="submit">Transferir</button>
+                    <button type="submit" class="btn">Confirmar Envío</button>
+                    <div class="helper" id="int-helper"></div>
                 </form>
-                <div class="helper" id="int-helper"></div>
-            </section>
+            </div>
 
-            <section class="card">
-                <h3>Transferencia externa</h3>
-                <small>Envía fondos desde una cuenta Atlas hacia un destino externo.</small>
-
+            <div class="card">
+                <div class="card-header"><span class="card-title">Transferencia Externa (Red Bancaria)</span></div>
                 <form id="form-external">
-                    <div>
-                        <label for="ext-account">Cuenta origen</label>
-                        <input id="ext-account" type="text" placeholder="Cuenta origen">
+                    <div class="form-group">
+                        <label>Cuenta Origen</label>
+                        <input id="ext-account" type="text" placeholder="Nº CUENTA">
                     </div>
-                    <div>
-                        <label for="ext-amount">Monto</label>
-                        <input id="ext-amount" type="number" placeholder="Monto" step="0.01" min="0">
+                    <div class="form-group">
+                        <label>Monto a Enviar</label>
+                        <input id="ext-amount" type="number" placeholder="0.00" step="0.01">
                     </div>
-                    <button type="submit">Enviar</button>
+                    <p
+                        style="font-size: 0.8rem; color: var(--gris-texto); margin-bottom: 20px; text-align: center; font-style: italic;">
+                        Las transferencias externas requieren verificación de red Swift/ACH.
+                    </p>
+                    <button type="submit" class="btn btn-outline">Procesar vía Enlace</button>
+                    <div class="helper" id="ext-helper"></div>
                 </form>
-                <div class="helper" id="ext-helper"></div>
-            </section>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <section class="side-panel">
-        <div class="side-card">
-            <p style="font-weight:600; margin-bottom:6px;">Consejo Atlas</p>
-            <p>Revisa siempre el número de cuenta destino antes de confirmar una transferencia.</p>
-        </div>
-
-        <nav class="sidebar-nav">
-            <a href="/panel/cliente">Volver al dashboard</a>
-            <a href="/panel/cliente/cuentas">Ir a cuentas</a>
-            <a href="#" id="logout-link" style="color: #ef4444;">Cerrar sesión segura</a>
-        </nav>
-    </section>
-</main>
-
-<script>
-    function ensureAuthenticated() {
-        const token = sessionStorage.getItem("atlasAuth");
-        if (!token) {
-            window.location.href = "/";
-            return null;
+    <script>
+        function ensureAuth() {
+            const token = sessionStorage.getItem("atlasAuth");
+            if (!token) { window.location.href = "/"; return null; }
+            return token;
         }
-        return token;
-    }
 
-    function setupClientHeader() {
-        const name = sessionStorage.getItem("atlasUser") || "";
-        const nameEl = document.getElementById("client-name");
-        const avatarEl = document.getElementById("client-avatar");
-        if (nameEl) {
-            nameEl.textContent = name || "Cliente ATLAS";
-        }
-        if (avatarEl) {
-            const initials = name ? name.split(" ").map(p => p.charAt(0)).join("").substring(0, 2).toUpperCase() : "AT";
-            avatarEl.textContent = initials;
-        }
-    }
+        (function init() {
+            const token = ensureAuth();
+            if (!token) return;
 
-    function setupInternalTransferForm(token) {
-        const form = document.getElementById("form-internal");
-        const helper = document.getElementById("int-helper");
-        if (!form || !helper) return;
-
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            helper.textContent = "";
-            const from = document.getElementById("int-from").value.trim();
-            const to = document.getElementById("int-to").value.trim();
-            const amount = document.getElementById("int-amount").value.trim();
-            if (!from || !to || !amount) {
-                helper.textContent = "Completa origen, destino y monto.";
-                return;
-            }
-            try {
-                const params = new URLSearchParams();
-                params.append("fromAccount", from);
-                params.append("toAccount", to);
-                params.append("amount", amount);
-                const response = await fetch("/transactions/transfer/internal?" + params.toString(), {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Basic " + token
-                    }
+            document.getElementById("form-internal").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const h = document.getElementById("int-helper");
+                const from = document.getElementById("int-from").value;
+                const to = document.getElementById("int-to").value;
+                const amt = document.getElementById("int-amount").value;
+                const params = new URLSearchParams({ fromAccount: from, toAccount: to, amount: amt });
+                const res = await fetch("/transactions/transfer/internal?" + params.toString(), {
+                    method: "POST", headers: { "Authorization": "Basic " + token }
                 });
-                if (!response.ok) {
-                    helper.textContent = "No se pudo realizar la transferencia interna.";
-                    return;
-                }
-                helper.textContent = "Transferencia interna realizada correctamente.";
-            } catch (_) {
-                helper.textContent = "Error al realizar la transferencia interna.";
-            }
-        });
-    }
+                h.textContent = res.ok ? "TRANSFERENCIA REGISTRADA" : "ERROR EN CANAL";
+            });
 
-    function setupExternalTransferForm(token) {
-        const form = document.getElementById("form-external");
-        const helper = document.getElementById("ext-helper");
-        if (!form || !helper) return;
-
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            helper.textContent = "";
-            const account = document.getElementById("ext-account").value.trim();
-            const amount = document.getElementById("ext-amount").value.trim();
-            if (!account || !amount) {
-                helper.textContent = "Indica cuenta origen y monto.";
-                return;
-            }
-            try {
-                const params = new URLSearchParams();
-                params.append("accountNumber", account);
-                params.append("amount", amount);
-                const response = await fetch("/transactions/transfer/external?" + params.toString(), {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Basic " + token
-                    }
+            document.getElementById("form-external").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const h = document.getElementById("ext-helper");
+                const acc = document.getElementById("ext-account").value;
+                const amt = document.getElementById("ext-amount").value;
+                const params = new URLSearchParams({ accountNumber: acc, amount: amt });
+                const res = await fetch("/transactions/transfer/external?" + params.toString(), {
+                    method: "POST", headers: { "Authorization": "Basic " + token }
                 });
-                if (!response.ok) {
-                    helper.textContent = "No se pudo realizar la transferencia externa.";
-                    return;
-                }
-                helper.textContent = "Transferencia externa realizada correctamente.";
-            } catch (_) {
-                helper.textContent = "Error al realizar la transferencia externa.";
-            }
-        });
-    }
-
-    function setupLogout() {
-        const link = document.getElementById("logout-link");
-        if (!link) return;
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
-            sessionStorage.removeItem("atlasAuth");
-            sessionStorage.removeItem("atlasUser");
-            sessionStorage.removeItem("atlasRoles");
-            window.location.href = "/";
-        });
-    }
-
-    (function init() {
-        const token = ensureAuthenticated();
-        if (!token) return;
-        setupClientHeader();
-        setupInternalTransferForm(token);
-        setupExternalTransferForm(token);
-        setupLogout();
-    }());
-</script>
-
+                h.textContent = res.ok ? "SOLICITUD EXTERNA ENVIADA" : "ERROR";
+            });
+        }());
+    </script>
 </body>
+
 </html>

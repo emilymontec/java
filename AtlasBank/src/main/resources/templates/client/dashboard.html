@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATLAS | Mi Cuenta</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ATLAS BANK | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
@@ -23,322 +24,322 @@
         }
 
         body {
-            background: var(--blanco);
+            background: #f9fafb;
             color: var(--negro);
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
         }
 
-        header {
+        /* TOP NAV */
+        nav {
+            background: var(--negro);
+            color: white;
+            padding: 0 5%;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
+            border-bottom: 2px solid var(--primario);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            background: var(--primario);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            text-decoration: none;
             color: white;
+        }
+
+        .brand span {
+            color: var(--primario);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            border-bottom-color: var(--primario);
+        }
+
+        /* HEADER */
+        .page-header {
+            background: white;
+            border-bottom: 1px solid var(--gris-borde);
+            padding: 25px 5%;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
             font-weight: 600;
-            font-size: 0.8rem;
+            color: var(--negro);
         }
 
-        .dashboard {
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            min-height: calc(100vh - 76px);
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
         }
 
-        .main-panel {
-            padding: 5% 8%;
-            border-right: 1px solid var(--gris-borde);
+        /* CARDS */
+        .card {
+            background: white;
+            border: 1px solid var(--negro);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--gris-borde);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primario);
+            letter-spacing: 0.5px;
+        }
+
+        .balance-box {
+            padding: 20px 0;
         }
 
         .balance-label {
             font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primario);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .balance-amount {
-            font-size: 4.5rem;
-            font-weight: 600;
-            letter-spacing: -3px;
-            margin: 10px 0 40px;
-        }
-
-        .transactions-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--negro);
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--gris-borde);
-            font-size: 0.95rem;
-        }
-
-        .transaction-item .meta {
             color: var(--gris-texto);
+            margin-bottom: 5px;
+        }
+
+        .balance-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--negro);
+            letter-spacing: -1px;
+        }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 0;
+            border-bottom: 2px solid var(--negro);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--gris-texto);
+        }
+
+        td {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gris-borde);
+            font-size: 0.9rem;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 12px 20px;
+            border: 1px solid var(--negro);
+            background: var(--negro);
+            color: white;
+            font-weight: 600;
             font-size: 0.8rem;
             text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 0;
         }
 
-        .transaction-item .amount {
-            font-weight: 600;
+        .btn:hover {
+            background: var(--primario);
+            border-color: var(--primario);
         }
 
-        .amount.negative {
+        .btn-outline {
+            background: transparent;
             color: var(--negro);
         }
 
-        .amount.positive {
-            color: var(--primario);
+        /* SIDEBAR / INFO */
+        .info-item {
+            margin-bottom: 15px;
         }
 
-        .side-panel {
-            background-color: var(--primario-soft);
-            padding: 10% 12%;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        .impact-card {
-            background: var(--primario);
-            color: var(--blanco);
-            padding: 32px;
-            border-radius: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .impact-card h2 {
-            font-size: 2.5rem;
-            line-height: 1;
-            margin-bottom: 10px;
-        }
-
-        .impact-card p {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .impact-card .icon-bg {
-            position: absolute;
-            right: -20px;
-            bottom: -20px;
-            font-size: 8rem;
-            opacity: 0.1;
-            transform: rotate(-15deg);
-        }
-
-        .quick-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .action-btn {
-            border: 1px solid var(--primario);
-            padding: 20px;
-            text-align: center;
-            text-decoration: none;
-            color: var(--primario);
-            font-weight: 600;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .action-btn:hover {
-            background: var(--primario);
-            color: var(--blanco);
-        }
-
-        .sidebar-nav {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .sidebar-nav a {
-            text-decoration: none;
+        .info-label {
+            font-size: 0.7rem;
+            font-weight: 700;
             color: var(--gris-texto);
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.2s;
+            text-transform: uppercase;
         }
 
-        .sidebar-nav a:hover {
-            color: var(--primario);
-            padding-left: 5px;
+        .info-val {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--negro);
         }
 
-        @media (max-width: 1024px) {
-            .dashboard {
+        @media (max-width: 900px) {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .main-panel {
-                border-right: none;
-                border-bottom: 1px solid var(--gris-borde);
             }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <div class="logo">ATLAS / <span style="font-weight: 300; color: var(--gris-texto);">DASHBOARD</span></div>
-    <div class="user-info">
-        <span id="client-name" style="font-size: 0.85rem; font-weight: 600;"></span>
-        <div class="avatar" id="client-avatar"></div>
+    <nav>
+        <a href="/panel/cliente/inicio" class="brand">ATLAS<span>BANK</span></a>
+        <div class="nav-links">
+            <a href="/panel/cliente" class="active">Resumen</a>
+            <a href="/panel/cliente/cuentas">Cuentas</a>
+            <a href="/panel/cliente/transferencias">Transferir</a>
+            <a href="/panel/cliente/tarjetas">Tarjetas</a>
+            <a href="/panel/cliente/movimientos">Historial</a>
+        </div>
+        <a href="#" id="logout-link" style="color: #9ca3af; font-size: 0.85rem; text-decoration: none;">Cerrar
+            Sesión</a>
+    </nav>
+
+    <div class="page-header">
+        <h1>Resumen de Posición Financiera</h1>
     </div>
-</header>
 
-<main class="dashboard">
-    <section class="main-panel">
-        <span class="balance-label">[ SALDO DISPONIBLE ]</span>
-        <h1 class="balance-amount" id="balance-amount">-</h1>
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Saldo Consolidado</span>
+                        <input id="account-input" type="text" placeholder="Nº de Cuenta"
+                            style="padding: 5px 10px; border: 1px solid var(--negro); font-size: 0.8rem;">
+                    </div>
+                    <div class="balance-box">
+                        <p class="balance-label">Total disponible en Atlas</p>
+                        <div class="balance-value" id="balance-amount">$0.00</div>
+                    </div>
+                    <button id="load-account" class="btn">Sincronizar Datos</button>
+                </div>
 
-        <div style="margin-bottom: 30px; display:flex; gap:10px; align-items:center; font-size:0.85rem;">
-            <input id="account-input" type="text" placeholder="Número de cuenta" style="flex:1; padding:8px 10px; border:1px solid var(--gris-borde); font-size:0.85rem;">
-            <button id="load-account" style="padding:9px 14px; border:1px solid var(--primario); background:var(--primario); color:white; font-size:0.75rem; text-transform:uppercase; cursor:pointer;">Cargar</button>
-        </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Últimas Operaciones</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Fecha</th>
+                                <th style="text-align: right;">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-container">
+                            <tr>
+                                <td colspan="3" style="text-align: center; padding: 30px; color: var(--gris-texto);">
+                                    Sincronice una cuenta para ver movimientos.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <div class="transactions-title">Movimientos recientes</div>
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Mi Perfil</span></div>
+                    <div class="info-item">
+                        <p class="info-label">Usuario</p>
+                        <p class="info-val" id="client-name">Cargando...</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="info-label">Categoría</p>
+                        <p class="info-val">Banca Ética / Corporativa</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="info-label">Impacto Estimado</p>
+                        <p class="info-val" id="impact-value">0.0 t CO2</p>
+                    </div>
+                </div>
 
-        <div id="transactions-container"></div>
-    </section>
-
-    <section class="side-panel">
-        <div class="impact-card">
-            <p>IMPACTO ACUMULADO</p>
-            <h2 id="impact-value">-</h2>
-            <p id="impact-text">Tu actividad se reflejará aquí cuando haya datos de cuenta.</p>
-            <div class="icon-bg">🌿</div>
-        </div>
-
-        <div>
-            <p style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; letter-spacing: 1px;">OPERACIONES RÁPIDAS</p>
-            <div class="quick-actions">
-                <a href="/panel/cliente/transferencias" class="action-btn">Transferir</a>
-                <a href="#" class="action-btn">Pagar</a>
-                <a href="#" class="action-btn">Invertir</a>
-                <a href="#" class="action-btn">Extractos</a>
+                <div class="card" style="background: var(--negro); color: white; border: none;">
+                    <span class="card-title"
+                        style="color: var(--primario); margin-bottom: 10px; display: block;">Seguridad Bancaria</span>
+                    <p style="font-size: 0.8rem; opacity: 0.8; line-height: 1.4;">Sus transacciones están protegidas
+                        bajo el protocolo Atlas v4.2. No comparta sus claves.</p>
+                </div>
             </div>
         </div>
+    </div>
 
-        <nav class="sidebar-nav">
-            <a href="/panel/cliente/cuentas">CONFIGURACIÓN DE CUENTA</a>
-            <a href="#">SEGURIDAD Y LLAVES</a>
-            <a href="#" id="logout-link" style="color: #ef4444;">CERRAR SESIÓN SEGURA</a>
-        </nav>
-    </section>
-</main>
-
-<script>
-    function ensureAuthenticated() {
-        const token = sessionStorage.getItem("atlasAuth");
-        if (!token) {
-            window.location.href = "/";
-            return null;
+    <script>
+        function ensureAuthenticated() {
+            const token = sessionStorage.getItem("atlasAuth");
+            if (!token) { window.location.href = "/"; return null; }
+            return token;
         }
-        return token;
-    }
 
-    function setupClientHeader() {
-        const name = sessionStorage.getItem("atlasUser") || "";
-        const nameEl = document.getElementById("client-name");
-        const avatarEl = document.getElementById("client-avatar");
-        if (nameEl) {
-            nameEl.textContent = name || "Cliente ATLAS";
-        }
-        if (avatarEl) {
-            const initials = name ? name.split(" ").map(p => p.charAt(0)).join("").substring(0, 2).toUpperCase() : "AT";
-            avatarEl.textContent = initials;
-        }
-    }
-
-    async function loadBalance(accountNumber, token) {
-        const amountEl = document.getElementById("balance-amount");
-        if (!amountEl) return;
-        amountEl.textContent = "-";
-        try {
-            const response = await fetch("/accounts/" + encodeURIComponent(accountNumber) + "/balance", {
-                headers: {
-                    "Authorization": "Basic " + token
+        async function loadBalance(accountNumber, token) {
+            const amountEl = document.getElementById("balance-amount");
+            try {
+                const response = await fetch("/accounts/" + encodeURIComponent(accountNumber) + "/balance", {
+                    headers: { "Authorization": "Basic " + token }
+                });
+                if (response.ok) {
+                    const balance = await response.json();
+                    amountEl.textContent = "$" + balance.toLocaleString('en-US', { minimumFractionDigits: 2 });
+                    document.getElementById("impact-value").textContent = (balance / 1250).toFixed(1) + " t CO2";
                 }
+            } catch (_) { }
+        }
+
+        (function init() {
+            const token = ensureAuthenticated();
+            if (!token) return;
+
+            const name = sessionStorage.getItem("atlasUser") || "Cliente ATLAS";
+            document.getElementById("client-name").textContent = name.toUpperCase();
+
+            document.getElementById("load-account").addEventListener("click", () => {
+                const num = document.getElementById("account-input").value.trim();
+                if (num) loadBalance(num, token);
             });
-            if (!response.ok) {
-                amountEl.textContent = "-";
-                return;
-            }
-            const balance = await response.json();
-            amountEl.textContent = typeof balance === "number" ? "$" + balance.toFixed(2) : balance;
-        } catch (_) {
-            amountEl.textContent = "-";
-        }
-    }
 
-    function setupAccountLoader(token) {
-        const input = document.getElementById("account-input");
-        const button = document.getElementById("load-account");
-        if (!input || !button) return;
-        button.addEventListener("click", function () {
-            const accountNumber = input.value.trim();
-            if (!accountNumber) {
-                return;
-            }
-            loadBalance(accountNumber, token);
-        });
-    }
-
-    function setupLogout() {
-        const link = document.getElementById("logout-link");
-        if (!link) return;
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
-            sessionStorage.removeItem("atlasAuth");
-            sessionStorage.removeItem("atlasUser");
-            sessionStorage.removeItem("atlasRoles");
-            window.location.href = "/";
-        });
-    }
-
-    (function init() {
-        const token = ensureAuthenticated();
-        if (!token) return;
-        setupClientHeader();
-        setupAccountLoader(token);
-        setupLogout();
-        const txContainer = document.getElementById("transactions-container");
-        if (txContainer) {
-            txContainer.innerHTML = '<p style="font-size:0.85rem; color: var(--gris-texto);">Sin movimientos disponibles para la cuenta seleccionada.</p>';
-        }
-    }());
-</script>
-
+            document.getElementById("logout-link").addEventListener("click", (e) => {
+                e.preventDefault();
+                sessionStorage.clear();
+                window.location.href = "/";
+            });
+        }());
+    </script>
 </body>
+
 </html>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATLAS | Tarjetas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ATLAS BANK | Tarjetas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
@@ -23,148 +24,235 @@
         }
 
         body {
-            background: var(--blanco);
+            background: #f9fafb;
             color: var(--negro);
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
         }
 
-        header {
+        nav {
+            background: var(--negro);
+            color: white;
+            padding: 0 5%;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
+            border-bottom: 2px solid var(--primario);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            background: var(--primario);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        main {
-            padding: 5% 8%;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--gris-texto);
-            margin-bottom: 24px;
-        }
-
-        .info-card {
-            border: 1px solid var(--gris-borde);
-            padding: 18px;
-            font-size: 0.9rem;
-        }
-
-        .sidebar-nav {
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .sidebar-nav a {
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
             text-decoration: none;
-            color: var(--gris-texto);
+            color: white;
+        }
+
+        .brand span {
+            color: var(--primario);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #9ca3af;
             font-size: 0.85rem;
-            font-weight: 600;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
             transition: 0.2s;
         }
 
-        .sidebar-nav a:hover {
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            border-bottom-color: var(--primario);
+        }
+
+        .page-header {
+            background: white;
+            border-bottom: 1px solid var(--gris-borde);
+            padding: 25px 5%;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--negro);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        .card-management {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--negro);
+            padding: 30px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
             color: var(--primario);
-            padding-left: 5px;
+            letter-spacing: 0.5px;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .card-preview {
+            width: 100%;
+            aspect-ratio: 1.58 / 1;
+            background: var(--negro);
+            padding: 25px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview::after {
+            content: "ATLAS_ST";
+            position: absolute;
+            bottom: -10px;
+            right: 0;
+            font-size: 3.5rem;
+            font-weight: 700;
+            opacity: 0.1;
+            letter-spacing: -2px;
+        }
+
+        .chip {
+            width: 45px;
+            height: 35px;
+            background: #fbbf24;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        .card-num {
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .card-holder {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        .status-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--primario-soft);
+            text-align: center;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: var(--gris-texto);
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 14px;
+            background: var(--negro);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--negro);
+            transition: 0.2s;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: var(--primario);
+            border-color: var(--primario);
+        }
+
+        @media (max-width: 1000px) {
+            .card-management {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <div class="logo">ATLAS / <span style="font-weight: 300; color: var(--gris-texto);">TARJETAS</span></div>
-    <div class="user-info">
-        <span id="client-name" style="font-size: 0.85rem; font-weight: 600;"></span>
-        <div class="avatar" id="client-avatar"></div>
-    </div>
-</header>
-
-<main>
-    <h1 class="section-title">Tarjetas Atlas</h1>
-    <p class="section-subtitle">Módulo en reserva para futuras integraciones de tarjetas físicas o virtuales.</p>
-
-    <div class="info-card">
-        <p>Actualmente las operaciones disponibles se centran en cuentas y transferencias. Cuando el backend exponga funciones específicas de tarjetas, se conectarán aquí manteniendo el mismo diseño Atlas.</p>
-    </div>
-
-    <nav class="sidebar-nav">
-        <a href="/panel/cliente">Volver al dashboard</a>
-        <a href="/panel/cliente/cuentas">Ir a cuentas</a>
-        <a href="/panel/cliente/transferencias">Ir a transferencias</a>
-        <a href="#" id="logout-link" style="color: #ef4444;">Cerrar sesión segura</a>
+    <nav>
+        <a href="/panel/cliente/inicio" class="brand">ATLAS<span>BANK</span></a>
+        <div class="nav-links">
+            <a href="/panel/cliente">Resumen</a>
+            <a href="/panel/cliente/cuentas">Cuentas</a>
+            <a href="/panel/cliente/transferencias">Transferir</a>
+            <a href="/panel/cliente/tarjetas" class="active">Tarjetas</a>
+            <a href="/panel/cliente/movimientos">Historial</a>
+        </div>
+        <a href="/" style="color: #9ca3af; font-size: 0.85rem; text-decoration: none;">Cerrar Sesión</a>
     </nav>
-</main>
 
-<script>
-    function ensureAuthenticated() {
-        const token = sessionStorage.getItem("atlasAuth");
-        if (!token) {
-            window.location.href = "/";
-            return null;
-        }
-        return token;
-    }
+    <div class="page-header">
+        <h1>Gestión de Tarjetas Atlas</h1>
+    </div>
 
-    function setupClientHeader() {
-        const name = sessionStorage.getItem("atlasUser") || "";
-        const nameEl = document.getElementById("client-name");
-        const avatarEl = document.getElementById("client-avatar");
-        if (nameEl) {
-            nameEl.textContent = name || "Cliente ATLAS";
-        }
-        if (avatarEl) {
-            const initials = name ? name.split(" ").map(p => p.charAt(0)).join("").substring(0, 2).toUpperCase() : "AT";
-            avatarEl.textContent = initials;
-        }
-    }
+    <div class="container">
+        <div class="card-management">
+            <div class="card">
+                <span class="card-title">Tarjeta Activa</span>
+                <div class="card-preview">
+                    <div class="chip"></div>
+                    <div>
+                        <div class="card-num">•••• •••• •••• ••••</div>
+                        <div class="card-holder">CLIENTE ATLAS</div>
+                    </div>
+                </div>
+                <div class="status-box">
+                    <span style="font-weight: 700; font-size: 0.75rem; color: var(--primario);">ESTADO: PENDIENTE DE
+                        VINCULACIÓN</span>
+                </div>
+            </div>
 
-    function setupLogout() {
-        const link = document.getElementById("logout-link");
-        if (!link) return;
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
-            sessionStorage.removeItem("atlasAuth");
-            sessionStorage.removeItem("atlasUser");
-            sessionStorage.removeItem("atlasRoles");
-            window.location.href = "/";
-        });
-    }
-
-    (function init() {
-        const token = ensureAuthenticated();
-        if (!token) return;
-        setupClientHeader();
-        setupLogout();
-    }());
-</script>
+            <div class="card"
+                style="display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                <h2 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 20px;">Red de Pagos Atlas Black</h2>
+                <p>Estamos finalizando la integración con la red de pagos global. Muy pronto podrá solicitar su tarjeta
+                    física o virtual con beneficios de impacto ambiental directo en cada compra.</p>
+                <div style="margin-top: 30px;">
+                    <a href="/panel/cliente" class="btn">Volver al Resumen</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
+
 </html>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATLAS | Cuentas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ATLAS BANK | Cuentas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
@@ -23,420 +24,311 @@
         }
 
         body {
-            background: var(--blanco);
+            background: #f9fafb;
             color: var(--negro);
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
         }
 
-        header {
+        nav {
+            background: var(--negro);
+            color: white;
+            padding: 0 5%;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
+            border-bottom: 2px solid var(--primario);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            background: var(--primario);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            text-decoration: none;
             color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
         }
 
-        main {
-            display: grid;
-            grid-template-columns: 1.4fr 0.6fr;
-            min-height: calc(100vh - 76px);
+        .brand span {
+            color: var(--primario);
         }
 
-        .accounts-main {
-            padding: 5% 8%;
-            border-right: 1px solid var(--gris-borde);
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            height: 100%;
         }
 
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 6px;
+        .nav-links a {
+            text-decoration: none;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
         }
 
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--gris-texto);
-            margin-bottom: 24px;
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            border-bottom-color: var(--primario);
         }
 
-        .balance-block {
+        .page-header {
+            background: white;
+            border-bottom: 1px solid var(--gris-borde);
+            padding: 25px 5%;
             margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--negro);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 50px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--negro);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            border-bottom: 1px solid var(--gris-borde);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primario);
+            letter-spacing: 0.5px;
+        }
+
+        .balance-hero {
+            background: var(--primario-soft);
+            padding: 30px;
+            border: 1px solid var(--negro);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .balance-label {
             font-size: 0.8rem;
             font-weight: 600;
-            color: var(--primario);
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .balance-amount {
-            font-size: 2.8rem;
-            font-weight: 600;
-            letter-spacing: -1px;
-            margin: 8px 0 8px;
-        }
-
-        .account-input-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            font-size: 0.85rem;
-            margin-top: 8px;
-        }
-
-        .account-input-row input {
-            flex: 1;
-            padding: 8px 10px;
-            border: 1px solid var(--gris-borde);
-            font-size: 0.85rem;
-        }
-
-        .account-input-row button {
-            padding: 9px 14px;
-            border: 1px solid var(--primario);
-            background: var(--primario);
-            color: white;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .operations-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 20px;
-            margin-top: 10px;
-        }
-
-        .op-card {
-            border: 1px solid var(--gris-borde);
-            padding: 16px 16px 18px;
-        }
-
-        .op-card h3 {
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-        }
-
-        .op-card small {
-            font-size: 0.8rem;
             color: var(--gris-texto);
         }
 
-        .op-card form {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .balance-val {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--negro);
         }
 
-        .op-card input {
-            padding: 8px 10px;
-            border: 1px solid var(--gris-borde);
-            font-size: 0.85rem;
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
         }
 
-        .op-card button {
-            align-self: flex-end;
-            padding: 8px 14px;
-            border: 1px solid var(--primario);
-            background: var(--primario);
-            color: white;
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
             font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--negro);
+            background: white;
+            font-size: 0.95rem;
+            outline: none;
+            border-radius: 0;
+        }
+
+        input:focus {
+            border-color: var(--primario);
+            background: var(--primario-soft);
+        }
+
+        .btn {
+            padding: 14px 25px;
+            border: 1px solid var(--negro);
+            background: var(--negro);
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
             text-transform: uppercase;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primario);
+            border-color: var(--primario);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--negro);
+        }
+
+        .btn-outline:hover {
+            background: var(--negro);
+            color: white;
         }
 
         .helper {
             font-size: 0.75rem;
-            color: var(--gris-texto);
-            margin-top: 4px;
-        }
-
-        .side-panel {
-            background-color: var(--primario-soft);
-            padding: 10% 12%;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        .side-card {
-            background: var(--blanco);
-            border: 1px solid var(--gris-borde);
-            padding: 18px;
-            font-size: 0.85rem;
-        }
-
-        .sidebar-nav {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .sidebar-nav a {
-            text-decoration: none;
-            color: var(--gris-texto);
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-
-        .sidebar-nav a:hover {
+            margin-top: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
             color: var(--primario);
-            padding-left: 5px;
         }
 
-        @media (max-width: 1024px) {
-            main {
+        @media (max-width: 800px) {
+            .form-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .accounts-main {
-                border-right: none;
-                border-bottom: 1px solid var(--gris-borde);
             }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <div class="logo">ATLAS / <span style="font-weight: 300; color: var(--gris-texto);">CUENTAS</span></div>
-    <div class="user-info">
-        <span id="client-name" style="font-size: 0.85rem; font-weight: 600;"></span>
-        <div class="avatar" id="client-avatar"></div>
+    <nav>
+        <a href="/panel/cliente/inicio" class="brand">ATLAS<span>BANK</span></a>
+        <div class="nav-links">
+            <a href="/panel/cliente">Resumen</a>
+            <a href="/panel/cliente/cuentas" class="active">Cuentas</a>
+            <a href="/panel/cliente/transferencias">Transferir</a>
+            <a href="/panel/cliente/tarjetas">Tarjetas</a>
+            <a href="/panel/cliente/movimientos">Historial</a>
+        </div>
+        <a href="/" style="color: #9ca3af; font-size: 0.85rem; text-decoration: none;">Cerrar Sesión</a>
+    </nav>
+
+    <div class="page-header">
+        <h1>Operaciones sobre Cuentas</h1>
     </div>
-</header>
 
-<main>
-    <section class="accounts-main">
-        <h1 class="section-title">Mis cuentas</h1>
-        <p class="section-subtitle">Consulta de saldo y operaciones básicas sobre una cuenta Atlas.</p>
-
-        <div class="balance-block">
-            <span class="balance-label">Saldo disponible</span>
-            <div class="balance-amount" id="balance-amount">-</div>
-            <div class="account-input-row">
-                <input id="account-input" type="text" placeholder="Número de cuenta">
-                <button id="load-account">Cargar saldo</button>
+    <div class="container">
+        <div class="balance-hero">
+            <div>
+                <span class="balance-label">Saldo Disponible</span>
+                <div class="balance-val" id="balance-amount">$0.00</div>
+            </div>
+            <div>
+                <input id="account-input" type="text" placeholder="Nº de Cuenta"
+                    style="padding: 10px; border: 1px solid var(--negro); width: 250px; margin-right: 10px;">
+                <button id="load-account" class="btn btn-outline">Sincronizar</button>
             </div>
         </div>
 
-        <div class="operations-grid">
-            <div class="op-card">
-                <h3>Depósito</h3>
-                <small>Incrementa el saldo de la cuenta seleccionada.</small>
+        <div class="form-grid">
+            <div class="card">
+                <div class="card-header"><span class="card-title">Inyección de Fondos (Depósito)</span></div>
                 <form id="form-deposit">
-                    <input type="number" id="dep-amount" placeholder="Monto a depositar" step="0.01" min="0">
-                    <button type="submit">Depositar</button>
+                    <div class="form-group">
+                        <label>Monto a Ingresar</label>
+                        <input type="number" id="dep-amount" placeholder="0.00" step="0.01">
+                    </div>
+                    <button type="submit" class="btn">Procesar Depósito</button>
+                    <div class="helper" id="dep-helper"></div>
                 </form>
-                <div class="helper" id="dep-helper"></div>
             </div>
 
-            <div class="op-card">
-                <h3>Retiro</h3>
-                <small>Disminuye el saldo de la cuenta seleccionada.</small>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Salida de Capital (Retiro)</span></div>
                 <form id="form-withdraw">
-                    <input type="number" id="wd-amount" placeholder="Monto a retirar" step="0.01" min="0">
-                    <button type="submit">Retirar</button>
+                    <div class="form-group">
+                        <label>Monto a Retirar</label>
+                        <input type="number" id="wd-amount" placeholder="0.00" step="0.01">
+                    </div>
+                    <button type="submit" class="btn btn-outline">Procesar Retiro</button>
+                    <div class="helper" id="wd-helper"></div>
                 </form>
-                <div class="helper" id="wd-helper"></div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="side-panel">
-        <div class="side-card">
-            <p style="font-weight:600; margin-bottom:6px;">Consejo Atlas</p>
-            <p>Las operaciones aquí reflejadas se aplican directamente sobre la cuenta indicada.</p>
-        </div>
-
-        <nav class="sidebar-nav">
-            <a href="/panel/cliente">Volver al dashboard</a>
-            <a href="/panel/cliente/transferencias">Ir a transferencias</a>
-            <a href="#" id="logout-link" style="color: #ef4444;">Cerrar sesión segura</a>
-        </nav>
-    </section>
-</main>
-
-<script>
-    function ensureAuthenticated() {
-        const token = sessionStorage.getItem("atlasAuth");
-        if (!token) {
-            window.location.href = "/";
-            return null;
+    <script>
+        function ensureAuth() {
+            const token = sessionStorage.getItem("atlasAuth");
+            if (!token) { window.location.href = "/"; return null; }
+            return token;
         }
-        return token;
-    }
 
-    function setupClientHeader() {
-        const name = sessionStorage.getItem("atlasUser") || "";
-        const nameEl = document.getElementById("client-name");
-        const avatarEl = document.getElementById("client-avatar");
-        if (nameEl) {
-            nameEl.textContent = name || "Cliente ATLAS";
-        }
-        if (avatarEl) {
-            const initials = name ? name.split(" ").map(p => p.charAt(0)).join("").substring(0, 2).toUpperCase() : "AT";
-            avatarEl.textContent = initials;
-        }
-    }
-
-    async function loadBalance(accountNumber, token) {
-        const amountEl = document.getElementById("balance-amount");
-        if (!amountEl) return;
-        amountEl.textContent = "-";
-        try {
-            const response = await fetch("/accounts/" + encodeURIComponent(accountNumber) + "/balance", {
-                headers: {
-                    "Authorization": "Basic " + token
+        async function loadBalance(accountNumber, token) {
+            const amountEl = document.getElementById("balance-amount");
+            try {
+                const response = await fetch("/accounts/" + encodeURIComponent(accountNumber) + "/balance", {
+                    headers: { "Authorization": "Basic " + token }
+                });
+                if (response.ok) {
+                    const balance = await response.json();
+                    amountEl.textContent = "$" + balance.toLocaleString('en-US', { minimumFractionDigits: 2 });
                 }
+            } catch (_) { }
+        }
+
+        (function init() {
+            const token = ensureAuth();
+            if (!token) return;
+
+            document.getElementById("load-account").addEventListener("click", () => {
+                const num = document.getElementById("account-input").value.trim();
+                if (num) loadBalance(num, token);
             });
-            if (!response.ok) {
-                amountEl.textContent = "-";
-                return;
-            }
-            const balance = await response.json();
-            amountEl.textContent = typeof balance === "number" ? "$" + balance.toFixed(2) : balance;
-        } catch (_) {
-            amountEl.textContent = "-";
-        }
-    }
 
-    function setupAccountLoader(token) {
-        const input = document.getElementById("account-input");
-        const button = document.getElementById("load-account");
-        if (!input || !button) return;
-        button.addEventListener("click", function () {
-            const accountNumber = input.value.trim();
-            if (!accountNumber) {
-                return;
-            }
-            loadBalance(accountNumber, token);
-        });
-    }
-
-    function currentAccountNumber() {
-        const input = document.getElementById("account-input");
-        return input ? input.value.trim() : "";
-    }
-
-    function setupDepositForm(token) {
-        const form = document.getElementById("form-deposit");
-        const helper = document.getElementById("dep-helper");
-        if (!form || !helper) return;
-
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            helper.textContent = "";
-            const accountNumber = currentAccountNumber();
-            const amount = document.getElementById("dep-amount").value.trim();
-            if (!accountNumber || !amount) {
-                helper.textContent = "Indica número de cuenta y monto.";
-                return;
-            }
-            try {
-                const params = new URLSearchParams();
-                params.append("accountNumber", accountNumber);
-                params.append("amount", amount);
-                const response = await fetch("/transactions/deposit?" + params.toString(), {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Basic " + token
-                    }
+            document.getElementById("form-deposit").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const num = document.getElementById("account-input").value.trim();
+                const amt = document.getElementById("dep-amount").value;
+                const h = document.getElementById("dep-helper");
+                if (!num) { h.textContent = "Ingrese Nº de cuenta"; return; }
+                const res = await fetch(`/transactions/deposit?accountNumber=${num}&amount=${amt}`, {
+                    method: "POST", headers: { "Authorization": "Basic " + token }
                 });
-                if (!response.ok) {
-                    helper.textContent = "No se pudo realizar el depósito.";
-                    return;
-                }
-                helper.textContent = "Depósito realizado correctamente.";
-                loadBalance(accountNumber, token);
-            } catch (_) {
-                helper.textContent = "Error al realizar el depósito.";
-            }
-        });
-    }
+                h.textContent = res.ok ? "DEPOSITO COMPLETADO" : "FALLO EN OPERACIÓN";
+                if (res.ok) loadBalance(num, token);
+            });
 
-    function setupWithdrawForm(token) {
-        const form = document.getElementById("form-withdraw");
-        const helper = document.getElementById("wd-helper");
-        if (!form || !helper) return;
-
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-            helper.textContent = "";
-            const accountNumber = currentAccountNumber();
-            const amount = document.getElementById("wd-amount").value.trim();
-            if (!accountNumber || !amount) {
-                helper.textContent = "Indica número de cuenta y monto.";
-                return;
-            }
-            try {
-                const params = new URLSearchParams();
-                params.append("accountNumber", accountNumber);
-                params.append("amount", amount);
-                const response = await fetch("/transactions/withdraw?" + params.toString(), {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Basic " + token
-                    }
+            document.getElementById("form-withdraw").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const num = document.getElementById("account-input").value.trim();
+                const amt = document.getElementById("wd-amount").value;
+                const h = document.getElementById("wd-helper");
+                if (!num) { h.textContent = "Ingrese Nº de cuenta"; return; }
+                const res = await fetch(`/transactions/withdraw?accountNumber=${num}&amount=${amt}`, {
+                    method: "POST", headers: { "Authorization": "Basic " + token }
                 });
-                if (!response.ok) {
-                    helper.textContent = "No se pudo realizar el retiro.";
-                    return;
-                }
-                helper.textContent = "Retiro realizado correctamente.";
-                loadBalance(accountNumber, token);
-            } catch (_) {
-                helper.textContent = "Error al realizar el retiro.";
-            }
-        });
-    }
-
-    function setupLogout() {
-        const link = document.getElementById("logout-link");
-        if (!link) return;
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
-            sessionStorage.removeItem("atlasAuth");
-            sessionStorage.removeItem("atlasUser");
-            sessionStorage.removeItem("atlasRoles");
-            window.location.href = "/";
-        });
-    }
-
-    (function init() {
-        const token = ensureAuthenticated();
-        if (!token) return;
-        setupClientHeader();
-        setupAccountLoader(token);
-        setupDepositForm(token);
-        setupWithdrawForm(token);
-        setupLogout();
-    }());
-</script>
-
+                h.textContent = res.ok ? "RETIRO COMPLETADO" : "SALDO INSUFICIENTE";
+                if (res.ok) loadBalance(num, token);
+            });
+        }());
+    </script>
 </body>
+
 </html>

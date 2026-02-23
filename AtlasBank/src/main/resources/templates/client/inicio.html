@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATLAS | Inicio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>ATLAS BANK | Inicio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
@@ -23,148 +24,189 @@
         }
 
         body {
-            background: var(--blanco);
+            background: #f9fafb;
             color: var(--negro);
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
         }
 
-        header {
+        nav {
+            background: var(--negro);
+            color: white;
+            padding: 0 5%;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
+            border-bottom: 2px solid var(--primario);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            background: var(--primario);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        main {
-            padding: 5% 8%;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--gris-texto);
-            margin-bottom: 24px;
-        }
-
-        .info-card {
-            border: 1px solid var(--gris-borde);
-            padding: 18px;
-            font-size: 0.9rem;
-        }
-
-        .sidebar-nav {
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .sidebar-nav a {
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
             text-decoration: none;
-            color: var(--gris-texto);
+            color: white;
+        }
+
+        .brand span {
+            color: var(--primario);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #9ca3af;
             font-size: 0.85rem;
-            font-weight: 600;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
             transition: 0.2s;
         }
 
-        .sidebar-nav a:hover {
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            border-bottom-color: var(--primario);
+        }
+
+        .hero {
+            background: white;
+            border-bottom: 1px solid var(--gris-borde);
+            padding: 100px 5%;
+            text-align: center;
+        }
+
+        .label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
             color: var(--primario);
-            padding-left: 5px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--negro);
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--gris-texto);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 18px 45px;
+            background: var(--negro);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--negro);
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primario);
+            border-color: var(--primario);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--negro);
+            padding: 30px;
+        }
+
+        .feature-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--negro);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--gris-texto);
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 900px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <div class="logo">ATLAS / <span style="font-weight: 300; color: var(--gris-texto);">INICIO</span></div>
-    <div class="user-info">
-        <span id="client-name" style="font-size: 0.85rem; font-weight: 600;"></span>
-        <div class="avatar" id="client-avatar"></div>
-    </div>
-</header>
-
-<main>
-    <h1 class="section-title">Bienvenido a Atlas</h1>
-    <p class="section-subtitle">Desde aquí puedes navegar a tus cuentas, transferencias y otros módulos.</p>
-
-    <div class="info-card">
-        <p>Utiliza el menú para acceder a las operaciones disponibles. El diseño de todos los módulos mantiene la misma línea visual que tu dashboard principal.</p>
-    </div>
-
-    <nav class="sidebar-nav">
-        <a href="/panel/cliente">Ir al dashboard</a>
-        <a href="/panel/cliente/cuentas">Ir a cuentas</a>
-        <a href="/panel/cliente/transferencias">Ir a transferencias</a>
-        <a href="#" id="logout-link" style="color: #ef4444;">Cerrar sesión segura</a>
+    <nav>
+        <a href="/panel/cliente/inicio" class="brand">ATLAS<span>BANK</span></a>
+        <div class="nav-links">
+            <a href="/panel/cliente">Resumen</a>
+            <a href="/panel/cliente/cuentas">Cuentas</a>
+            <a href="/panel/cliente/transferencias">Transferir</a>
+            <a href="/panel/cliente/tarjetas">Tarjetas</a>
+            <a href="/panel/cliente/movimientos">Historial</a>
+        </div>
+        <a href="/" style="color: #9ca3af; font-size: 0.85rem; text-decoration: none;">Cerrar Sesión</a>
     </nav>
-</main>
 
-<script>
-    function ensureAuthenticated() {
-        const token = sessionStorage.getItem("atlasAuth");
-        if (!token) {
-            window.location.href = "/";
-            return null;
-        }
-        return token;
-    }
+    <header class="hero">
+        <span class="label">Acceso Autorizado</span>
+        <h1>Bienvenido al Núcleo Bancario v4.2</h1>
+        <p>Gestione su capital con responsabilidad ética y regenerativa a través de la infraestructura financiera más
+            avanzada de Atlas.</p>
+        <a href="/panel/cliente" class="btn">Entrar al Centro de Control</a>
+    </header>
 
-    function setupClientHeader() {
-        const name = sessionStorage.getItem("atlasUser") || "";
-        const nameEl = document.getElementById("client-name");
-        const avatarEl = document.getElementById("client-avatar");
-        if (nameEl) {
-            nameEl.textContent = name || "Cliente ATLAS";
-        }
-        if (avatarEl) {
-            const initials = name ? name.split(" ").map(p => p.charAt(0)).join("").substring(0, 2).toUpperCase() : "AT";
-            avatarEl.textContent = initials;
-        }
-    }
-
-    function setupLogout() {
-        const link = document.getElementById("logout-link");
-        if (!link) return;
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
-            sessionStorage.removeItem("atlasAuth");
-            sessionStorage.removeItem("atlasUser");
-            sessionStorage.removeItem("atlasRoles");
-            window.location.href = "/";
-        });
-    }
-
-    (function init() {
-        const token = ensureAuthenticated();
-        if (!token) return;
-        setupClientHeader();
-        setupLogout();
-    }());
-</script>
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Monitoreo en Tiempo Real</h3>
+                <p>Verifique sus saldos y movimientos con precisión absoluta y trazabilidad garantizada.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Impacto Positivo</h3>
+                <p>Cada transacción en Atlas contribuye a proyectos de regeneración ambiental certificados.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Seguridad AES-256</h3>
+                <p>Sus activos están protegidos por capas de cifrado bancario de última generación.</p>
+            </div>
+        </div>
+    </div>
 
 </body>
+
 </html>
