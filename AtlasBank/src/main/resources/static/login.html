@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtlasBank | Acceso Seguro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primario: #15803d;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-texto: #6b7280;
+            --fondo: #f9fafb;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        body {
+            background: var(--fondo);
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+
+        .login-card {
+            background: var(--blanco);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--gris-borde);
+            padding: 60px 50px;
+            position: relative;
+        }
+
+        .login-card::before {
+            content: "";
+            position: absolute;
+            top: -1px; left: -1px;
+            width: 100%; height: 4px;
+            background: var(--primario);
+        }
+
+        .brand {
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            color: var(--negro);
+            display: flex; justify-content: space-between;
+        }
+
+        .brand span { color: var(--primario); font-size: 0.8rem; letter-spacing: 1px; }
+
+        h1 { font-size: 2rem; font-weight: 600; letter-spacing: -1.5px; margin-bottom: 10px; }
+        p.subtitle { color: var(--gris-texto); font-size: 0.9rem; margin-bottom: 35px; }
+
+        .form-group { margin-bottom: 25px; }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--negro);
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--gris-borde);
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primario);
+            background: var(--fondo);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            background: var(--primario);
+            color: white;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background: var(--negro);
+            transform: translateY(-2px);
+        }
+
+        .login-footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+
+        .login-footer a {
+            text-decoration: none;
+            color: var(--gris-texto);
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .login-footer a:hover { color: var(--primario); }
+
+        .bg-text {
+            position: absolute;
+            font-size: 20vw;
+            font-weight: 600;
+            color: rgba(0,0,0,0.02);
+            z-index: -1;
+            bottom: -5vw;
+            left: -2vw;
+            pointer-events: none;
+            letter-spacing: -1vw;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-text">AtlasBank</div>
+
+<div class="login-card">
+    <div class="brand">
+        AtlasBank <span>ID-01</span>
+    </div>
+
+    <h1>Acceso al sistema</h1>
+    <p class="subtitle">Introduce tus credenciales para continuar.</p>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="customerId">Identificador de Cliente</label>
+            <input type="text" id="customerId" placeholder="ej. carlos.sustentable" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña Maestra</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <div id="errorMessage" class="error-msg"></div>
+
+        <button type="submit" class="btn-login">Verificar Identidad</button>
+    </form>
+
+    <div class="login-footer">
+        <a href="#">¿Olvidaste tu acceso?</a>
+        <a href="registro.html" style="color: var(--primario);">Abrir cuenta</a>
+    </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById('customerId').value;
+    const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMessage');
+
+    try {
+        const response = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            sessionStorage.setItem('adminUser', username);
+            sessionStorage.setItem('role', 'ADMIN');
+            window.location.href = 'panel_admin.html';
+            return;
+        }
+
+        const customerRes = await fetch('/api/customers/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customerId: username, password })
+        });
+
+        if (customerRes.ok) {
+            sessionStorage.setItem('customerId', username);
+            sessionStorage.setItem('role', 'CUSTOMER');
+            window.location.href = 'dashboard.html';
+        } else {
+            errorMsg.textContent = 'Credenciales inválidas. Verifica tu información.';
+            errorMsg.style.display = 'block';
+        }
+    } catch (err) {
+        errorMsg.textContent = 'Error de conexión. Intenta más tarde.';
+        errorMsg.style.display = 'block';
+    }
+});
+</script>
+
+</body>
+</html>
