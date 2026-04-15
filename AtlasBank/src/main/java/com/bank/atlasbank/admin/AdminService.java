@@ -13,9 +13,9 @@ public class AdminService {
 
     @PostConstruct
     public void initDefaultAdmin() {
-        Optional<Admin> existing = adminRepository.findByUsername("./chief");
+        Optional<Admin> existing = adminRepository.findByUsername("chief");
         if (existing.isEmpty()) {
-            Admin admin = new Admin("./chief", "P@ss-CHIEF-83f7d");
+            Admin admin = new Admin("chief", "P@ss-CHIEF-83f7d");
             adminRepository.save(admin);
         }
     }

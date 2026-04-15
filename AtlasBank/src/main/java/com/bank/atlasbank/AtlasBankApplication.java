@@ -11,4 +11,4 @@ public class AtlasBankApplication {
     }
 }
 
-/* Para ejecutar: mvn spring-boot:run */
+/* Para ejecutar: .\mvnw spring-boot:run */
