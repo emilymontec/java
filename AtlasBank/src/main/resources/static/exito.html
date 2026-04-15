@@ -37,7 +37,9 @@
         <a href="dashboard.html" class="btn-dashboard">Volver al Panel</a>
     </div>
     <script>
-        document.getElementById('txId').textContent = Math.random().toString(36).substring(2, 12).toUpperCase();
+        const params = new URLSearchParams(window.location.search);
+        const txId = params.get('txId');
+        document.getElementById('txId').textContent = txId ? txId : '-';
     </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package com.bank.atlasbank.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
 import java.util.Optional;
@@ -8,27 +8,95 @@ import java.util.Optional;
 @Service
 public class AdminService {
 
-    @Autowired
-    private AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
+    private final Environment environment;
+
+    public AdminService(AdminRepository adminRepository, Environment environment) {
+        this.adminRepository = adminRepository;
+        this.environment = environment;
+    }
 
     @PostConstruct
     public void initDefaultAdmin() {
-        Optional<Admin> existing = adminRepository.findByUsername("chief");
-        if (existing.isEmpty()) {
-            Admin admin = new Admin("chief", "P@ss-CHIEF-83f7d");
-            adminRepository.save(admin);
-        }
     }
 
     public Optional<Admin> authenticate(String username, String password) {
-        Optional<Admin> admin = adminRepository.findByUsername(username);
-        if (admin.isPresent() && admin.get().getPassword().equals(password)) {
-            return admin;
+        if (username == null || password == null) return Optional.empty();
+
+        String normalizedUsername = normalizeUsername(username);
+        if (normalizedUsername == null || normalizedUsername.isBlank()) return Optional.empty();
+
+        EmergencyAdminConfig cfg = loadEmergencyAdminConfig();
+        if (cfg != null && cfg.username.equalsIgnoreCase(normalizedUsername) && password.equals(cfg.password)) {
+            Admin admin = new Admin(cfg.username, cfg.password);
+            admin.setRole(cfg.role);
+            return Optional.of(admin);
         }
-        return Optional.empty();
+
+        return adminRepository.findByUsername(normalizedUsername)
+                .filter(a -> password.equals(a.getPassword()));
     }
 
     public boolean existsByUsername(String username) {
         return adminRepository.findByUsername(username).isPresent();
+    }
+
+    private static String normalizeUsername(String username) {
+        if (username == null) return null;
+        String trimmed = username.trim();
+        if (trimmed.isBlank()) return null;
+        if (trimmed.startsWith("./")) return trimmed.substring(2);
+        return trimmed;
+    }
+
+    private EmergencyAdminConfig loadEmergencyAdminConfig() {
+        String username = firstNonBlank(
+                environment.getProperty("ATLASBANK_EMERGENCY_ADMIN_USERNAME"),
+                environment.getProperty("atlasbank.emergency-admin.username"),
+                environment.getProperty("atlasbank.emergencyAdmin.username"),
+                environment.getProperty("EMERGENCY_ADMIN_USERNAME")
+        );
+        String password = firstNonBlank(
+                environment.getProperty("ATLASBANK_EMERGENCY_ADMIN_PASSWORD"),
+                environment.getProperty("atlasbank.emergency-admin.password"),
+                environment.getProperty("atlasbank.emergencyAdmin.password"),
+                environment.getProperty("EMERGENCY_ADMIN_PASSWORD")
+        );
+        String role = firstNonBlank(
+                environment.getProperty("ATLASBANK_EMERGENCY_ADMIN_ROLE"),
+                environment.getProperty("atlasbank.emergency-admin.role"),
+                environment.getProperty("atlasbank.emergencyAdmin.role"),
+                environment.getProperty("EMERGENCY_ADMIN_ROLE"),
+                "EXECUTIVE"
+        );
+
+        String normalizedUsername = normalizeUsername(username);
+        if (normalizedUsername == null || password == null || password.isBlank()) return null;
+
+        String normalizedRole = role == null ? "EXECUTIVE" : role.trim().toUpperCase();
+        if (normalizedRole.isBlank()) normalizedRole = "EXECUTIVE";
+        return new EmergencyAdminConfig(normalizedUsername, password, normalizedRole);
+    }
+
+    private static final class EmergencyAdminConfig {
+        private final String username;
+        private final String password;
+        private final String role;
+
+        private EmergencyAdminConfig(String username, String password, String role) {
+            this.username = username;
+            this.password = password;
+            this.role = role;
+        }
+    }
+
+    private static String firstNonBlank(String... candidates) {
+        if (candidates == null) return null;
+        for (String candidate : candidates) {
+            if (candidate == null) continue;
+            String trimmed = candidate.trim();
+            if (!trimmed.isBlank()) return trimmed;
+        }
+        return null;
     }
 }

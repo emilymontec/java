@@ -251,7 +251,7 @@ async function executeTransfer() {
     const sourceAccountId = document.getElementById('sourceAccount').value;
     const destAccount = document.getElementById('destinationAccount').value;
     const amount = parseFloat(document.getElementById('amount').value);
-    const description = document.getElementById('description').value;
+    const targetAccountId = parseInt(destAccount);
 
     try {
         const res = await fetch('/api/transactions/transfer', {
@@ -259,16 +259,17 @@ async function executeTransfer() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 sourceAccountId: parseInt(sourceAccountId),
-                destinationAccountCLABE: destAccount,
-                amount,
-                description
+                targetAccountId,
+                amount
             })
         });
 
         hideModal();
 
         if (res.ok) {
-            window.location.href = 'exito.html';
+            const tx = await res.json();
+            const txId = tx && tx.id ? tx.id : '';
+            window.location.href = `exito.html?txId=${encodeURIComponent(txId)}`;
         } else {
             window.location.href = 'fallo.html';
         }

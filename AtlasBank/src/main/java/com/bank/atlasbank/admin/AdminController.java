@@ -20,10 +20,10 @@ public class AdminController {
 
         Optional<Admin> admin = adminService.authenticate(username, password);
         if (admin.isPresent()) {
+            String role = admin.get().getRole() == null ? "" : admin.get().getRole().trim().toUpperCase();
             return ResponseEntity.ok(Map.of(
                 "success", true,
-                "username", admin.get().getUsername(),
-                "role", admin.get().getRole()
+                "role", role
             ));
         }
         return ResponseEntity.status(401).body(Map.of(

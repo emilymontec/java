@@ -65,8 +65,8 @@
 <body>
 
 <header>
-    <div>ATLASBANK ADMIN / CORE_SYSTEM_v4</div>
-    <div class="sys-status">● SISTEMA OPERATIVO : <span id="currentDate"></span></div>
+    <div>AtlasBank Admin</div>
+    <div class="sys-status"><span id="currentDate"></span></div>
 </header>
 
 <div class="admin-wrapper">
@@ -85,8 +85,8 @@
         <div class="stats-grid">
             <div class="stat-card"><small>Usuarios Totales</small><p id="totalUsers">0</p></div>
             <div class="stat-card"><small>Cuentas x Aprobar</small><p id="pendingAccounts" style="color: var(--primario);">0</p></div>
-            <div class="stat-card"><small>Volumen 24h</small><p>$420,500</p></div>
-            <div class="stat-card"><small>Alertas Riesgo</small><p style="color: var(--alerta);">0</p></div>
+            <div class="stat-card"><small>Volumen 24h</small><p id="volume24h">$0.00</p></div>
+            <div class="stat-card"><small>Alertas Riesgo</small><p id="riskAlerts" style="color: var(--alerta);">0</p></div>
         </div>
 
         <div class="table-section">
@@ -131,7 +131,7 @@
             <h3 style="font-size: 1rem; margin-bottom: 10px;">Simulador de Depósito</h3>
             <p style="font-size: 0.85rem; color: var(--gris-texto); margin-bottom: 15px;">Crea transacciones de prueba para el sistema.</p>
             <div class="sim-form">
-                <input type="text" id="simCustomerId" placeholder="ID Cliente">
+                <input type="text" id="simCustomerId" placeholder="ID Cuenta">
                 <input type="number" id="simAmount" placeholder="Monto">
                 <button onclick="simulateDeposit()" class="btn-action simulate">Ejecutar</button>
             </div>
@@ -140,8 +140,8 @@
 </div>
 
 <script>
-const role = sessionStorage.getItem('role');
-if (role !== 'ADMIN') {
+const role = (sessionStorage.getItem('role') || '').toUpperCase();
+if (role !== 'ADMIN' && role !== 'EXECUTIVE') {
     window.location.href = 'login.html';
 }
 
@@ -162,15 +162,27 @@ async function loadAdminData() {
             tbody.innerHTML = '';
             txs.slice(0, 10).forEach(tx => {
                 const tr = document.createElement('tr');
+                const source = tx.sourceAccount ? (tx.sourceAccount.accountNumber || tx.sourceAccount.id) : '-';
+                const target = tx.targetAccount ? (tx.targetAccount.accountNumber || tx.targetAccount.id) : '-';
+                const amount = typeof tx.amount === 'number' ? tx.amount : Number(tx.amount || 0);
                 tr.innerHTML = `
-                    <td>#${tx.id || Math.random().toString(36).substr(2, 6)}</td>
-                    <td>Cuenta #${tx.sourceAccountId || 'N/A'}</td>
-                    <td>${tx.description || tx.transactionType}</td>
-                    <td>$${tx.amount.toFixed(2)}</td>
+                    <td>#${tx.id}</td>
+                    <td>${source}</td>
+                    <td>${tx.type}${target !== '-' ? ` → ${target}` : ''}</td>
+                    <td>$${amount.toFixed(2)}</td>
                     <td><small>COMPLETADO</small></td>
                 `;
                 tbody.appendChild(tr);
             });
+
+            const last24h = Date.now() - (24 * 60 * 60 * 1000);
+            const volume = txs
+                .filter(tx => tx.createdAt && new Date(tx.createdAt).getTime() >= last24h)
+                .reduce((sum, tx) => {
+                    const a = typeof tx.amount === 'number' ? tx.amount : Number(tx.amount || 0);
+                    return sum + (Number.isFinite(a) ? a : 0);
+                }, 0);
+            document.getElementById('volume24h').textContent = `$${volume.toFixed(2)}`;
         }
     } catch (err) {
         console.error('Error loading admin data:', err);
@@ -178,19 +190,19 @@ async function loadAdminData() {
 }
 
 async function simulateDeposit() {
-    const customerId = document.getElementById('simCustomerId').value;
+    const accountId = document.getElementById('simCustomerId').value;
     const amount = parseFloat(document.getElementById('simAmount').value);
 
-    if (!customerId || !amount) {
+    if (!accountId || !amount) {
         alert('Completa todos los campos');
         return;
     }
 
     try {
-        const res = await fetch('/api/transactions/deposit', {
+        const res = await fetch(`/api/transactions/deposit/${encodeURIComponent(accountId)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ customerId, amount })
+            body: JSON.stringify({ amount })
         });
 
         if (res.ok) {

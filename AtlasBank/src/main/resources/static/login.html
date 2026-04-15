@@ -141,7 +141,7 @@
 
 <div class="login-card">
     <div class="brand">
-        AtlasBank <span>ID-01</span>
+        AtlasBank
     </div>
 
     <h1>Acceso al sistema</h1>
@@ -154,7 +154,7 @@
         </div>
 
         <div class="form-group">
-            <label for="password">Contraseña Maestra</label>
+            <label for="password">Contraseña</label>
             <input type="password" id="password" placeholder="••••••••" required>
         </div>
 
@@ -187,7 +187,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         if (response.ok) {
             const data = await response.json();
             sessionStorage.setItem('adminUser', username);
-            sessionStorage.setItem('role', 'ADMIN');
+            sessionStorage.setItem('role', (data.role || '').toUpperCase());
             window.location.href = 'panel_admin.html';
             return;
         }
@@ -199,8 +199,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         });
 
         if (customerRes.ok) {
+            const data = await customerRes.json();
             sessionStorage.setItem('customerId', username);
-            sessionStorage.setItem('role', 'CUSTOMER');
+            sessionStorage.setItem('role', (data.role || 'USER').toUpperCase());
             window.location.href = 'dashboard.html';
         } else {
             errorMsg.textContent = 'Credenciales inválidas. Verifica tu información.';
