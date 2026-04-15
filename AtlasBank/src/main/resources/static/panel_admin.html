@@ -140,6 +140,11 @@
 </div>
 
 <script>
+const role = sessionStorage.getItem('role');
+if (role !== 'ADMIN') {
+    window.location.href = 'login.html';
+}
+
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
 
 async function loadAdminData() {
