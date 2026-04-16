@@ -141,7 +141,7 @@
 
 <header>
     <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">TRANSFERENCIAS</span></div>
-    <a href="dashboard.html" class="back-link">← Volver al Dashboard</a>
+    <a href="/customer/dashboard.html" class="back-link">← Volver al Dashboard</a>
 </header>
 
 <main class="transfer-grid">
@@ -240,7 +240,7 @@
 
 <script>
 const customerId = sessionStorage.getItem('customerId');
-if (!customerId) window.location.href = 'login.html';
+if (!customerId) window.location.href = '/auth/login.html';
 
 let accounts = [];
 
@@ -322,7 +322,7 @@ async function executeTransfer() {
                 showSystemModal('ALERTA ANTIFRAUDE', errorData.message, 'error');
                 setTimeout(() => {
                     sessionStorage.clear();
-                    window.location.href = 'login.html';
+                    window.location.href = '/auth/login.html';
                 }, 3000);
                 return;
             }
@@ -333,13 +333,13 @@ async function executeTransfer() {
         if (res.ok) {
             const tx = await res.json();
             const txId = tx && tx.id ? tx.id : '';
-            window.location.href = `exito.html?txId=${encodeURIComponent(txId)}`;
+            window.location.href = `/common/exito.html?txId=${encodeURIComponent(txId)}`;
         } else {
-            window.location.href = 'fallo.html';
+            window.location.href = '/common/fallo.html';
         }
     } catch (err) {
         hideModal();
-        window.location.href = 'fallo.html';
+        window.location.href = '/common/fallo.html';
     }
 }
 

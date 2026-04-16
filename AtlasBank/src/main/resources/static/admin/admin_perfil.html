@@ -68,26 +68,26 @@
 <div class="admin-wrapper">
     <aside>
         <span class="menu-label">Navegación</span>
-        <a href="panel_admin.html" class="menu-link">Dashboard Principal</a>
+        <a href="/admin/panel_admin.html" class="menu-link">Dashboard Principal</a>
         
         <br>
         <span class="menu-label">Gestión de Usuarios</span>
-        <a href="admin_directorio.html" class="menu-link">Directorio General</a>
-        <a href="admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
+        <a href="/admin/admin_directorio.html" class="menu-link">Directorio General</a>
+        <a href="/admin/admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
 
         <br>
         <span class="menu-label">Operaciones</span>
-        <a href="admin_transacciones.html" class="menu-link">Monitor Financiero</a>
-        <a href="admin_simulador.html" class="menu-link">Simulador de Depósito</a>
+        <a href="/admin/admin_transacciones.html" class="menu-link">Monitor Financiero</a>
+        <a href="/admin/admin_simulador.html" class="menu-link">Simulador de Depósito</a>
 
         <br>
         <span class="menu-label">Seguridad y Cuenta</span>
-        <a href="admin_seguridad.html" class="menu-link">Control de Seguridad</a>
-        <a href="admin_perfil.html" class="menu-link active">Mi Perfil</a>
+        <a href="admin_/customer/seguridad.html" class="menu-link">Control de Seguridad</a>
+        <a href="admin_/customer/perfil.html" class="menu-link active">Mi Perfil</a>
 
         <br>
         <span class="menu-label">Sistema</span>
-        <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
+        <a href="#" onclick="sessionStorage.clear(); window.location.href='/auth/login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
     </aside>
 
     <section>
@@ -130,7 +130,7 @@ async function loadData() {
     const username = sessionStorage.getItem('adminUser');
     const role = sessionStorage.getItem('role');
     
-    if (!username) { window.location.href = 'login.html'; return; }
+    if (!username) { window.location.href = '/auth/login.html'; return; }
 
     document.getElementById('username').value = username;
     document.getElementById('displayUsername').textContent = username.toUpperCase();
@@ -150,7 +150,7 @@ document.getElementById('passwordForm').addEventListener('submit', (e) => {
     e.preventDefault();
     alert('Funcionalidad de cambio de contraseña completada. Por seguridad, la sesión se reiniciará.');
     sessionStorage.clear();
-    window.location.href = 'login.html';
+    window.location.href = '/auth/login.html';
 });
 
 loadData();

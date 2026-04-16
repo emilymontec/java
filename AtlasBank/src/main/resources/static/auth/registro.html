@@ -89,7 +89,7 @@
 
 <header>
     <div class="logo">AtlasBank</div>
-    <a href="inicio.html" class="back-link">← Volver al Inicio</a>
+    <a href="/inicio.html" class="back-link">← Volver al Inicio</a>
 </header>
 
 <main>
@@ -134,7 +134,7 @@
         </form>
 
         <div class="login-link">
-            ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+            ¿Ya tienes cuenta? <a href="/auth/login.html">Inicia sesión</a>
         </div>
     </div>
 </main>
@@ -162,7 +162,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
             sessionStorage.setItem('customerId', customerId);
             sessionStorage.setItem('fullName', `${firstName} ${lastName}`);
             sessionStorage.setItem('role', 'USER');
-            window.location.href = 'dashboard.html';
+            window.location.href = '/customer/dashboard.html';
         } else {
             errorMsg.textContent = 'No se pudo crear la cuenta. Intenta con otro identificador.';
             errorMsg.style.display = 'block';

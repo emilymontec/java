@@ -165,7 +165,7 @@
 
     <div class="login-footer">
         <a href="#">¿Olvidaste tu acceso?</a>
-        <a href="registro.html" style="color: var(--primario);">Abrir cuenta</a>
+        <a href="/auth/registro.html" style="color: var(--primario);">Abrir cuenta</a>
     </div>
 </div>
 
@@ -188,7 +188,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             const data = await response.json();
             sessionStorage.setItem('adminUser', username);
             sessionStorage.setItem('role', (data.role || '').toUpperCase());
-            window.location.href = 'panel_admin.html';
+            window.location.href = '/admin/panel_admin.html';
             return;
         }
 
@@ -203,7 +203,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             sessionStorage.setItem('customerId', username);
             sessionStorage.setItem('fullName', data.fullName || username);
             sessionStorage.setItem('role', (data.role || 'USER').toUpperCase());
-            window.location.href = 'dashboard.html';
+            window.location.href = '/customer/dashboard.html';
         } else {
             errorMsg.textContent = 'Credenciales inválidas. Verifica tu información.';
             errorMsg.style.display = 'block';

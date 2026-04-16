@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank Admin | Directorio</title>
+    <title>AtlasBank Admin | Transacciones</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -43,10 +43,6 @@
         th { background: var(--gris-fondo); text-align: left; padding: 12px 20px; font-size: 0.7rem; text-transform: uppercase; color: var(--gris-texto); }
         td { padding: 15px 20px; border-bottom: 1px solid var(--gris-fondo); }
 
-        .btn-action { padding: 6px 12px; border: 1px solid var(--negro); background: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; text-transform: uppercase; }
-        .btn-action.approve { border-color: var(--primario); color: var(--primario); }
-        .btn-action.approve:hover { background: var(--primario); color: white; }
-
         @media (max-width: 900px) {
             .admin-wrapper { grid-template-columns: 1fr; }
             aside { display: none; }
@@ -63,46 +59,46 @@
 <div class="admin-wrapper">
     <aside>
         <span class="menu-label">Navegación</span>
-        <a href="panel_admin.html" class="menu-link">Dashboard Principal</a>
+        <a href="/admin/panel_admin.html" class="menu-link">Dashboard Principal</a>
         
         <br>
         <span class="menu-label">Gestión de Usuarios</span>
-        <a href="admin_directorio.html" class="menu-link active">Directorio General</a>
-        <a href="admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
+        <a href="/admin/admin_directorio.html" class="menu-link">Directorio General</a>
+        <a href="/admin/admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
 
         <br>
         <span class="menu-label">Operaciones</span>
-        <a href="admin_transacciones.html" class="menu-link">Monitor Financiero</a>
-        <a href="admin_simulador.html" class="menu-link">Simulador de Depósito</a>
+        <a href="/admin/admin_transacciones.html" class="menu-link active">Monitor Financiero</a>
+        <a href="/admin/admin_simulador.html" class="menu-link">Simulador de Depósito</a>
 
         <br>
         <span class="menu-label">Seguridad y Cuenta</span>
-        <a href="admin_seguridad.html" class="menu-link">Control de Seguridad</a>
-        <a href="admin_perfil.html" class="menu-link">Mi Perfil</a>
+        <a href="admin_/customer/seguridad.html" class="menu-link">Control de Seguridad</a>
+        <a href="admin_/customer/perfil.html" class="menu-link">Mi Perfil</a>
 
         <br>
         <span class="menu-label">Sistema</span>
-        <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
+        <a href="#" onclick="sessionStorage.clear(); window.location.href='/auth/login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
     </aside>
 
     <section>
         <div class="table-section">
             <div class="table-header">
-                <h2>Directorio General de Clientes</h2>
+                <h2>Monitor Global de Transacciones</h2>
             </div>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>User ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
                         <th>Estado</th>
-                        <th>Acción</th>
                     </tr>
                 </thead>
-                <tbody id="customersTableBody">
-                    <tr><td colspan="6" style="text-align:center; padding:40px;">Cargando...</td></tr>
+                <tbody id="transactionsTableBody">
+                    <tr><td colspan="6" style="text-align:center; padding:40px;">Cargando historial...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -120,50 +116,30 @@ async function loadData() {
             document.getElementById('pendingCount').textContent = stats.pendingAccounts;
         }
 
-        const res = await fetch('/api/admin/customers');
+        const res = await fetch('/api/transactions');
         if (res.ok) {
-            const customers = await res.json();
-            const tbody = document.getElementById('customersTableBody');
+            const txs = await res.json();
+            const tbody = document.getElementById('transactionsTableBody');
             tbody.innerHTML = '';
-            customers.forEach(c => {
+            txs.forEach(tx => {
                 const tr = document.createElement('tr');
-                let statusColor = 'var(--primario)';
-                if (c.status === 'PENDING') statusColor = 'var(--gris-texto)';
-                if (c.status === 'INACTIVE') statusColor = 'var(--alerta)';
-
-                let actions = '';
-                if (c.status === 'PENDING') {
-                    actions = `<button onclick="updateStatus(${c.id}, 'ACTIVE')" class="btn-action approve">Aprobar</button>`;
-                } else if (c.status === 'ACTIVE') {
-                    actions = `<button onclick="updateStatus(${c.id}, 'INACTIVE')" class="btn-action">Desactivar</button>`;
-                } else {
-                    actions = `<button onclick="updateStatus(${c.id}, 'ACTIVE')" class="btn-action approve">Activar</button>`;
-                }
+                const source = tx.sourceAccount ? (tx.sourceAccount.accountNumber || tx.sourceAccount.id) : '-';
+                const target = tx.targetAccount ? (tx.targetAccount.accountNumber || tx.targetAccount.id) : '-';
+                const date = tx.createdAt ? new Date(tx.createdAt).toLocaleString() : '-';
+                const amount = typeof tx.amount === 'number' ? tx.amount : Number(tx.amount || 0);
 
                 tr.innerHTML = `
-                    <td>${c.id}</td>
-                    <td>${c.customerId || c.id}</td>
-                    <td>${c.fullName}</td>
-                    <td>${c.email}</td>
-                    <td style="color:${statusColor}; font-weight:bold;">${c.status}</td>
-                    <td>${actions}</td>
+                    <td>#${tx.id}</td>
+                    <td>${source}</td>
+                    <td>${tx.type}${target !== '-' ? ` → ${target}` : ''}</td>
+                    <td>$${amount.toFixed(2)}</td>
+                    <td>${date}</td>
+                    <td><small style="color:var(--primario); font-weight:bold;">COMPLETADO</small></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
     } catch (err) { console.error(err); }
-}
-
-async function updateStatus(id, newStatus) {
-    if (!confirm(`¿Cambiar estado a ${newStatus}?`)) return;
-    try {
-        const res = await fetch(`/api/admin/customers/${id}/status`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: newStatus })
-        });
-        if (res.ok) loadData();
-    } catch (err) { alert('Error al actualizar'); }
 }
 
 loadData();

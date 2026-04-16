@@ -133,17 +133,17 @@
         <div>
             <p style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; letter-spacing: 1px;">OPERACIONES RÁPIDAS</p>
             <div class="quick-actions" style="grid-template-columns: repeat(2, 1fr);">
-                <a href="transferencias.html" class="action-btn">Transferir</a>
-                <a href="ahorro_metas.html" class="action-btn" style="background:var(--primario); color:white; border-color:var(--primario);">Metas Ahorro</a>
-                <a href="movimientos.html" class="action-btn">Movimientos</a>
-                <a href="tarjetas.html" class="action-btn">Mis Tarjetas</a>
-                <a href="cuentas.html" class="action-btn" style="grid-column: span 2;">Mis Cuentas y Productos</a>
+                <a href="/customer/transferencias.html" class="action-btn">Transferir</a>
+                <a href="/customer/ahorro_metas.html" class="action-btn" style="background:var(--primario); color:white; border-color:var(--primario);">Metas Ahorro</a>
+                <a href="/customer/movimientos.html" class="action-btn">Movimientos</a>
+                <a href="/customer/tarjetas.html" class="action-btn">Mis Tarjetas</a>
+                <a href="/customer/cuentas.html" class="action-btn" style="grid-column: span 2;">Mis Cuentas y Productos</a>
             </div>
         </div>
 
         <nav class="sidebar-nav">
-            <a href="usuarios.html">CONFIGURACIÓN DE CUENTA</a>
-            <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" style="color: #ef4444;">CERRAR SESIÓN SEGURA</a>
+            <a href="/customer/perfil.html">CONFIGURACIÓN DE CUENTA</a>
+            <a href="#" onclick="sessionStorage.clear(); window.location.href='/auth/login.html'; return false;" style="color: #ef4444;">CERRAR SESIÓN SEGURA</a>
         </nav>
     </section>
 </main>
@@ -152,7 +152,7 @@
 async function loadDashboard() {
     const customerId = sessionStorage.getItem('customerId');
     if (!customerId) {
-        window.location.href = 'login.html';
+        window.location.href = '/auth/login.html';
         return;
     }
 

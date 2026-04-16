@@ -25,7 +25,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     public Customer create(@Valid @RequestBody CreateCustomerRequest request) {
         Customer c = service.create(request);
-        accountService.create(new com.bank.atlasbank.account.CreateAccountRequest(c.getId(), com.bank.atlasbank.account.AccountType.SAVINGS, java.math.BigDecimal.ZERO));
+        accountService.create(new com.bank.atlasbank.account.CreateAccountRequest(c.getCustomerId(), com.bank.atlasbank.account.AccountType.SAVINGS, java.math.BigDecimal.ZERO));
         return c;
     }
 

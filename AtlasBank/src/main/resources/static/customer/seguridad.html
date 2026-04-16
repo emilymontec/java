@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Privacidad</title>
+    <title>AtlasBank | Seguridad</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -54,9 +54,13 @@
         .form-group label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--gris-texto); }
 
         input {
-            width: auto;
-            margin-right: 10px;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gris-borde);
+            font-size: 0.95rem;
+            outline: none;
         }
+        input:focus { border-color: var(--primario); background: var(--primario-soft); }
 
         .btn-save {
             padding: 14px 28px;
@@ -71,6 +75,15 @@
         }
         .btn-save:hover { background: var(--primario); }
 
+        .security-info {
+            background: var(--primario-soft);
+            padding: 20px;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--primario);
+            margin-top: 20px;
+            color: var(--primario);
+        }
+
         @media (max-width: 900px) {
             main { grid-template-columns: 1fr; }
             .settings-nav { display: none; }
@@ -81,38 +94,38 @@
 
 <header>
     <div class="logo">AtlasBank</div>
-    <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
+    <a href="/customer/dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
 </header>
 
 <main>
     <aside class="settings-nav">
-        <a href="usuarios.html">Datos Personales</a>
-        <a href="seguridad.html">Seguridad y Llaves</a>
-        <a href="privacidad.html" class="active">Privacidad</a>
-        <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" class="logout">Finalizar Sesión</a>
+        <a href="/customer/perfil.html">Datos Personales</a>
+        <a href="/customer/seguridad.html" class="active">Seguridad y Llaves</a>
+        <a href="/customer/privacidad.html">Privacidad</a>
+        <a href="#" onclick="sessionStorage.clear(); window.location.href='/auth/login.html'; return false;" class="logout">Finalizar Sesión</a>
     </aside>
 
     <section class="settings-content">
-        <div class="settings-section" id="privacidad">
-            <h2>Políticas y Privacidad</h2>
-            <form id="privacyForm">
-                <div class="form-group" style="display:flex; align-items:center; gap: 10px;">
-                    <input type="checkbox" id="marketing" checked>
-                    <label style="margin:0;">Acepto recibir correos y notificaciones sobre nuevos productos</label>
+        <div class="settings-section" id="seguridad">
+            <h2>Seguridad y Accesos</h2>
+            <form id="securityForm">
+                <div class="form-group">
+                    <label>Contraseña Actual</label>
+                    <input type="password" placeholder="••••••••" required>
                 </div>
-                <div class="form-group" style="display:flex; align-items:center; gap: 10px;">
-                    <input type="checkbox" id="dataSharing">
-                    <label style="margin:0;">Permitir compartir mis datos con terceros afiliados para mejores ofertas</label>
+                <div class="form-group">
+                    <label>Nueva Contraseña</label>
+                    <input type="password" placeholder="••••••••" required>
                 </div>
-                <br>
-                <button type="submit" class="btn-save">Guardar Preferencias</button>
+                <div class="form-group">
+                    <label>Confirmar Nueva Contraseña</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-save">Cambiar Contraseña</button>
             </form>
-            
-            <div style="margin-top:40px; font-size:0.85rem;">
-                <p><strong>Uso de Datos Personales (AtlasBank)</strong></p>
-                <p>Tu información se encuentra encriptada bajo estándares internacionales. Puedes descargar tu información en cualquier momento según las disposiciones de la ley general de datos.</p>
-                <br>
-                <a href="#" style="color:var(--alerta);">Solicitar Eliminación de Cuenta y Datos (Irreversible)</a>
+
+            <div class="security-info">
+                ⚠️ Se recomienda cambiar tu contraseña cada 90 días para mantener la seguridad de tu cuenta.
             </div>
         </div>
     </section>
@@ -123,18 +136,20 @@ const role = (sessionStorage.getItem('role') || '').toUpperCase();
 const isAdmin = role === 'ADMIN' || role === 'EXECUTIVE';
 const userId = isAdmin ? sessionStorage.getItem('adminUser') : sessionStorage.getItem('customerId');
 
-if (!userId) window.location.href = 'login.html';
+if (!userId) window.location.href = '/auth/login.html';
 
 // Update context-sensitive UI
 const backLink = document.querySelector('.back-link');
 if (isAdmin) {
-    backLink.href = 'panel_admin.html';
+    backLink.href = '/admin/panel_admin.html';
     backLink.textContent = '← Volver al Panel Admin';
 }
 
-document.getElementById('privacyForm').addEventListener('submit', function(e) {
+document.getElementById('securityForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    alert('Tus preferencias de privacidad han sido guardadas y actualizadas.');
+    alert('Contraseña actualizada correctamente. Por seguridad, inicia sesión nuevamente.');
+    sessionStorage.clear();
+    window.location.href='/auth/login.html';
 });
 </script>
 

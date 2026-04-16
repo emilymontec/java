@@ -72,26 +72,26 @@
 <div class="admin-wrapper">
     <aside>
         <span class="menu-label">Navegación</span>
-        <a href="panel_admin.html" class="menu-link active">Dashboard Principal</a>
+        <a href="/admin/panel_admin.html" class="menu-link active">Dashboard Principal</a>
         
         <br>
         <span class="menu-label">Gestión de Usuarios</span>
-        <a href="admin_directorio.html" class="menu-link">Directorio General</a>
-        <a href="admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
+        <a href="/admin/admin_directorio.html" class="menu-link">Directorio General</a>
+        <a href="/admin/admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
 
         <br>
         <span class="menu-label">Operaciones</span>
-        <a href="admin_transacciones.html" class="menu-link">Monitor Financiero</a>
-        <a href="admin_simulador.html" class="menu-link">Simulador de Depósito</a>
+        <a href="/admin/admin_transacciones.html" class="menu-link">Monitor Financiero</a>
+        <a href="/admin/admin_simulador.html" class="menu-link">Simulador de Depósito</a>
 
         <br>
         <span class="menu-label">Seguridad y Cuenta</span>
-        <a href="admin_seguridad.html" class="menu-link">Control de Seguridad</a>
-        <a href="admin_perfil.html" class="menu-link">Mi Perfil</a>
+        <a href="admin_/customer/seguridad.html" class="menu-link">Control de Seguridad</a>
+        <a href="admin_/customer/perfil.html" class="menu-link">Mi Perfil</a>
 
         <br>
         <span class="menu-label">Sistema</span>
-        <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
+        <a href="#" onclick="sessionStorage.clear(); window.location.href='/auth/login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
     </aside>
 
     <section>
@@ -103,23 +103,23 @@
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--primario);" onclick="window.location.href='admin_directorio.html'">
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--primario);" onclick="window.location.href='/admin/admin_directorio.html'">
                 <h3>Gestionar Directorio</h3>
                 <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Ver y editar todos los clientes registrados.</p>
             </div>
-            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--primario);" onclick="window.location.href='admin_aprobaciones.html'">
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--primario);" onclick="window.location.href='/admin/admin_aprobaciones.html'">
                 <h3>Aprobaciones Pendientes</h3>
                 <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Validar nuevas solicitudes de clientes.</p>
             </div>
-            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--negro);" onclick="window.location.href='admin_transacciones.html'">
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--negro);" onclick="window.location.href='/admin/admin_transacciones.html'">
                 <h3>Monitor Financiero</h3>
                 <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Auditoría global de movimientos bancarios.</p>
             </div>
-            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--negro);" onclick="window.location.href='admin_simulador.html'">
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--negro);" onclick="window.location.href='/admin/admin_simulador.html'">
                 <h3>Operaciones Especiales</h3>
                 <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Simulador de depósitos y fondeo manual.</p>
             </div>
-            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--alerta);" onclick="window.location.href='admin_seguridad.html'">
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--alerta);" onclick="window.location.href='admin_/customer/seguridad.html'">
                 <h3>Seguridad Crítica</h3>
                 <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Gestión de bloqueos y recuperación de cuentas.</p>
             </div>
@@ -130,7 +130,7 @@
 <script>
 const role = (sessionStorage.getItem('role') || '').toUpperCase();
 if (role !== 'ADMIN' && role !== 'EXECUTIVE') {
-    window.location.href = 'login.html';
+    window.location.href = '/auth/login.html';
 }
 
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();

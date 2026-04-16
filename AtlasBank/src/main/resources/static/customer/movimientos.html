@@ -111,7 +111,7 @@
 
 <header>
     <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">MOVIMIENTOS</span></div>
-    <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
+    <a href="/customer/dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
 </header>
 
 <main>
@@ -178,7 +178,7 @@
 
 <script>
 const customerId = sessionStorage.getItem('customerId');
-if (!customerId) window.location.href = 'login.html';
+if (!customerId) window.location.href = '/auth/login.html';
 
 document.getElementById('customerIdDisplay').textContent = customerId;
 

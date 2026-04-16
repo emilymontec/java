@@ -170,13 +170,14 @@
 
 <header>
     <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">MIS CUENTAS</span></div>
-    <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
+    <a href="/customer/dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
 </header>
 
 <main>
     <section class="section-intro">
         <p style="color: var(--primario); font-weight: 600; margin-bottom: 10px;">[ ÁREA DE PRODUCTOS ]</p>
         <h1>Mis Cuentas</h1>
+        <p id="customerIdDisplay" style="font-size: 0.8rem; font-weight: 600; opacity: 0.6; margin-bottom: 10px;"></p>
         <p>Resumen detallado de tus activos y credenciales de sistema.</p>
     </section>
 
@@ -221,7 +222,7 @@
 async function loadAccounts() {
     const customerId = sessionStorage.getItem('customerId');
     if (!customerId) {
-        window.location.href = 'login.html';
+        window.location.href = '/auth/login.html';
         return;
     }
 
@@ -265,8 +266,8 @@ async function loadAccounts() {
                             <p class="detail-value">${acc.clabe || 'N/A'} <button class="copy-btn" onclick="navigator.clipboard.writeText('${acc.clabe || ''}')">Copiar</button></p>
                         </div>
                         <div class="account-actions">
-                            <a href="movimientos.html" class="action-link">Ver Extractos</a>
-                            <a href="transferencias.html" class="action-link">Realizar Transferencia</a>
+                            <a href="/customer/movimientos.html" class="action-link">Ver Extractos</a>
+                            <a href="/customer/transferencias.html" class="action-link">Realizar Transferencia</a>
                         </div>
                     </div>
                 `;
@@ -318,8 +319,12 @@ document.getElementById('createAccountForm').addEventListener('submit', async fu
             loadAccounts();
             document.getElementById('createAccountForm').reset();
         } else {
-            const errData = await res.json();
-            showSystemModal('Error de Solicitud', errData.message || 'No se pudo procesar la apertura de cuenta.', 'error');
+            let errorMsg = 'No se pudo procesar la apertura de cuenta.';
+            try {
+                const errData = await res.json();
+                errorMsg = errData.message || errorMsg;
+            } catch(e) {}
+            showSystemModal('Error de Solicitud', errorMsg, 'error');
         }
     } catch (err) {
         showSystemModal('Error de Conexión', 'El servidor no responde. Intenta más tarde.', 'error');
