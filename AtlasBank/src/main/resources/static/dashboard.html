@@ -111,6 +111,11 @@
         <span class="balance-label">[ SALDO DISPONIBLE ]</span>
         <h1 id="balanceAmount" class="balance-amount">$0.00</h1>
 
+        <div id="securityAlert" style="display:none; background: #fee2e2; border: 1px solid #ef4444; padding: 20px; margin-bottom: 30px; color: #b91c1c;">
+            <strong style="display:flex; align-items:center; gap:10px;"><span style="font-size:1.5rem;">⚠️</span> CUENTA RESTRINGIDA POR SEGURIDAD</strong>
+            <p style="font-size: 0.85rem; margin-top: 5px;">Hemos detectado actividad inusual. Por tu protección, las transferencias salientes han sido bloqueadas. Contacta a soporte para verificar tu identidad.</p>
+        </div>
+
         <div class="transactions-title">Movimientos recientes</div>
 
         <div id="transactionContainer" class="transaction-container">
@@ -154,6 +159,16 @@ async function loadDashboard() {
     try {
         const fullName = sessionStorage.getItem('fullName') || customerId;
         document.getElementById('userName').textContent = fullName.toUpperCase();
+        
+        // Check for blocked status (simulated through a dedicated check or existing data)
+        const custRes = await fetch(`/api/admin/customers`); // For demo, let's find ourselves
+        if (custRes.ok) {
+            const customers = await custRes.json();
+            const me = customers.find(c => c.customerId === customerId);
+            if (me && me.status === 'BLOCKED') {
+                document.getElementById('securityAlert').style.display = 'block';
+            }
+        }
         
         let initls = "US";
         if(fullName.includes(" ")){

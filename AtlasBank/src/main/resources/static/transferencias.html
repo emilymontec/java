@@ -152,6 +152,17 @@
                 <label>Concepto de pago</label>
                 <input type="text" id="description" placeholder="ej. Pago de Renta">
             </div>
+
+            <div class="input-group" style="background: var(--primario-soft); padding: 20px; border-radius: 8px;">
+                <label style="color: var(--primario);">[ SIMULACIÓN ANTIFRAUDE ] Ubicación de Transacción</label>
+                <select id="location" style="border-color: var(--primario);">
+                    <option value="Colombia">Colombia (Ubicación Habitual)</option>
+                    <option value="Rusia">Rusia (Riesgo Alto)</option>
+                    <option value="Corea del Norte">Corea del Norte (Riesgo Extremo)</option>
+                    <option value="Islas Caiman">Islas Caimán (Paraíso Fiscal)</option>
+                </select>
+                <p style="font-size: 0.7rem; color: var(--gris-texto); margin-top: 10px;">El sistema AtlasShield™ analiza tu IP y geolocalización en tiempo real para proteger tu patrimonio.</p>
+            </div>
         </form>
     </section>
 
@@ -251,6 +262,7 @@ async function executeTransfer() {
     const sourceAccountId = document.getElementById('sourceAccount').value;
     const destAccount = document.getElementById('destinationAccount').value;
     const amount = parseFloat(document.getElementById('amount').value);
+    const location = document.getElementById('location').value;
     const targetAccountId = parseInt(destAccount);
 
     try {
@@ -260,9 +272,20 @@ async function executeTransfer() {
             body: JSON.stringify({
                 sourceAccountId: parseInt(sourceAccountId),
                 targetAccountId,
-                amount
+                amount,
+                location
             })
         });
+
+        if (res.status === 400 || res.status === 500) {
+            const errorData = await res.json();
+            if (errorData.message && errorData.message.includes('antifraude')) {
+                alert('⚠️ ALERTA DE SEGURIDAD: ' + errorData.message);
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+                return;
+            }
+        }
 
         hideModal();
 

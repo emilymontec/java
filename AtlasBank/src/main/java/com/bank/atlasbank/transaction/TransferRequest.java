@@ -10,6 +10,7 @@ public record TransferRequest(
         @NotNull(message = "targetAccountId es obligatorio") Long targetAccountId,
         @NotNull(message = "amount es obligatorio")
         @DecimalMin(value = "0.01", inclusive = true, message = "El monto debe ser mayor a cero")
-        BigDecimal amount
+        BigDecimal amount,
+        String location
 ) {
 }

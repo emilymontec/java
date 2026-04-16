@@ -15,13 +15,16 @@ public class TransactionService {
     private final AccountService accountService;
     private final TransactionRepository transactionRepository;
     private final com.bank.atlasbank.savings.SavingsGoalService savingsGoalService;
+    private final com.bank.atlasbank.security.AntiFraudService antiFraudService;
 
     public TransactionService(AccountService accountService, 
                               TransactionRepository transactionRepository,
-                              com.bank.atlasbank.savings.SavingsGoalService savingsGoalService) {
+                              com.bank.atlasbank.savings.SavingsGoalService savingsGoalService,
+                              com.bank.atlasbank.security.AntiFraudService antiFraudService) {
         this.accountService = accountService;
         this.transactionRepository = transactionRepository;
         this.savingsGoalService = savingsGoalService;
+        this.antiFraudService = antiFraudService;
     }
 
     @Transactional
@@ -57,15 +60,22 @@ public class TransactionService {
 
     @Transactional
     public BankTransaction transfer(TransferRequest request) {
+        Account source = accountService.findById(request.sourceAccountId());
+        Account target = accountService.findById(request.targetAccountId());
+
+        // Anti-fraud check
+        if (source.getCustomer() != null) {
+            if (antiFraudService.analyzeTransaction(source.getCustomer(), request.amount(), request.location())) {
+                throw new BusinessException("Transacción bloqueada por el sistema antifraude. Tu cuenta ha sido restringida por seguridad.");
+            }
+        }
+
         if (request.sourceAccountId().equals(request.targetAccountId())) {
             throw new BusinessException("No se puede transferir a la misma cuenta");
         }
 
         accountService.withdraw(request.sourceAccountId(), request.amount());
         accountService.deposit(request.targetAccountId(), request.amount());
-
-        Account source = accountService.findById(request.sourceAccountId());
-        Account target = accountService.findById(request.targetAccountId());
 
         BankTransaction tx = new BankTransaction();
         tx.setType(TransactionType.TRANSFER);
