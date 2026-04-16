@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtlasBank Admin | Transacciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primario: #15803d;
+            --alerta: #b91c1c;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-fondo: #f9fafb;
+            --gris-texto: #6b7280;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        body { background: var(--gris-fondo); color: var(--negro); font-size: 13px; }
+
+        header {
+            background: var(--negro); color: white;
+            padding: 10px 25px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .sys-status { font-size: 0.65rem; letter-spacing: 1px; color: var(--primario); font-weight: 600; }
+
+        .admin-wrapper { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+        aside { background: var(--blanco); border-right: 1px solid var(--gris-borde); padding: 30px 20px; }
+        .menu-label { font-size: 0.65rem; font-weight: 700; color: var(--gris-texto); text-transform: uppercase; margin-bottom: 15px; display: block; }
+        .menu-link { display: block; padding: 10px 0; text-decoration: none; color: var(--negro); font-weight: 500; border-bottom: 1px solid var(--gris-fondo); }
+        .menu-link:hover { color: var(--primario); }
+        .menu-link.active { color: var(--primario); border-right: 3px solid var(--primario); }
+
+        section { padding: 40px; }
+
+        .table-section { background: white; border: 1px solid var(--gris-borde); margin-bottom: 40px; }
+        .table-header { padding: 20px; border-bottom: 1px solid var(--gris-borde); display: flex; justify-content: space-between; align-items: center; }
+        .table-header h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--gris-fondo); text-align: left; padding: 12px 20px; font-size: 0.7rem; text-transform: uppercase; color: var(--gris-texto); }
+        td { padding: 15px 20px; border-bottom: 1px solid var(--gris-fondo); }
+
+        @media (max-width: 900px) {
+            .admin-wrapper { grid-template-columns: 1fr; }
+            aside { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>AtlasBank Admin</div>
+    <div class="sys-status"><span id="currentDate"></span></div>
+</header>
+
+<div class="admin-wrapper">
+    <aside>
+        <span class="menu-label">Navegación</span>
+        <a href="panel_admin.html" class="menu-link">Dashboard</a>
+        <br>
+        <span class="menu-label">Usuarios</span>
+        <a href="admin_directorio.html" class="menu-link">Directorio General</a>
+        <a href="admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
+
+        <br>
+        <span class="menu-label">Finanzas</span>
+        <a href="admin_transacciones.html" class="menu-link active">Transacciones</a>
+        <a href="admin_simulador.html" class="menu-link">Simulador</a>
+
+        <br>
+        <span class="menu-label">Sistema</span>
+        <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
+    </aside>
+
+    <section>
+        <div class="table-section">
+            <div class="table-header">
+                <h2>Monitor Global de Transacciones</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Origen</th>
+                        <th>Destino</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsTableBody">
+                    <tr><td colspan="6" style="text-align:center; padding:40px;">Cargando historial...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<script>
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+
+async function loadData() {
+    try {
+        const statsRes = await fetch('/api/admin/stats');
+        if (statsRes.ok) {
+            const stats = await statsRes.json();
+            document.getElementById('pendingCount').textContent = stats.pendingAccounts;
+        }
+
+        const res = await fetch('/api/transactions');
+        if (res.ok) {
+            const txs = await res.json();
+            const tbody = document.getElementById('transactionsTableBody');
+            tbody.innerHTML = '';
+            txs.forEach(tx => {
+                const tr = document.createElement('tr');
+                const source = tx.sourceAccount ? (tx.sourceAccount.accountNumber || tx.sourceAccount.id) : '-';
+                const target = tx.targetAccount ? (tx.targetAccount.accountNumber || tx.targetAccount.id) : '-';
+                const date = tx.createdAt ? new Date(tx.createdAt).toLocaleString() : '-';
+                const amount = typeof tx.amount === 'number' ? tx.amount : Number(tx.amount || 0);
+
+                tr.innerHTML = `
+                    <td>#${tx.id}</td>
+                    <td>${source}</td>
+                    <td>${tx.type}${target !== '-' ? ` → ${target}` : ''}</td>
+                    <td>$${amount.toFixed(2)}</td>
+                    <td>${date}</td>
+                    <td><small style="color:var(--primario); font-weight:bold;">COMPLETADO</small></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    } catch (err) { console.error(err); }
+}
+
+loadData();
+</script>
+</body>
+</html>

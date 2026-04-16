@@ -72,13 +72,13 @@
 <div class="admin-wrapper">
     <aside>
         <span class="menu-label">Usuarios</span>
-        <a href="#" class="menu-link">Directorio General</a>
-        <a href="#" class="menu-link" style="color: var(--primario);">Aprobaciones Pendientes (<span id="pendingCount">0</span>)</a>
+        <a href="admin_directorio.html" class="menu-link">Directorio General</a>
+        <a href="admin_aprobaciones.html" class="menu-link" style="color: var(--primario);">Aprobaciones (<span id="pendingCount">0</span>)</a>
 
         <br>
         <span class="menu-label">Finanzas</span>
-        <a href="#" class="menu-link">Monitor de Transacciones</a>
-        <a href="#" class="menu-link">Simulador de Depósito</a>
+        <a href="admin_transacciones.html" class="menu-link">Monitor de Transacciones</a>
+        <a href="admin_simulador.html" class="menu-link">Simulador de Depósito</a>
 
         <br>
         <span class="menu-label">Sistema</span>
@@ -93,51 +93,22 @@
             <div class="stat-card"><small>Alertas Riesgo</small><p id="riskAlerts" style="color: var(--alerta);">0</p></div>
         </div>
 
-        <div class="table-section">
-            <div class="table-header">
-                <h2 id="tableTitle">Directorio de Clientes</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--primario);" onclick="window.location.href='admin_directorio.html'">
+                <h3>Gestionar Directorio</h3>
+                <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Ver y editar todos los clientes registrados.</p>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID (Sys)</th>
-                        <th>User ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="pendingTableBody">
-                </tbody>
-            </table>
-        </div>
-
-        <div class="table-section">
-            <div class="table-header">
-                <h2>Últimas Transacciones (Monitor Global)</h2>
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--primario);" onclick="window.location.href='admin_aprobaciones.html'">
+                <h3>Aprobaciones Pendientes</h3>
+                <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Validar nuevas solicitudes de clientes.</p>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Origen</th>
-                        <th>Destino</th>
-                        <th>Monto</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="transactionsTableBody">
-                </tbody>
-            </table>
-        </div>
-
-        <div class="simulation-panel">
-            <h3 style="font-size: 1rem; margin-bottom: 10px;">Simulador de Depósito (Root)</h3>
-            <p style="font-size: 0.85rem; color: var(--gris-texto); margin-bottom: 15px;">Fondea recursos directamente al ID de una Cuenta bancaria.</p>
-            <div class="sim-form">
-                <input type="text" id="simAccountId" placeholder="ID de Cuenta Bancaria (Ej: 1)">
-                <input type="number" id="simAmount" placeholder="Monto">
-                <button onclick="simulateDeposit()" class="btn-action simulate">Ejecutar</button>
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--negro);" onclick="window.location.href='admin_transacciones.html'">
+                <h3>Monitor Financiero</h3>
+                <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Auditoría global de movimientos bancarios.</p>
+            </div>
+            <div class="stat-card" style="cursor:pointer; border-left: 4px solid var(--negro);" onclick="window.location.href='admin_simulador.html'">
+                <h3>Operaciones Especiales</h3>
+                <p style="font-size: 0.8rem; color: var(--gris-texto); font-weight: normal; margin-top: 10px;">Simulador de depósitos y fondeo manual.</p>
             </div>
         </div>
     </section>
@@ -153,89 +124,17 @@ document.getElementById('currentDate').textContent = new Date().toLocaleDateStri
 
 async function loadAdminData() {
     try {
-        const customersRes = await fetch('/api/customers');
-        if (customersRes.ok) {
-            const customers = await customersRes.json();
-            document.getElementById('totalUsers').textContent = customers.length;
-            document.getElementById('pendingCount').textContent = "0";
-
-            // Populate customers table
-            const tbodyC = document.getElementById('pendingTableBody');
-            tbodyC.innerHTML = '';
-            customers.slice(0, 10).forEach(c => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${c.id}</td>
-                    <td>${c.customerId || c.id}</td>
-                    <td>${c.fullName}</td>
-                    <td>${c.email}</td>
-                    <td><small style="color:var(--primario);font-weight:bold;">ACTIVO</small></td>
-                `;
-                tbodyC.appendChild(tr);
-            });
-        }
-
-        const txRes = await fetch('/api/transactions');
-        let totalTxAlerts = 0;
-        if (txRes.ok) {
-            const txs = await txRes.json();
-            const tbody = document.getElementById('transactionsTableBody');
-            tbody.innerHTML = '';
-            txs.slice(0, 10).forEach(tx => {
-                const tr = document.createElement('tr');
-                const source = tx.sourceAccount ? (tx.sourceAccount.accountNumber || tx.sourceAccount.id) : '-';
-                const target = tx.targetAccount ? (tx.targetAccount.accountNumber || tx.targetAccount.id) : '-';
-                const amount = typeof tx.amount === 'number' ? tx.amount : Number(tx.amount || 0);
-                tr.innerHTML = `
-                    <td>#${tx.id}</td>
-                    <td>${source}</td>
-                    <td>${tx.type}${target !== '-' ? ` → ${target}` : ''}</td>
-                    <td>$${amount.toFixed(2)}</td>
-                    <td><small>COMPLETADO</small></td>
-                `;
-                tbody.appendChild(tr);
-
-                // Count large amounts as simulated risk alerts
-                if (amount >= 5000) totalTxAlerts++;
-            });
-
-            const last24h = Date.now() - (24 * 60 * 60 * 1000);
-            const volume = txs
-                .filter(tx => tx.createdAt && new Date(tx.createdAt).getTime() >= last24h)
-                .reduce((sum, tx) => {
-                    const a = typeof tx.amount === 'number' ? tx.amount : Number(tx.amount || 0);
-                    return sum + (Number.isFinite(a) ? a : 0);
-                }, 0);
-            document.getElementById('volume24h').textContent = `$${volume.toFixed(2)}`;
-            document.getElementById('riskAlerts').textContent = totalTxAlerts;
+        const statsRes = await fetch('/api/admin/stats');
+        if (statsRes.ok) {
+            const stats = await statsRes.json();
+            document.getElementById('totalUsers').textContent = stats.totalUsers;
+            document.getElementById('pendingAccounts').textContent = stats.pendingAccounts;
+            document.getElementById('pendingCount').textContent = stats.pendingAccounts;
+            document.getElementById('volume24h').textContent = `$${Number(stats.volume24h).toFixed(2)}`;
+            document.getElementById('riskAlerts').textContent = stats.riskAlerts;
         }
     } catch (err) {
-        console.error('Error loading admin data:', err);
-    }
-}
-
-async function simulateDeposit() {
-    const accountId = document.getElementById('simAccountId').value;
-    const amount = parseFloat(document.getElementById('simAmount').value);
-
-    if (!accountId || !amount) {
-        alert('Completa todos los campos');
-        return;
-    }
-
-    try {
-        const res = await fetch(`/api/transactions/deposit/${encodeURIComponent(accountId)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount })
-        });
-
-        if (res.ok) {
-            alert('Depósito simulado exitoso');
-            loadAdminData();
-        }
-    } catch (err) {
-        alert('Error al simular depósito');
+        console.error('Error loading admin stats:', err);
     }
 }
 

@@ -57,6 +57,7 @@ public class DataInitializer {
                 cliente.setEmail("demo@atlasbank.com");
                 cliente.setPhone("+52 000 000 0000");
                 cliente.setPassword("demo1234");
+                cliente.setStatus("ACTIVE");
                 customerRepository.save(cliente);
 
                 com.bank.atlasbank.account.Account acc = new com.bank.atlasbank.account.Account();

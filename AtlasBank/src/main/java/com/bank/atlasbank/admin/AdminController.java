@@ -31,4 +31,21 @@ public class AdminController {
             "message", "Credenciales inválidas"
         ));
     }
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getStats() {
+        return ResponseEntity.ok(adminService.getDashboardStats());
+    }
+
+    @GetMapping("/customers")
+    public ResponseEntity<?> getCustomers() {
+        return ResponseEntity.ok(adminService.getAllCustomers());
+    }
+
+    @PutMapping("/customers/{id}/status")
+    public ResponseEntity<?> updateCustomerStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String status = body.get("status");
+        if (status == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(adminService.updateCustomerStatus(id, status));
+    }
 }

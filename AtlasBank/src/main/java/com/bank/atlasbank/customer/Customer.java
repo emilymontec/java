@@ -27,6 +27,9 @@ public class Customer {
     private String password;
 
     @Column(nullable = false)
+    private String status = "PENDING";
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -46,5 +49,7 @@ public class Customer {
     public void setPhone(String phone) { this.phone = phone; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 }

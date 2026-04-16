@@ -1,23 +1,78 @@
 package com.bank.atlasbank.admin;
 
+import com.bank.atlasbank.customer.Customer;
+import com.bank.atlasbank.customer.CustomerRepository;
+import com.bank.atlasbank.account.AccountRepository;
+import com.bank.atlasbank.transaction.TransactionRepository;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class AdminService {
 
     private final AdminRepository adminRepository;
+    private final CustomerRepository customerRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
     private final Environment environment;
 
-    public AdminService(AdminRepository adminRepository, Environment environment) {
+    public AdminService(AdminRepository adminRepository, 
+                        CustomerRepository customerRepository,
+                        AccountRepository accountRepository,
+                        TransactionRepository transactionRepository,
+                        Environment environment) {
         this.adminRepository = adminRepository;
+        this.customerRepository = customerRepository;
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
         this.environment = environment;
     }
 
     @PostConstruct
     public void initDefaultAdmin() {
+    }
+
+    public Map<String, Object> getDashboardStats() {
+        Map<String, Object> stats = new HashMap<>();
+        long totalUsers = customerRepository.count();
+        long pendingAccounts = customerRepository.findAll().stream()
+                .filter(c -> "PENDING".equalsIgnoreCase(c.getStatus()))
+                .count();
+
+        LocalDateTime last24h = LocalDateTime.now().minusDays(1);
+        BigDecimal volume24h = transactionRepository.findAll().stream()
+                .filter(tx -> tx.getCreatedAt() != null && tx.getCreatedAt().isAfter(last24h))
+                .map(tx -> tx.getAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        long riskAlerts = transactionRepository.findAll().stream()
+                .filter(tx -> tx.getAmount().compareTo(new BigDecimal("5000")) >= 0)
+                .count();
+
+        stats.put("totalUsers", totalUsers);
+        stats.put("pendingAccounts", pendingAccounts);
+        stats.put("volume24h", volume24h);
+        stats.put("riskAlerts", riskAlerts);
+        return stats;
+    }
+
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+
+    public Customer updateCustomerStatus(Long id, String status) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        customer.setStatus(status.toUpperCase());
+        return customerRepository.save(customer);
     }
 
     public Optional<Admin> authenticate(String username, String password) {

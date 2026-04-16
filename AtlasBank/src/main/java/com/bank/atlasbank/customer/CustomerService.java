@@ -59,7 +59,8 @@ public class CustomerService {
         if (normalizedCustomerId == null) return Optional.empty();
 
         return repository.findByCustomerId(normalizedCustomerId)
-                .filter(customer -> password.equals(customer.getPassword()));
+                .filter(customer -> password.equals(customer.getPassword()))
+                .filter(customer -> "ACTIVE".equalsIgnoreCase(customer.getStatus()));
     }
 
     public List<Customer> findAll() {
