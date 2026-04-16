@@ -13,7 +13,7 @@
             --blanco: #ffffff;
             --gris-borde: #e5e7eb;
             --gris-fondo: #f9fafb;
-            --gris-texto: #6b7280;
+            --gris-texto: #4b5563;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
@@ -110,11 +110,8 @@
 <body>
 
 <header>
-    <div class="logo">AtlasBank</div>
-    <div style="display: flex; gap: 20px; align-items: center;">
-        <div class="nav-meta">USUARIO: <span id="customerIdDisplay">---</span> / ESTADO: CONECTADO</div>
-        <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
-    </div>
+    <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">MOVIMIENTOS</span></div>
+    <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
 </header>
 
 <main>
