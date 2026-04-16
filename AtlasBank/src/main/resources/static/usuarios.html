@@ -137,18 +137,39 @@
 </main>
 
 <script>
-const customerId = sessionStorage.getItem('customerId');
-if (!customerId) window.location.href = 'login.html';
+const role = (sessionStorage.getItem('role') || '').toUpperCase();
+const isAdmin = role === 'ADMIN' || role === 'EXECUTIVE';
+const userId = isAdmin ? sessionStorage.getItem('adminUser') : sessionStorage.getItem('customerId');
+
+if (!userId) window.location.href = 'login.html';
+
+// Update context-sensitive UI
+const backLink = document.querySelector('.back-link');
+if (isAdmin) {
+    backLink.href = 'panel_admin.html';
+    backLink.textContent = '← Volver al Panel Admin';
+}
 
 async function loadProfile() {
     try {
-        const res = await fetch(`/api/customers/${customerId}`);
-        if (res.ok) {
-            const customer = await res.json();
-            document.getElementById('firstName').value = customer.firstName || '';
-            document.getElementById('lastName').value = customer.lastName || '';
-            document.getElementById('email').value = customer.email || '';
-            document.getElementById('phone').value = customer.phone || '';
+        if (isAdmin) {
+            // Admins don't have a detailed profile endpoint yet, using session data
+            document.getElementById('firstName').value = 'Personal';
+            document.getElementById('lastName').value = 'Bancario';
+            document.getElementById('email').value = userId + "@atlasbank.com";
+            document.getElementById('phone').value = 'SOPORTE INTERNO';
+            document.getElementById('email').disabled = true;
+            document.getElementById('phone').disabled = true;
+            document.querySelector('.btn-save').style.display = 'none';
+        } else {
+            const res = await fetch(`/api/customers/${userId}`);
+            if (res.ok) {
+                const customer = await res.json();
+                document.getElementById('firstName').value = customer.firstName || customer.fullName.split(' ')[0] || '';
+                document.getElementById('lastName').value = customer.lastName || customer.fullName.split(' ')[1] || '';
+                document.getElementById('email').value = customer.email || '';
+                document.getElementById('phone').value = customer.phone || '';
+            }
         }
     } catch (err) {
         console.error('Error loading profile:', err);
@@ -157,6 +178,7 @@ async function loadProfile() {
 
 document.getElementById('profileForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    if (isAdmin) return;
     alert('Datos actualizados correctamente');
 });
 

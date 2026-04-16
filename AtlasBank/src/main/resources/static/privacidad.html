@@ -119,8 +119,18 @@
 </main>
 
 <script>
-const customerId = sessionStorage.getItem('customerId');
-if (!customerId) window.location.href = 'login.html';
+const role = (sessionStorage.getItem('role') || '').toUpperCase();
+const isAdmin = role === 'ADMIN' || role === 'EXECUTIVE';
+const userId = isAdmin ? sessionStorage.getItem('adminUser') : sessionStorage.getItem('customerId');
+
+if (!userId) window.location.href = 'login.html';
+
+// Update context-sensitive UI
+const backLink = document.querySelector('.back-link');
+if (isAdmin) {
+    backLink.href = 'panel_admin.html';
+    backLink.textContent = '← Volver al Panel Admin';
+}
 
 document.getElementById('privacyForm').addEventListener('submit', function(e) {
     e.preventDefault();

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank Admin | Simulador</title>
+    <title>AtlasBank Admin | Mi Perfil</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primario: #15803d;
+            --primario-soft: #f0fdf4;
             --alerta: #b91c1c;
             --negro: #111827;
             --blanco: #ffffff;
@@ -35,18 +36,21 @@
 
         section { padding: 40px; }
 
-        .simulation-panel { background: white; border: 1px solid var(--gris-borde); padding: 40px; max-width: 600px; }
-        .simulation-panel h3 { font-size: 1.2rem; margin-bottom: 10px; }
-        .simulation-panel p { color: var(--gris-texto); margin-bottom: 30px; }
+        .profile-card { background: white; border: 1px solid var(--gris-borde); padding: 40px; max-width: 600px; }
+        .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
+        .avatar-circle { width: 60px; height: 60px; background: var(--negro); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 600; border-radius: 50%; }
         
-        .sim-form { display: flex; flex-direction: column; gap: 20px; }
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-section { margin-top: 30px; border-top: 1px solid var(--gris-fondo); pt: 30px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
         .form-group label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--gris-texto); }
-        .sim-form input { padding: 12px; border: 1px solid var(--gris-borde); outline: none; font-size: 1rem; }
-        .sim-form input:focus { border-color: var(--primario); }
-        
+        input { padding: 12px; border: 1px solid var(--gris-borde); outline: none; font-size: 0.95rem; }
+        input:focus { border-color: var(--primario); }
+        input[disabled] { background: var(--gris-fondo); color: var(--gris-texto); border-color: transparent; }
+
         .btn-action { padding: 15px; background: var(--negro); color: white; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
         .btn-action:hover { background: var(--primario); }
+
+        .role-badge { padding: 4px 8px; font-size: 0.65rem; font-weight: 700; background: var(--primario-soft); color: var(--primario); border: 1px solid var(--primario); border-radius: 4px; }
 
         @media (max-width: 900px) {
             .admin-wrapper { grid-template-columns: 1fr; }
@@ -74,12 +78,12 @@
         <br>
         <span class="menu-label">Operaciones</span>
         <a href="admin_transacciones.html" class="menu-link">Monitor Financiero</a>
-        <a href="admin_simulador.html" class="menu-link active">Simulador de Depósito</a>
+        <a href="admin_simulador.html" class="menu-link">Simulador de Depósito</a>
 
         <br>
         <span class="menu-label">Seguridad y Cuenta</span>
         <a href="admin_seguridad.html" class="menu-link">Control de Seguridad</a>
-        <a href="admin_perfil.html" class="menu-link">Mi Perfil</a>
+        <a href="admin_perfil.html" class="menu-link active">Mi Perfil</a>
 
         <br>
         <span class="menu-label">Sistema</span>
@@ -87,20 +91,33 @@
     </aside>
 
     <section>
-        <div class="simulation-panel">
-            <h3>Simulador de Depósito Bancario</h3>
-            <p>Fondea recursos de forma manual a cualquier ID de cuenta del sistema.</p>
-            
-            <div class="sim-form">
-                <div class="form-group">
-                    <label>ID de Cuenta Bancaria</label>
-                    <input type="text" id="simAccountId" placeholder="Ej: 1">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="avatar-circle" id="avatarInitials">AD</div>
+                <div>
+                    <h2 id="displayUsername">ADMIN</h2>
+                    <span id="roleBadge" class="role-badge">ADMINISTRADOR</span>
                 </div>
-                <div class="form-group">
-                    <label>Monto a Depositar ($)</label>
-                    <input type="number" id="simAmount" placeholder="0.00">
-                </div>
-                <button onclick="simulateDeposit()" class="btn-action">Ejecutar Depósito</button>
+            </div>
+
+            <div class="form-group">
+                <label>Nombre de Usuario (ID Interno)</label>
+                <input type="text" id="username" disabled>
+            </div>
+
+            <div class="form-section">
+                <h3 style="margin-bottom: 20px; font-size: 1rem;">Cambiar Contraseña Acceso</h3>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label>Contraseña Actual</label>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nueva Contraseña</label>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-action">Guardar Cambios</button>
+                </form>
             </div>
         </div>
     </section>
@@ -110,6 +127,16 @@
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
 
 async function loadData() {
+    const username = sessionStorage.getItem('adminUser');
+    const role = sessionStorage.getItem('role');
+    
+    if (!username) { window.location.href = 'login.html'; return; }
+
+    document.getElementById('username').value = username;
+    document.getElementById('displayUsername').textContent = username.toUpperCase();
+    document.getElementById('roleBadge').textContent = role || 'ADMIN';
+    document.getElementById('avatarInitials').textContent = username.substring(0, 2).toUpperCase();
+
     try {
         const statsRes = await fetch('/api/admin/stats');
         if (statsRes.ok) {
@@ -119,34 +146,12 @@ async function loadData() {
     } catch (err) { console.error(err); }
 }
 
-async function simulateDeposit() {
-    const accountId = document.getElementById('simAccountId').value;
-    const amount = parseFloat(document.getElementById('simAmount').value);
-
-    if (!accountId || !amount) {
-        alert('Completa todos los campos');
-        return;
-    }
-
-    try {
-        const res = await fetch(`/api/transactions/deposit/${encodeURIComponent(accountId)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount })
-        });
-
-        if (res.ok) {
-            alert('Depósito simulado exitoso');
-            document.getElementById('simAccountId').value = '';
-            document.getElementById('simAmount').value = '';
-        } else {
-            const error = await res.json();
-            alert('Error: ' + (error.message || 'No se pudo completar el depósito'));
-        }
-    } catch (err) {
-        alert('Error al simular depósito');
-    }
-}
+document.getElementById('passwordForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Funcionalidad de cambio de contraseña completada. Por seguridad, la sesión se reiniciará.');
+    sessionStorage.clear();
+    window.location.href = 'login.html';
+});
 
 loadData();
 </script>
