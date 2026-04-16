@@ -48,4 +48,27 @@ public class AdminController {
         if (status == null) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(adminService.updateCustomerStatus(id, status));
     }
+
+    @PostMapping("/customers/{id}/lock")
+    public ResponseEntity<?> lockCustomer(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.lockCustomer(id));
+    }
+
+    @PostMapping("/customers/{id}/unlock")
+    public ResponseEntity<?> unlockCustomer(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.unlockCustomer(id));
+    }
+
+    @PostMapping("/customers/{id}/reset-password")
+    public ResponseEntity<?> resetPassword(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String newPassword = body.get("password");
+        String adminRole = body.get("adminRole"); // Simulated role check for simplicity in this demo
+
+        if (!"ADMIN".equalsIgnoreCase(adminRole)) {
+            return ResponseEntity.status(403).body(Map.of("message", "Permisos insuficientes para recuperación de cuenta. Se requiere rol ADMIN."));
+        }
+
+        if (newPassword == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(adminService.resetPassword(id, newPassword));
+    }
 }

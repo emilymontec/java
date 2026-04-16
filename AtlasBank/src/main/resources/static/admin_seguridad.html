@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank Admin | Directorio</title>
+    <title>AtlasBank Admin | Seguridad</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -44,8 +44,19 @@
         td { padding: 15px 20px; border-bottom: 1px solid var(--gris-fondo); }
 
         .btn-action { padding: 6px 12px; border: 1px solid var(--negro); background: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; text-transform: uppercase; }
-        .btn-action.approve { border-color: var(--primario); color: var(--primario); }
-        .btn-action.approve:hover { background: var(--primario); color: white; }
+        .btn-action.lock { border-color: var(--alerta); color: var(--alerta); }
+        .btn-action.lock:hover { background: var(--alerta); color: white; }
+        .btn-action.unlock { border-color: var(--primario); color: var(--primario); }
+        .btn-action.unlock:hover { background: var(--primario); color: white; }
+        .btn-action.reset { background: var(--negro); color: white; }
+
+        .role-badge { 
+            padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; 
+            background: #f3f4f6; color: var(--gris-texto); border: 1px solid var(--gris-borde);
+        }
+
+        .modal { display:none; position:fixed; z-index:100; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; }
+        .modal-content { background:white; padding:30px; border-radius:4px; width:400px; }
 
         @media (max-width: 900px) {
             .admin-wrapper { grid-template-columns: 1fr; }
@@ -56,7 +67,7 @@
 <body>
 
 <header>
-    <div>AtlasBank Admin</div>
+    <div>AtlasBank Admin <span id="adminRoleBadge" class="role-badge">Cargando...</span></div>
     <div class="sys-status"><span id="currentDate"></span></div>
 </header>
 
@@ -66,7 +77,7 @@
         <a href="panel_admin.html" class="menu-link">Dashboard</a>
         <br>
         <span class="menu-label">Usuarios</span>
-        <a href="admin_directorio.html" class="menu-link active">Directorio General</a>
+        <a href="admin_directorio.html" class="menu-link">Directorio General</a>
         <a href="admin_aprobaciones.html" class="menu-link">Aprobaciones (<span id="pendingCount">0</span>)</a>
 
         <br>
@@ -76,7 +87,7 @@
 
         <br>
         <span class="menu-label">Seguridad</span>
-        <a href="admin_seguridad.html" class="menu-link">Seguridad y Bloqueos</a>
+        <a href="admin_seguridad.html" class="menu-link active">Seguridad y Bloqueos</a>
 
         <br>
         <span class="menu-label">Sistema</span>
@@ -86,7 +97,7 @@
     <section>
         <div class="table-section">
             <div class="table-header">
-                <h2>Directorio General de Clientes</h2>
+                <h2>Seguridad de Cuentas y Control de Acceso</h2>
             </div>
             <table>
                 <thead>
@@ -94,12 +105,12 @@
                         <th>ID</th>
                         <th>User ID</th>
                         <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Estado</th>
+                        <th>Estado de Cuenta</th>
                         <th>Acción</th>
+                        <th id="resetColHead" style="display:none;">Recuperación</th>
                     </tr>
                 </thead>
-                <tbody id="customersTableBody">
+                <tbody id="securityTableBody">
                     <tr><td colspan="6" style="text-align:center; padding:40px;">Cargando...</td></tr>
                 </tbody>
             </table>
@@ -107,10 +118,32 @@
     </section>
 </div>
 
-<script>
-document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+<div id="resetModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom:20px;">Restablecer Contraseña</h3>
+        <p style="font-size:0.8rem; margin-bottom:15px; color:var(--gris-texto);">Ingresa la nueva contraseña para el cliente <strong id="resetTargetName"></strong>.</p>
+        <input type="text" id="newPassword" placeholder="Nueva Contraseña" style="width:100%; padding:10px; margin-bottom:20px; border:1px solid var(--gris-borde);">
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button onclick="closeModal()" class="btn-action">Cancelar</button>
+            <button onclick="executeReset()" class="btn-action reset">Confirmar</button>
+        </div>
+    </div>
+</div>
 
-async function loadData() {
+<script>
+const adminRole = (sessionStorage.getItem('role') || '').toUpperCase();
+const isAdmin = adminRole === 'ADMIN';
+
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+document.getElementById('adminRoleBadge').textContent = adminRole;
+
+if (isAdmin) {
+    document.getElementById('resetColHead').style.display = 'table-cell';
+}
+
+let resetTargetId = null;
+
+async function loadSecurityData() {
     try {
         const statsRes = await fetch('/api/admin/stats');
         if (statsRes.ok) {
@@ -121,30 +154,31 @@ async function loadData() {
         const res = await fetch('/api/admin/customers');
         if (res.ok) {
             const customers = await res.json();
-            const tbody = document.getElementById('customersTableBody');
+            const tbody = document.getElementById('securityTableBody');
             tbody.innerHTML = '';
             customers.forEach(c => {
                 const tr = document.createElement('tr');
-                let statusColor = 'var(--primario)';
-                if (c.status === 'PENDING') statusColor = 'var(--gris-texto)';
-                if (c.status === 'INACTIVE') statusColor = 'var(--alerta)';
+                const isLocked = c.status === 'LOCKED' || c.status === 'INACTIVE';
+                
+                const lockBtn = isLocked 
+                    ? `<button onclick="unlockCustomer(${c.id})" class="btn-action unlock">Desbloquear</button>`
+                    : `<button onclick="lockCustomer(${c.id})" class="btn-action lock">Bloquear Cuenta</button>`;
 
-                let actions = '';
-                if (c.status === 'PENDING') {
-                    actions = `<button onclick="updateStatus(${c.id}, 'ACTIVE')" class="btn-action approve">Aprobar</button>`;
-                } else if (c.status === 'ACTIVE') {
-                    actions = `<button onclick="updateStatus(${c.id}, 'INACTIVE')" class="btn-action">Desactivar</button>`;
-                } else {
-                    actions = `<button onclick="updateStatus(${c.id}, 'ACTIVE')" class="btn-action approve">Activar</button>`;
-                }
+                const resetBtn = isAdmin 
+                    ? `<td style="display:table-cell;"><button onclick="openResetModal(${c.id}, '${c.fullName}')" class="btn-action reset">Recuperar</button></td>`
+                    : '';
 
                 tr.innerHTML = `
                     <td>${c.id}</td>
                     <td>${c.customerId || c.id}</td>
                     <td>${c.fullName}</td>
-                    <td>${c.email}</td>
-                    <td style="color:${statusColor}; font-weight:bold;">${c.status}</td>
-                    <td>${actions}</td>
+                    <td>
+                        <small style="color:${isLocked ? 'var(--alerta)' : 'var(--primario)'}; font-weight:bold;">
+                            ${c.status}
+                        </small>
+                    </td>
+                    <td>${lockBtn}</td>
+                    ${resetBtn}
                 `;
                 tbody.appendChild(tr);
             });
@@ -152,19 +186,54 @@ async function loadData() {
     } catch (err) { console.error(err); }
 }
 
-async function updateStatus(id, newStatus) {
-    if (!confirm(`¿Cambiar estado a ${newStatus}?`)) return;
+async function lockCustomer(id) {
+    if (!confirm('¿Seguro que deseas bloquear esta cuenta? El usuario perderá acceso inmediato.')) return;
     try {
-        const res = await fetch(`/api/admin/customers/${id}/status`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: newStatus })
-        });
-        if (res.ok) loadData();
-    } catch (err) { alert('Error al actualizar'); }
+        const res = await fetch(`/api/admin/customers/${id}/lock`, { method: 'POST' });
+        if (res.ok) loadSecurityData();
+    } catch (err) { alert('Error al bloquear'); }
 }
 
-loadData();
+async function unlockCustomer(id) {
+    try {
+        const res = await fetch(`/api/admin/customers/${id}/unlock`, { method: 'POST' });
+        if (res.ok) loadSecurityData();
+    } catch (err) { alert('Error al desbloquear'); }
+}
+
+function openResetModal(id, name) {
+    resetTargetId = id;
+    document.getElementById('resetTargetName').textContent = name;
+    document.getElementById('resetModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('resetModal').style.display = 'none';
+    document.getElementById('newPassword').value = '';
+}
+
+async function executeReset() {
+    const password = document.getElementById('newPassword').value;
+    if (!password) return alert('Ingresa una contraseña');
+
+    try {
+        const res = await fetch(`/api/admin/customers/${resetTargetId}/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password, adminRole })
+        });
+        if (res.ok) {
+            alert('Contraseña restablecida con éxito');
+            closeModal();
+            loadSecurityData();
+        } else {
+            const data = await res.json();
+            alert(data.message || 'Error al restablecer');
+        }
+    } catch (err) { alert('Error de conexión'); }
+}
+
+loadSecurityData();
 </script>
 </body>
 </html>

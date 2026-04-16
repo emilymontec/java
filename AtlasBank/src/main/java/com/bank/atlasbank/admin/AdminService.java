@@ -75,6 +75,21 @@ public class AdminService {
         return customerRepository.save(customer);
     }
 
+    public Customer lockCustomer(Long id) {
+        return updateCustomerStatus(id, "LOCKED");
+    }
+
+    public Customer unlockCustomer(Long id) {
+        return updateCustomerStatus(id, "ACTIVE");
+    }
+
+    public Customer resetPassword(Long id, String newPassword) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        customer.setPassword(newPassword);
+        return customerRepository.save(customer);
+    }
+
     public Optional<Admin> authenticate(String username, String password) {
         if (username == null || password == null) return Optional.empty();
 
