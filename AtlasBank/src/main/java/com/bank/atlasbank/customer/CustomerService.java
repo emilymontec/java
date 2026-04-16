@@ -54,13 +54,14 @@ public class CustomerService {
     }
 
     public Optional<Customer> authenticate(String customerId, String password) {
-        if (customerId == null || password == null) return Optional.empty();
+        if (customerId == null || password == null)
+            return Optional.empty();
         String normalizedCustomerId = normalize(customerId);
-        if (normalizedCustomerId == null) return Optional.empty();
+        if (normalizedCustomerId == null)
+            return Optional.empty();
 
         return repository.findByCustomerId(normalizedCustomerId)
-                .filter(customer -> password.equals(customer.getPassword()))
-                .filter(customer -> "ACTIVE".equalsIgnoreCase(customer.getStatus()));
+                .filter(customer -> password.equals(customer.getPassword()));
     }
 
     public List<Customer> findAll() {
@@ -74,19 +75,24 @@ public class CustomerService {
 
     private static String resolveFullName(CreateCustomerRequest request) {
         String fullName = normalizeOrNull(request.fullName());
-        if (fullName != null) return fullName;
+        if (fullName != null)
+            return fullName;
 
         String firstName = normalizeOrNull(request.firstName());
         String lastName = normalizeOrNull(request.lastName());
 
-        if (firstName == null && lastName == null) return null;
-        if (firstName == null) return lastName;
-        if (lastName == null) return firstName;
+        if (firstName == null && lastName == null)
+            return null;
+        if (firstName == null)
+            return lastName;
+        if (lastName == null)
+            return firstName;
         return firstName + " " + lastName;
     }
 
     private static String normalize(String value) {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         String trimmed = value.trim();
         return trimmed.isBlank() ? null : trimmed;
     }

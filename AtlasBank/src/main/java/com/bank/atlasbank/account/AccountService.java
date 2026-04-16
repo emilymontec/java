@@ -9,9 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class AccountService {
+
+    private static final Logger log = LoggerFactory.getLogger(AccountService.class);
 
     private final AccountRepository repository;
     private final CustomerService customerService;
@@ -23,14 +27,23 @@ public class AccountService {
 
     @Transactional
     public Account create(CreateAccountRequest request) {
-        Customer customer = customerService.findById(request.customerId());
+        log.info("Procesando apertura de cuenta para cliente: {}", request.customerId());
+        Customer customer = customerService.findByCustomerId(request.customerId());
 
         Account account = new Account();
         account.setCustomer(customer);
         account.setAccountType(request.accountType());
         account.setBalance(request.initialBalance());
         account.setAccountNumber(generateAccountNumber());
-        return repository.save(account);
+        account.setClabe(generateClabe());
+        
+        Account saved = repository.save(account);
+        log.info("Apertura exitosa. ID: {}, Número: {}", saved.getId(), saved.getAccountNumber());
+        return saved;
+    }
+
+    private String generateClabe() {
+        return "012" + (long)(Math.random() * 1000000000000000L);
     }
 
     public List<Account> findAll() {

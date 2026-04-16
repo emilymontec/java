@@ -55,6 +55,27 @@
         .form-group label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: rgba(255,255,255,0.6); }
         input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; outline: none; }
         input:focus { border-color: var(--primario); }
+        .goal-item:hover { border-color: var(--primario); }
+
+        /* Modal Sistema */
+        #systemModal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(17, 24, 39, 0.8);
+            display: none; justify-content: center; align-items: center;
+            z-index: 9999; backdrop-filter: blur(4px);
+        }
+        .system-modal-content {
+            background: white; padding: 40px; max-width: 450px; width: 90%;
+            text-align: center; border-radius: 2px; border: 1px solid var(--negro);
+        }
+        .system-modal-content h3 { font-size: 1.5rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: -1px; }
+        .system-modal-content p { color: var(--gris-texto); margin-bottom: 25px; font-size: 0.9rem; }
+        .btn-modal {
+            padding: 12px 30px; background: var(--negro); color: white;
+            border: none; font-weight: 600; text-transform: uppercase;
+            cursor: pointer; font-size: 0.75rem;
+        }
+
         .btn-create { width: 100%; padding: 15px; background: var(--primario); color: white; border: none; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .btn-create:hover { background: #166534; }
 
@@ -121,13 +142,21 @@
     </aside>
 </main>
 
+<div id="systemModal">
+    <div class="system-modal-content">
+        <span id="modalIcon" style="font-size: 3rem; display: block; margin-bottom: 15px;">✅</span>
+        <h3 id="modalTitle">Título</h3>
+        <p id="modalMsg">Mensaje de sistema.</p>
+        <button class="btn-modal" onclick="closeSystemModal()">Entendido</button>
+    </div>
+</div>
+
 <script>
 const customerId = sessionStorage.getItem('customerId');
 if (!customerId) window.location.href = 'login.html';
 
 async function loadData() {
     try {
-        // Load Goals
         const res = await fetch(`/api/savings/goals/${customerId}`);
         if (res.ok) {
             const goals = await res.json();
@@ -136,8 +165,6 @@ async function loadData() {
 
             goals.forEach(g => {
                 const progress = (g.currentAmount / g.targetAmount) * 100;
-                
-                // Calculate weekly suggestion (Manual calculation if not from API)
                 const deadline = new Date(g.deadline);
                 const now = new Date();
                 const weeks = Math.max(1, Math.ceil((deadline - now) / (1000 * 60 * 60 * 24 * 7)));
@@ -162,19 +189,29 @@ async function loadData() {
                 container.appendChild(div);
             });
         }
-
-        // Check Roundup status (Actually we should have an endpoint to get customer object)
-        // For now, assume we check the toggle based on local storage or fresh fetch
-        // In a real app we'd fetch the customer object.
     } catch (err) { console.error(err); }
+}
+
+function showSystemModal(title, msg, type = 'success') {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalMsg').textContent = msg;
+    document.getElementById('modalIcon').textContent = type === 'success' ? '✅' : '❌';
+    document.getElementById('systemModal').style.display = 'flex';
+}
+
+function closeSystemModal() {
+    document.getElementById('systemModal').style.display = 'none';
 }
 
 async function createGoal() {
     const name = document.getElementById('goalName').value;
-    const targetAmount = document.getElementById('goalTarget').value;
+    const targetAmount = parseFloat(document.getElementById('goalTarget').value);
     const deadline = document.getElementById('goalDeadline').value;
 
-    if (!name || !targetAmount || !deadline) return alert('Completa todos los campos');
+    if (!name || isNaN(targetAmount) || targetAmount <= 0 || !deadline) {
+        showSystemModal('Error de Datos', 'Por favor verifica el nombre, el monto y la fecha de tu meta.', 'error');
+        return;
+    }
 
     try {
         const res = await fetch(`/api/savings/goals/${customerId}`, {
@@ -183,13 +220,17 @@ async function createGoal() {
             body: JSON.stringify({ name, targetAmount, deadline })
         });
         if (res.ok) {
-            alert('Meta creada exitosamente');
+            showSystemModal('Meta Creada', '¡Excelente! Has iniciado un nuevo camino de ahorro.', 'success');
             loadData();
             document.getElementById('goalName').value = '';
             document.getElementById('goalTarget').value = '';
             document.getElementById('goalDeadline').value = '';
+        } else {
+            showSystemModal('Error', 'No pudimos crear la meta en este momento.', 'error');
         }
-    } catch (err) { alert('Error al crear meta'); }
+    } catch (err) {
+        showSystemModal('Error', 'Error de conexión con el servidor.', 'error');
+    }
 }
 
 async function toggleRoundup() {

@@ -11,11 +11,14 @@ import java.time.LocalDateTime;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
     private String accountNumber;
+
+    @Column(unique = true)
+    private String clabe;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -58,6 +61,14 @@ public class Account {
 
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
+    }
+
+    public String getClabe() {
+        return clabe;
+    }
+
+    public void setClabe(String clabe) {
+        this.clabe = clabe;
     }
 
     public BigDecimal getBalance() {

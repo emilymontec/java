@@ -112,6 +112,25 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 30px; }
         .btn-outline { flex: 1; padding: 15px; border: 1px solid var(--negro); background: none; font-weight: 600; cursor: pointer; }
 
+        /* Modal Sistema */
+        #systemModal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(17, 24, 39, 0.8);
+            display: none; justify-content: center; align-items: center;
+            z-index: 9999; backdrop-filter: blur(4px);
+        }
+        .system-modal-content {
+            background: white; padding: 40px; max-width: 450px; width: 90%;
+            text-align: center; border-radius: 2px; border: 1px solid var(--negro);
+        }
+        .system-modal-content h3 { font-size: 1.5rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: -1px; }
+        .system-modal-content p { color: var(--gris-texto); margin-bottom: 25px; font-size: 0.9rem; }
+        .btn-modal {
+            padding: 12px 30px; background: var(--negro); color: white;
+            border: none; font-weight: 600; text-transform: uppercase;
+            cursor: pointer; font-size: 0.75rem;
+        }
+
         @media (max-width: 900px) {
             .transfer-grid { grid-template-columns: 1fr; }
             .form-section { border-right: none; border-bottom: 1px solid var(--gris-borde); }
@@ -210,6 +229,15 @@
     </div>
 </div>
 
+<div id="systemModal">
+    <div class="system-modal-content">
+        <span id="modalIcon" style="font-size: 3rem; display: block; margin-bottom: 15px;">✅</span>
+        <h3 id="modalTitle">Título</h3>
+        <p id="modalMsg">Mensaje de sistema.</p>
+        <button class="btn-modal" onclick="closeSystemModal()">Entendido</button>
+    </div>
+</div>
+
 <script>
 const customerId = sessionStorage.getItem('customerId');
 if (!customerId) window.location.href = 'login.html';
@@ -240,12 +268,23 @@ function updatePreview() {
     document.getElementById('sum-total').textContent = '$' + amount.toFixed(2);
 }
 
+function showSystemModal(title, msg, type = 'success') {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalMsg').textContent = msg;
+    document.getElementById('modalIcon').textContent = type === 'success' ? '✅' : '❌';
+    document.getElementById('systemModal').style.display = 'flex';
+}
+
+function closeSystemModal() {
+    document.getElementById('systemModal').style.display = 'none';
+}
+
 function showModal() {
     const dest = document.getElementById('destinationAccount').value;
     const amount = parseFloat(document.getElementById('amount').value);
 
     if (!dest || !amount || amount <= 0) {
-        alert('Por favor completa todos los campos');
+        showSystemModal('Campos Incompletos', 'Por favor verifica la cuenta y el monto.', 'error');
         return;
     }
 
@@ -280,9 +319,11 @@ async function executeTransfer() {
         if (res.status === 400 || res.status === 500) {
             const errorData = await res.json();
             if (errorData.message && errorData.message.includes('antifraude')) {
-                alert('⚠️ ALERTA DE SEGURIDAD: ' + errorData.message);
-                sessionStorage.clear();
-                window.location.href = 'login.html';
+                showSystemModal('ALERTA ANTIFRAUDE', errorData.message, 'error');
+                setTimeout(() => {
+                    sessionStorage.clear();
+                    window.location.href = 'login.html';
+                }, 3000);
                 return;
             }
         }
