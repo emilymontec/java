@@ -201,6 +201,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         if (customerRes.ok) {
             const data = await customerRes.json();
             sessionStorage.setItem('customerId', username);
+            sessionStorage.setItem('fullName', data.fullName || username);
             sessionStorage.setItem('role', (data.role || 'USER').toUpperCase());
             window.location.href = 'dashboard.html';
         } else {

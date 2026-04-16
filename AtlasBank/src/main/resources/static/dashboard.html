@@ -120,7 +120,7 @@
     <section class="side-panel">
         <div class="impact-card">
             <p>IMPACTO ACUMULADO</p>
-            <h2>14.2 kg</h2>
+            <h2 id="impactVal">0.0 kg</h2>
             <p>CO2 evitado este mes mediante tus inversiones en proyectos verdes.</p>
             <div class="icon-bg">🌿</div>
         </div>
@@ -130,7 +130,7 @@
             <div class="quick-actions">
                 <a href="transferencias.html" class="action-btn">Transferir</a>
                 <a href="cuentas.html" class="action-btn">Cuentas</a>
-                <a href="movivmientos.html" class="action-btn">Movimientos</a>
+                <a href="movimientos.html" class="action-btn">Movimientos</a>
                 <a href="tarjetas.html" class="action-btn">Tarjetas</a>
             </div>
         </div>
@@ -152,7 +152,20 @@ async function loadDashboard() {
     }
 
     try {
+        const fullName = sessionStorage.getItem('fullName') || customerId;
+        document.getElementById('userName').textContent = fullName.toUpperCase();
+        
+        let initls = "US";
+        if(fullName.includes(" ")){
+            const parts = fullName.split(" ");
+            initls = (parts[0][0] + parts[1][0]).toUpperCase();
+        } else {
+            initls = fullName.substring(0, 2).toUpperCase();
+        }
+        document.getElementById('userAvatar').textContent = initls;
+
         const accRes = await fetch(`/api/accounts/customer/${customerId}`);
+
         if (accRes.ok) {
             const accounts = await accRes.json();
             if (accounts.length > 0) {
@@ -178,6 +191,9 @@ async function loadDashboard() {
                 `;
                 container.appendChild(div);
             });
+            
+            // Random impact simulation based on txs
+            document.getElementById('impactVal').textContent = (txs.length * 2.3).toFixed(1) + ' kg';
         }
     } catch (err) {
         console.error('Error loading dashboard:', err);

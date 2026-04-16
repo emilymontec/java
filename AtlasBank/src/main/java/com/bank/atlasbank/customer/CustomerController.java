@@ -14,15 +14,19 @@ import java.util.Optional;
 public class CustomerController {
 
     private final CustomerService service;
+    private final com.bank.atlasbank.account.AccountService accountService;
 
-    public CustomerController(CustomerService service) {
+    public CustomerController(CustomerService service, com.bank.atlasbank.account.AccountService accountService) {
         this.service = service;
+        this.accountService = accountService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Customer create(@Valid @RequestBody CreateCustomerRequest request) {
-        return service.create(request);
+        Customer c = service.create(request);
+        accountService.create(new com.bank.atlasbank.account.CreateAccountRequest(c.getId(), com.bank.atlasbank.account.AccountType.SAVINGS, java.math.BigDecimal.ZERO));
+        return c;
     }
 
     @PostMapping("/login")

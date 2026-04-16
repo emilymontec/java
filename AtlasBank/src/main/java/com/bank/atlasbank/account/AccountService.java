@@ -42,6 +42,10 @@ public class AccountService {
                 .orElseThrow(() -> new BusinessException("Cuenta no encontrada: " + id));
     }
 
+    public List<Account> findByCustomerId(String customerId) {
+        return repository.findByCustomer_CustomerId(customerId);
+    }
+
     @Transactional
     public void deposit(Long accountId, BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {

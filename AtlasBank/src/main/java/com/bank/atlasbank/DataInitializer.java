@@ -16,11 +16,14 @@ public class DataInitializer {
 
     private final AdminRepository adminRepository;
     private final CustomerRepository customerRepository;
+    private final com.bank.atlasbank.account.AccountRepository accountRepository;
 
     public DataInitializer(AdminRepository adminRepository,
-                           CustomerRepository customerRepository) {
+                           CustomerRepository customerRepository,
+                           com.bank.atlasbank.account.AccountRepository accountRepository) {
         this.adminRepository = adminRepository;
         this.customerRepository = customerRepository;
+        this.accountRepository = accountRepository;
     }
 
     @PostConstruct
@@ -55,6 +58,14 @@ public class DataInitializer {
                 cliente.setPhone("+52 000 000 0000");
                 cliente.setPassword("demo1234");
                 customerRepository.save(cliente);
+
+                com.bank.atlasbank.account.Account acc = new com.bank.atlasbank.account.Account();
+                acc.setCustomer(cliente);
+                acc.setAccountType(com.bank.atlasbank.account.AccountType.SAVINGS);
+                acc.setBalance(new java.math.BigDecimal("1500.00"));
+                acc.setAccountNumber("AT-DEMO-" + java.util.UUID.randomUUID().toString().substring(0, 4).toUpperCase());
+                accountRepository.save(acc);
+
                 System.out.println("[AtlasBank] Cliente demo sembrado → customerId: cliente.demo | password: demo1234");
             }
         }

@@ -31,4 +31,9 @@ public class AccountController {
     public Account findById(@PathVariable Long id) {
         return service.findById(id);
     }
+
+    @GetMapping("/customer/{customerId}")
+    public List<Account> findByCustomer(@PathVariable String customerId) {
+        return service.findByCustomerId(customerId);
+    }
 }

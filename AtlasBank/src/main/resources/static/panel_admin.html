@@ -79,6 +79,10 @@
         <span class="menu-label">Finanzas</span>
         <a href="#" class="menu-link">Monitor de Transacciones</a>
         <a href="#" class="menu-link">Simulador de Depósito</a>
+
+        <br>
+        <span class="menu-label">Sistema</span>
+        <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" class="menu-link" style="color: #b91c1c;">Cerrar Sesión</a>
     </aside>
 
     <section>
@@ -91,16 +95,16 @@
 
         <div class="table-section">
             <div class="table-header">
-                <h2>Cuentas Pendientes de Aprobación</h2>
+                <h2 id="tableTitle">Directorio de Clientes</h2>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Usuario</th>
+                        <th>ID (Sys)</th>
+                        <th>User ID</th>
+                        <th>Nombre</th>
                         <th>Email</th>
-                        <th>Fecha Registro</th>
-                        <th>Documentación</th>
-                        <th>Acción</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody id="pendingTableBody">
@@ -128,10 +132,10 @@
         </div>
 
         <div class="simulation-panel">
-            <h3 style="font-size: 1rem; margin-bottom: 10px;">Simulador de Depósito</h3>
-            <p style="font-size: 0.85rem; color: var(--gris-texto); margin-bottom: 15px;">Crea transacciones de prueba para el sistema.</p>
+            <h3 style="font-size: 1rem; margin-bottom: 10px;">Simulador de Depósito (Root)</h3>
+            <p style="font-size: 0.85rem; color: var(--gris-texto); margin-bottom: 15px;">Fondea recursos directamente al ID de una Cuenta bancaria.</p>
             <div class="sim-form">
-                <input type="text" id="simCustomerId" placeholder="ID Cuenta">
+                <input type="text" id="simAccountId" placeholder="ID de Cuenta Bancaria (Ej: 1)">
                 <input type="number" id="simAmount" placeholder="Monto">
                 <button onclick="simulateDeposit()" class="btn-action simulate">Ejecutar</button>
             </div>
@@ -153,9 +157,26 @@ async function loadAdminData() {
         if (customersRes.ok) {
             const customers = await customersRes.json();
             document.getElementById('totalUsers').textContent = customers.length;
+            document.getElementById('pendingCount').textContent = "0";
+
+            // Populate customers table
+            const tbodyC = document.getElementById('pendingTableBody');
+            tbodyC.innerHTML = '';
+            customers.slice(0, 10).forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.id}</td>
+                    <td>${c.customerId || c.id}</td>
+                    <td>${c.fullName}</td>
+                    <td>${c.email}</td>
+                    <td><small style="color:var(--primario);font-weight:bold;">ACTIVO</small></td>
+                `;
+                tbodyC.appendChild(tr);
+            });
         }
 
         const txRes = await fetch('/api/transactions');
+        let totalTxAlerts = 0;
         if (txRes.ok) {
             const txs = await txRes.json();
             const tbody = document.getElementById('transactionsTableBody');
@@ -173,6 +194,9 @@ async function loadAdminData() {
                     <td><small>COMPLETADO</small></td>
                 `;
                 tbody.appendChild(tr);
+
+                // Count large amounts as simulated risk alerts
+                if (amount >= 5000) totalTxAlerts++;
             });
 
             const last24h = Date.now() - (24 * 60 * 60 * 1000);
@@ -183,6 +207,7 @@ async function loadAdminData() {
                     return sum + (Number.isFinite(a) ? a : 0);
                 }, 0);
             document.getElementById('volume24h').textContent = `$${volume.toFixed(2)}`;
+            document.getElementById('riskAlerts').textContent = totalTxAlerts;
         }
     } catch (err) {
         console.error('Error loading admin data:', err);
@@ -190,7 +215,7 @@ async function loadAdminData() {
 }
 
 async function simulateDeposit() {
-    const accountId = document.getElementById('simCustomerId').value;
+    const accountId = document.getElementById('simAccountId').value;
     const amount = parseFloat(document.getElementById('simAmount').value);
 
     if (!accountId || !amount) {
