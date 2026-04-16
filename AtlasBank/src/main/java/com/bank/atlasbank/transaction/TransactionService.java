@@ -14,10 +14,14 @@ public class TransactionService {
 
     private final AccountService accountService;
     private final TransactionRepository transactionRepository;
+    private final com.bank.atlasbank.savings.SavingsGoalService savingsGoalService;
 
-    public TransactionService(AccountService accountService, TransactionRepository transactionRepository) {
+    public TransactionService(AccountService accountService, 
+                              TransactionRepository transactionRepository,
+                              com.bank.atlasbank.savings.SavingsGoalService savingsGoalService) {
         this.accountService = accountService;
         this.transactionRepository = transactionRepository;
+        this.savingsGoalService = savingsGoalService;
     }
 
     @Transactional
@@ -41,7 +45,14 @@ public class TransactionService {
         tx.setType(TransactionType.WITHDRAW);
         tx.setAmount(amount);
         tx.setSourceAccount(account);
-        return transactionRepository.save(tx);
+        BankTransaction saved = transactionRepository.save(tx);
+        
+        // Process roundup
+        if (account.getCustomer() != null) {
+            savingsGoalService.processRoundup(account.getCustomer().getCustomerId(), amount);
+        }
+        
+        return saved;
     }
 
     @Transactional
@@ -61,7 +72,14 @@ public class TransactionService {
         tx.setAmount(request.amount());
         tx.setSourceAccount(source);
         tx.setTargetAccount(target);
-        return transactionRepository.save(tx);
+        BankTransaction saved = transactionRepository.save(tx);
+
+        // Process roundup (from source account owner)
+        if (source.getCustomer() != null) {
+            savingsGoalService.processRoundup(source.getCustomer().getCustomerId(), request.amount());
+        }
+
+        return saved;
     }
 
     public List<BankTransaction> findAll() {

@@ -29,6 +29,8 @@ public class Customer {
     @Column(nullable = false)
     private String status = "PENDING";
 
+    private boolean roundupEnabled = false;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -51,5 +53,7 @@ public class Customer {
     public void setPassword(String password) { this.password = password; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public boolean isRoundupEnabled() { return roundupEnabled; }
+    public void setRoundupEnabled(boolean roundupEnabled) { this.roundupEnabled = roundupEnabled; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 }
