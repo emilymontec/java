@@ -73,6 +73,11 @@ public class CustomerService {
                 .orElseThrow(() -> new BusinessException("Cliente no encontrado: " + id));
     }
 
+    public Customer findByCustomerId(String customerId) {
+        return repository.findByCustomerId(customerId)
+                .orElseThrow(() -> new BusinessException("Identificador de cliente no válido: " + customerId));
+    }
+
     private static String resolveFullName(CreateCustomerRequest request) {
         String fullName = normalizeOrNull(request.fullName());
         if (fullName != null)
