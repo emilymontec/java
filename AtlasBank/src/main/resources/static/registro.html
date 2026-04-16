@@ -99,8 +99,8 @@
 
         <form id="registerForm">
             <div class="form-group">
-                <label for="customerId">Identificador de Cliente</label>
-                <input type="text" id="customerId" placeholder="ej. carlos.sustentable" required>
+                <label for="customerId">Usuario o Documento de Identidad (ID)</label>
+                <input type="text" id="customerId" placeholder="Ej. carlos.garcia o 12345678" required>
             </div>
 
             <div class="form-group">
@@ -160,6 +160,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
 
         if (response.ok) {
             sessionStorage.setItem('customerId', customerId);
+            sessionStorage.setItem('fullName', `${firstName} ${lastName}`);
             sessionStorage.setItem('role', 'USER');
             window.location.href = 'dashboard.html';
         } else {

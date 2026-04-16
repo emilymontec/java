@@ -140,7 +140,10 @@
 
 <header>
     <div class="logo">AtlasBank</div>
-    <div id="customerIdDisplay" style="font-size: 0.8rem; font-weight: 600;"></div>
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <div id="customerIdDisplay" style="font-size: 0.8rem; font-weight: 600;"></div>
+        <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
+    </div>
 </header>
 
 <main>
@@ -221,11 +224,11 @@ async function loadAccounts() {
                             <p class="detail-value">${acc.accountNumber} <button class="copy-btn" onclick="navigator.clipboard.writeText('${acc.accountNumber}')">Copiar</button></p>
                         </div>
                         <div class="detail-group">
-                            <label>CLABE</label>
+                            <label>CLAVE</label>
                             <p class="detail-value">${acc.clabe || 'N/A'} <button class="copy-btn" onclick="navigator.clipboard.writeText('${acc.clabe || ''}')">Copiar</button></p>
                         </div>
                         <div class="account-actions">
-                            <a href="movivmientos.html" class="action-link">Ver Extractos</a>
+                            <a href="movimientos.html" class="action-link">Ver Extractos</a>
                             <a href="transferencias.html" class="action-link">Realizar Transferencia</a>
                         </div>
                     </div>

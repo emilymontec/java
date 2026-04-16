@@ -107,7 +107,7 @@
 
 <header>
     <div class="logo">AtlasBank</div>
-    <div style="font-size: 0.8rem; font-weight: 600;">TARJETAS / GESTIÓN</div>
+    <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
 </header>
 
 <main>
@@ -124,7 +124,7 @@
                 <div class="card-info">
                     <div>
                         <label>Titular</label>
-                        <p id="cardHolder">CARLOS SUSTENTABLE</p>
+                        <p id="cardHolder">Cargando...</p>
                     </div>
                     <div>
                         <label>Expira</label>
@@ -190,6 +190,7 @@
 <script>
 const customerId = sessionStorage.getItem('customerId');
 if (!customerId) window.location.href = 'login.html';
+document.getElementById('cardHolder').textContent = (sessionStorage.getItem('fullName') || 'USUARIO').toUpperCase();
 
 document.getElementById('cardBlock').addEventListener('change', function() {
     const card = document.getElementById('physicalCard');

@@ -101,7 +101,7 @@
 <header>
     <div class="logo">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">DASHBOARD</span></div>
     <div class="user-info">
-        <span id="userName" style="font-size: 0.85rem; font-weight: 600;">CARLOS SUSTENTABLE</span>
+        <span id="userName" style="font-size: 0.85rem; font-weight: 600;">Cargando...</span>
         <div id="userAvatar" class="avatar">CS</div>
     </div>
 </header>
@@ -136,8 +136,8 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="usuarios.html">CONFIGURACIÓN DE CUENTA</a>
-            <a href="#">SEGURIDAD Y LLAVES</a>
+            <a href="usuarios.html#datos">CONFIGURACIÓN DE CUENTA</a>
+            <a href="usuarios.html#seguridad">SEGURIDAD Y LLAVES</a>
             <a href="#" onclick="sessionStorage.clear(); window.location.href='login.html'; return false;" style="color: #ef4444;">CERRAR SESIÓN SEGURA</a>
         </nav>
     </section>
@@ -181,13 +181,14 @@ async function loadDashboard() {
             txs.slice(0, 5).forEach(tx => {
                 const div = document.createElement('div');
                 div.className = 'transaction-item';
-                const isPositive = tx.transactionType === 'DEPOSIT';
+                const isPositive = tx.type === 'DEPOSIT';
+                const desc = isPositive ? 'DEPÓSITO' : 'RETIRO';
                 div.innerHTML = `
                     <div>
-                        <p>${tx.description || tx.transactionType}</p>
-                        <span class="meta">${new Date(tx.timestamp).toLocaleDateString()} / ${new Date(tx.timestamp).toLocaleTimeString()}</span>
+                        <p>${desc}</p>
+                        <span class="meta">${new Date(tx.createdAt || new Date()).toLocaleDateString()}</span>
                     </div>
-                    <div class="amount ${isPositive ? 'positive' : 'negative'}">${isPositive ? '+' : '-'}$${tx.amount.toFixed(2)}</div>
+                    <div class="amount ${isPositive ? 'positive' : 'negative'}">${isPositive ? '+' : '-'}$${(tx.amount || 0).toFixed(2)}</div>
                 `;
                 container.appendChild(div);
             });

@@ -111,7 +111,10 @@
 
 <header>
     <div class="logo">AtlasBank</div>
-    <div class="nav-meta">USUARIO: <span id="customerIdDisplay">---</span> / ESTADO: CONECTADO</div>
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <div class="nav-meta">USUARIO: <span id="customerIdDisplay">---</span> / ESTADO: CONECTADO</div>
+        <a href="dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
+    </div>
 </header>
 
 <main>
@@ -210,15 +213,16 @@ function renderTransactions() {
 
     allTransactions.forEach(tx => {
         const tr = document.createElement('tr');
-        const isDeposit = tx.transactionType === 'DEPOSIT';
-        const date = new Date(tx.timestamp);
+        const isDeposit = tx.type === 'DEPOSIT';
+        const date = new Date(tx.createdAt || new Date());
+        const desc = tx.type === 'DEPOSIT' ? 'DEPÓSITO EN CUENTA' : 'RETIRO / TRANSFERENCIA';
 
         tr.innerHTML = `
             <td class="date-cell">${date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}</td>
             <td><span class="type-tag ${isDeposit ? 'type-in' : 'type-out'}">${isDeposit ? 'Ingreso' : 'Egreso'}</span></td>
-            <td>${tx.description || tx.transactionType}<br><small style="color: var(--gris-texto);">REF: ${tx.id || tx.transactionType}</small></td>
+            <td>${desc}<br><small style="color: var(--gris-texto);">REF: ${tx.id || '-'}</small></td>
             <td><small>COMPLETADO</small></td>
-            <td class="amount-cell ${isDeposit ? 'amount-in' : ''}">${isDeposit ? '+' : '-'}$${tx.amount.toFixed(2)}</td>
+            <td class="amount-cell ${isDeposit ? 'amount-in' : ''}">${isDeposit ? '+' : '-'}$${(tx.amount || 0).toFixed(2)}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -229,8 +233,9 @@ function renderTransactions() {
 function exportCSV() {
     let csv = 'Fecha,Tipo,Concepto,Monto\n';
     allTransactions.forEach(tx => {
-        const isDeposit = tx.transactionType === 'DEPOSIT';
-        csv += `${new Date(tx.timestamp).toISOString()},${tx.transactionType},${tx.description || ''},${isDeposit ? '+' : '-'}${tx.amount}\n`;
+        const isDeposit = tx.type === 'DEPOSIT';
+        const desc = isDeposit ? 'DEPÓSITO' : 'RETIRO';
+        csv += `${new Date(tx.createdAt || new Date()).toISOString()},${tx.type},${desc},${isDeposit ? '+' : '-'}${tx.amount}\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv' });
