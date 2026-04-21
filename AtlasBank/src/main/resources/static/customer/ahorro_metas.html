@@ -4,156 +4,208 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlasBank | Metas de Ahorro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        :root {
-            --primario: #15803d;
-            --primario-soft: #f0fdf4;
-            --negro: #111827;
-            --blanco: #ffffff;
-            --gris-borde: #e5e7eb;
-            --gris-texto: #4b5563;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
-        body { background: var(--blanco); color: var(--negro); min-height: 100vh; }
-
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
-        }
-        .user-info { display: flex; align-items: center; gap: 15px; }
-        .avatar { width: 35px; height: 35px; background: var(--primario); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.8rem; }
-
-        main {
+        .goals-layout {
             display: grid;
-            grid-template-columns: 1fr 350px;
-            min-height: calc(100vh - 76px);
+            grid-template-columns: 1fr 380px;
+            gap: 3rem;
+            align-items: start;
         }
 
-        .content-panel { padding: 50px 8%; border-right: 1px solid var(--gris-borde); }
-        .side-panel { background: var(--gris-fondo); padding: 50px 30px; }
-        
-        h1 { font-size: 2.5rem; letter-spacing: -1.5px; margin-bottom: 10px; }
-        p.subtitle { color: var(--gris-texto); margin-bottom: 40px; }
-
-        .goals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 50px; }
-        .goal-card { border: 1px solid var(--gris-borde); padding: 30px; position: relative; }
-        .goal-card h3 { font-size: 1.2rem; margin-bottom: 5px; }
-        .goal-card .category { font-size: 0.7rem; font-weight: 700; color: var(--primario); text-transform: uppercase; margin-bottom: 20px; display: block; }
-        
-        .progress-bar { height: 6px; background: #f3f4f6; margin: 20px 0; border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primario); width: 0%; transition: 0.5s; }
-        
-        .goal-stats { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; }
-        .suggestion-box { background: var(--primario-soft); padding: 15px; font-size: 0.8rem; color: var(--primario); margin-top: 20px; border-radius: 4px; }
-
-        .form-card { background: var(--negro); color: white; padding: 40px; }
-        .form-card h2 { font-size: 1.5rem; margin-bottom: 25px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: rgba(255,255,255,0.6); }
-        input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; outline: none; }
-        input:focus { border-color: var(--primario); }
-        .goal-item:hover { border-color: var(--primario); }
-
-        /* Modal Sistema */
-        #systemModal {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(17, 24, 39, 0.8);
-            display: none; justify-content: center; align-items: center;
-            z-index: 9999; backdrop-filter: blur(4px);
-        }
-        .system-modal-content {
-            background: white; padding: 40px; max-width: 450px; width: 90%;
-            text-align: center; border-radius: 2px; border: 1px solid var(--negro);
-        }
-        .system-modal-content h3 { font-size: 1.5rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: -1px; }
-        .system-modal-content p { color: var(--gris-texto); margin-bottom: 25px; font-size: 0.9rem; }
-        .btn-modal {
-            padding: 12px 30px; background: var(--negro); color: white;
-            border: none; font-weight: 600; text-transform: uppercase;
-            cursor: pointer; font-size: 0.75rem;
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
-        .btn-create { width: 100%; padding: 15px; background: var(--primario); color: white; border: none; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-create:hover { background: #166534; }
+        .goal-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
 
-        .roundup-box { border: 1px dashed var(--primario); padding: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .roundup-info h4 { font-size: 0.9rem; margin-bottom: 5px; }
-        .roundup-info p { font-size: 0.75rem; color: var(--gris-texto); }
-        
-        /* Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .goal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .category-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-alt);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 1s ease-out;
+        }
+
+        .roundup-box {
+            background: var(--primary-soft);
+            border: 1px dashed var(--primary);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .suggestion-box {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primario); }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        @media (max-width: 900px) { main { grid-template-columns: 1fr; } .content-panel { border-right: none; } }
+        @media (max-width: 1024px) {
+            .goals-layout { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">AHORRO INTELIGENTE</span></div>
-    <a href="/customer/dashboard.html" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
-</header>
-
-<main>
-    <section class="content-panel">
-        <h1>Mis Metas de Ahorro</h1>
-        <p class="subtitle">Visualiza tu progreso y deja que la inteligencia del banco te ayude a llegar más rápido.</p>
-
-        <div class="roundup-box">
-            <div class="roundup-info">
-                <h4>Redondeo Automático Activado</h4>
-                <p>Cada vez que gastes, redondearemos al siguiente mil y lo guardaremos en tu meta prioritaria.</p>
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="roundupToggle" onchange="toggleRoundup()">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="goals-grid" id="goalsContainer">
-            <!-- Goals dynamic loading -->
-        </div>
-    </section>
-
-    <aside class="side-panel">
-        <div class="form-card">
-            <h2>Crear Nueva Meta</h2>
-            <div class="form-group">
-                <label>¿Para qué estás ahorrando?</label>
-                <input type="text" id="goalName" placeholder="Ej: Viaje a Japón">
-            </div>
-            <div class="form-group">
-                <label>Monto Objetivo ($)</label>
-                <input type="number" id="goalTarget" placeholder="0.00">
-            </div>
-            <div class="form-group">
-                <label>Fecha Límite</label>
-                <input type="date" id="goalDeadline">
-            </div>
-            <button class="btn-create" onclick="createGoal()">Iniciar Ahorro</button>
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
+        <nav class="sidebar-nav">
+            <a href="/customer/dashboard.html" class="sidebar-link">📊 Dashboard</a>
+            <a href="/customer/cuentas.html" class="sidebar-link">🏦 Cuentas</a>
+            <a href="/customer/movimientos.html" class="sidebar-link">📄 Movimientos</a>
+            <a href="/customer/transferencias.html" class="sidebar-link">💸 Transferencias</a>
+            <a href="/customer/tarjetas.html" class="sidebar-link">💳 Tarjetas</a>
+            <a href="/customer/ahorro_metas.html" class="sidebar-link active">🌱 Metas de Ahorro</a>
+            <a href="/customer/perfil.html" class="sidebar-link">⚙️ Configuración</a>
+        </nav>
+        
+        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
+            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
         </div>
     </aside>
-</main>
 
-<div id="systemModal">
-    <div class="system-modal-content">
-        <span id="modalIcon" style="font-size: 3rem; display: block; margin-bottom: 15px;">✅</span>
-        <h3 id="modalTitle">Título</h3>
-        <p id="modalMsg">Mensaje de sistema.</p>
-        <button class="btn-modal" onclick="closeSystemModal()">Entendido</button>
+    <main class="app-content">
+        <header class="content-header">
+            <div>
+                <h1 style="font-size: 1.75rem;">Metas de Ahorro</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Visualiza tu progreso y acelera tus objetivos financieros.</p>
+            </div>
+        </header>
+
+        <div class="goals-layout animate-up">
+            <section>
+                <div class="roundup-box">
+                    <div>
+                        <h4 style="margin-bottom: 0.25rem;">Redondeo Automático</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Redondeamos tus compras al siguiente dólar para tu meta principal.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="roundupToggle" onchange="toggleRoundup()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="goals-grid" id="goalsContainer">
+                    <!-- Goals dynamic loading -->
+                </div>
+            </section>
+
+            <aside class="stat-card">
+                <h2 style="font-size: 1.25rem; margin-bottom: 2rem;">Nueva Meta</h2>
+                <div class="flex flex-direction-column gap-4">
+                    <div class="form-group">
+                        <label class="label">¿Para qué estás ahorrando?</label>
+                        <input type="text" id="goalName" class="form-control" placeholder="Ej: Viaje a Japón">
+                    </div>
+                    <div class="form-group">
+                        <label class="label">Monto Objetivo (USD)</label>
+                        <input type="number" id="goalTarget" class="form-control" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="label">Fecha Límite</label>
+                        <input type="date" id="goalDeadline" class="form-control">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; padding: 1rem;" onclick="createGoal()">Iniciar Ahorro</button>
+                </div>
+            </aside>
+        </div>
+    </main>
+</div>
+
+<!-- Modal de Sistema -->
+<div id="systemModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
+    <div class="stat-card" style="max-width: 400px; text-align: center; padding: 3rem;">
+        <div id="modalIcon" style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+        <h2 id="modalTitle" style="margin-bottom: 1rem;"></h2>
+        <p id="modalMsg" style="color: var(--text-muted); margin-bottom: 2rem;"></p>
+        <button onclick="closeSystemModal()" class="btn btn-primary" style="width: 100%;">Entendido</button>
     </div>
 </div>
 
 <script>
 const customerId = sessionStorage.getItem('customerId');
+const fullName = sessionStorage.getItem('fullName');
+
 if (!customerId) window.location.href = '/auth/login.html';
+
+document.getElementById('userDisplay').textContent = fullName || customerId;
+
+function logout() {
+    sessionStorage.clear();
+    window.location.href = '/auth/login.html';
+}
 
 async function loadData() {
     try {
@@ -163,27 +215,34 @@ async function loadData() {
             const container = document.getElementById('goalsContainer');
             container.innerHTML = '';
 
+            if (goals.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">Aún no tienes metas creadas. Empieza una hoy mismo.</div>';
+                return;
+            }
+
             goals.forEach(g => {
-                const progress = (g.currentAmount / g.targetAmount) * 100;
+                const current = g.currentAmount || 0;
+                const target = g.targetAmount || 1; // Avoid div by zero
+                const progress = (current / target) * 100;
                 const deadline = new Date(g.deadline);
                 const now = new Date();
                 const weeks = Math.max(1, Math.ceil((deadline - now) / (1000 * 60 * 60 * 24 * 7)));
-                const suggestion = (g.targetAmount - g.currentAmount) / weeks;
+                const suggestion = (target - current) / weeks;
 
                 const div = document.createElement('div');
                 div.className = 'goal-card';
                 div.innerHTML = `
-                    <span class="category">Meta de Ahorro</span>
-                    <h3>${g.name}</h3>
+                    <span class="category-tag">Meta Certificada</span>
+                    <h3 style="font-size: 1.25rem;">${g.name}</h3>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${Math.min(100, progress)}%"></div>
                     </div>
-                    <div class="goal-stats">
-                        <span>$${g.currentAmount.toFixed(2)}</span>
-                        <span>$${g.targetAmount.toFixed(2)}</span>
+                    <div class="flex justify-between" style="font-size: 0.85rem; font-weight: 700;">
+                        <span>$${current.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                        <span style="color: var(--text-muted);">$${target.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
                     </div>
                     <div class="suggestion-box">
-                        💡 Sugerencia semanal: <strong>$${Math.max(0, suggestion).toFixed(2)}</strong> para llegar a tiempo.
+                        💡 Recomendación Atlas: <strong>$${Math.max(0, suggestion).toLocaleString('en-US', {minimumFractionDigits: 2})}</strong> semanales para cumplir tu objetivo.
                     </div>
                 `;
                 container.appendChild(div);
@@ -205,43 +264,34 @@ function closeSystemModal() {
 
 async function createGoal() {
     const name = document.getElementById('goalName').value;
-    const targetAmount = parseFloat(document.getElementById('goalTarget').value);
+    const target = parseFloat(document.getElementById('goalTarget').value);
     const deadline = document.getElementById('goalDeadline').value;
 
-    if (!name || isNaN(targetAmount) || targetAmount <= 0 || !deadline) {
-        showSystemModal('Error de Datos', 'Por favor verifica el nombre, el monto y la fecha de tu meta.', 'error');
+    if (!name || !target || !deadline) {
+        alert('Por favor completa todos los campos.');
         return;
     }
 
     try {
-        const res = await fetch(`/api/savings/goals/${customerId}`, {
+        const res = await fetch('/api/savings/goals', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, targetAmount, deadline })
+            body: JSON.stringify({ customerId, name, targetAmount: target, deadline })
         });
         if (res.ok) {
-            showSystemModal('Meta Creada', '¡Excelente! Has iniciado un nuevo camino de ahorro.', 'success');
+            showSystemModal('META INICIADA', 'Tu objetivo de ahorro ha sido registrado en el sistema.');
             loadData();
-            document.getElementById('goalName').value = '';
-            document.getElementById('goalTarget').value = '';
-            document.getElementById('goalDeadline').value = '';
         } else {
-            showSystemModal('Error', 'No pudimos crear la meta en este momento.', 'error');
+            showSystemModal('ERROR', 'No se pudo crear la meta de ahorro.', 'error');
         }
-    } catch (err) {
-        showSystemModal('Error', 'Error de conexión con el servidor.', 'error');
-    }
+    } catch (err) { console.error(err); }
 }
 
-async function toggleRoundup() {
-    const enabled = document.getElementById('roundupToggle').checked;
-    try {
-        await fetch(`/api/savings/roundup/${customerId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ enabled })
-        });
-    } catch (err) { console.error(err); }
+function toggleRoundup() {
+    const active = document.getElementById('roundupToggle').checked;
+    if (active) {
+        showSystemModal('REDONDEO ACTIVO', 'AtlasBank redondeará tus compras y abonará el excedente a tu meta principal.');
+    }
 }
 
 loadData();

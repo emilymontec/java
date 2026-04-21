@@ -7,342 +7,239 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        .transfer-layout {
+        .transfer-grid {
             display: grid;
-            grid-template-columns: 1fr 420px;
-            min-height: 100vh;
+            grid-template-columns: 1fr 380px;
+            gap: 2.5rem;
+            align-items: start;
         }
 
-        .main-form {
-            padding: 60px 8%;
-            border-right: 1px solid var(--border);
-            background: white;
-        }
-
-        .summary-side {
-            background: var(--bg-alt);
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-        }
-
-        .summary-card {
-            background: white;
-            border-radius: var(--radius-sm);
-            padding: 30px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .security-section {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            padding: 25px;
-            border-radius: var(--radius-sm);
-            margin-top: 40px;
-        }
-
-        .shield-badge {
-            font-size: 0.65rem;
+        .amount-display {
+            font-size: 3.5rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             color: var(--primary);
+            border-bottom: 2px solid var(--bg-dark);
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            margin-bottom: 40px;
-            color: var(--bg-dark);
-        }
-
-        .amount-input-group {
-            border-bottom: 2px solid var(--bg-dark);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+            gap: 1rem;
         }
 
         .amount-field {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary);
-            border: none;
             background: transparent;
+            border: none;
+            color: inherit;
+            font: inherit;
             width: 100%;
             outline: none;
         }
 
-        #modal-overlay, #systemModal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(17, 24, 39, 0.7);
-            display: none; justify-content: center; align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-box {
-            background: white;
-            padding: 50px;
-            border-radius: var(--radius-sm);
-            max-width: 500px;
-            width: 90%;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
+        .summary-card {
+            position: sticky;
+            top: 2rem;
         }
 
         @media (max-width: 1024px) {
-            .transfer-layout { grid-template-columns: 1fr; }
-            .summary-side { height: auto; position: static; }
-            .main-form { border-right: none; }
+            .transfer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body style="background: white;">
+<body>
 
-<nav style="border-bottom: 1px solid var(--border); background: white;">
-    <div class="container flex justify-between align-center" style="padding: 15px 0;">
-        <div class="logo">Atlas<span>Bank</span> / <span style="font-weight: 400; font-size: 0.8rem; color: var(--text-muted);">OPERATION TERMINAL</span></div>
-        <a href="/customer/dashboard.html" class="nav-link" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">← Return to Console</a>
-    </div>
-</nav>
-
-<main class="transfer-layout">
-    <section class="main-form animate-up">
-        <span class="label" style="color: var(--primary); margin-bottom: 10px; display: block;">Protocol: Fund Transmission</span>
-        <h1>New Capital Transfer</h1>
-
-        <form id="transferForm">
-            <div class="form-group" style="margin-bottom: 30px;">
-                <label class="label">Primary Funding Source</label>
-                <select id="sourceAccount" class="form-control" style="border-radius: var(--radius-sm); padding: 15px;" required>
-                    <option value="">Select account</option>
-                </select>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 30px;">
-                <label class="label">Target Recipient Identity (CLAVE/ID)</label>
-                <input type="text" id="destinationAccount" class="form-control" style="border-radius: var(--radius-sm); padding: 15px;" placeholder="000 000 000000000 0" required>
-            </div>
-
-            <div class="amount-input-group">
-                <label class="label">Authorization Amount (USD)</label>
-                <div class="flex align-center gap-2">
-                    <span style="font-size: 2.5rem; font-weight: 700;">$</span>
-                    <input type="number" id="amount" class="amount-field" placeholder="0.00" step="0.01" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="label">Operation Memo / Reference</label>
-                <input type="text" id="description" class="form-control" style="border-radius: var(--radius-sm); padding: 15px;" placeholder="Internal Transfer Ref.">
-            </div>
-
-            <div class="security-section">
-                <div class="shield-badge">
-                    <span>🛡️</span> AtlasShield™ Active Verification
-                </div>
-                <label class="label">Transmission Node Location</label>
-                <select id="location" class="form-control" style="background: white; border-radius: var(--radius-sm);">
-                    <option value="Colombia">Trusted Node: Colombia</option>
-                    <option value="Russia">High Risk Node: Russia</option>
-                    <option value="North Korea">Restricted Node: North Korea</option>
-                    <option value="Cayman Islands">Observation Node: Cayman Islands</option>
-                </select>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 15px;">Automated risk assessment protocol analyzing transmission metadata and node integrity.</p>
-            </div>
-        </form>
-    </section>
-
-    <aside class="summary-side animate-up" style="animation-delay: 0.1s">
-        <div class="summary-card">
-            <h3 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 10px;">Execution Preview</h3>
-            
-            <div style="margin-bottom: 15px;">
-                <span class="label">Recipient Identity</span>
-                <p id="sum-dest" style="font-weight: 700; font-size: 1rem;">---</p>
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <span class="label">Gross Value</span>
-                <p id="sum-amount" style="font-weight: 600;">$0.00</p>
-            </div>
-
-            <div style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
-                <span class="label" style="color: var(--primary);">Network Transmission Fee</span>
-                <p style="font-weight: 600; color: var(--primary);">$0.00</p>
-            </div>
-
-            <div style="margin-top: 10px;">
-                <span class="label" style="color: var(--bg-dark);">TOTAL TO BE DEBITED</span>
-                <p id="sum-total" style="font-size: 2rem; font-weight: 700; color: var(--bg-dark);">$0.00</p>
-            </div>
-        </div>
-
-        <button type="button" class="btn btn-primary" style="width: 100%; padding: 20px; border-radius: var(--radius-sm);" onclick="showModal()">
-            AUTHORIZE OPERATION
-        </button>
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
+        <nav class="sidebar-nav">
+            <a href="/customer/dashboard.html" class="sidebar-link">📊 Dashboard</a>
+            <a href="/customer/cuentas.html" class="sidebar-link">🏦 Cuentas</a>
+            <a href="/customer/movimientos.html" class="sidebar-link">📄 Movimientos</a>
+            <a href="/customer/transferencias.html" class="sidebar-link active">💸 Transferencias</a>
+            <a href="/customer/tarjetas.html" class="sidebar-link">💳 Tarjetas</a>
+            <a href="/customer/ahorro_metas.html" class="sidebar-link">🌱 Metas de Ahorro</a>
+            <a href="/customer/perfil.html" class="sidebar-link">⚙️ Configuración</a>
+        </nav>
         
-        <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted);">
-            🔒 Official Encryption Protocol Active
-        </p>
+        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
+            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
+        </div>
     </aside>
-</main>
 
-<div id="modal-overlay">
-    <div class="modal-box">
-        <div style="font-size: 3rem; margin-bottom: 20px;">🛡️</div>
-        <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 10px;">Confirm Digital Signature?</h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 30px;">Signing this document will initiate the irreversibe movement of assets through the global digital ledger.</p>
+    <main class="app-content">
+        <header class="content-header">
+            <div>
+                <h1 style="font-size: 1.75rem;">Transmisión de Capital</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Protocolo de transferencia segura entre nodos bancarios.</p>
+            </div>
+        </header>
 
-        <div style="background: #f1f5f9; padding: 25px; text-align: left; border-radius: var(--radius-sm); margin-bottom: 30px; border: 1px solid var(--border);">
-            <p><small class="label" style="margin-bottom: 5px; font-size: 0.65rem;">TARGET RECIPIENT:</small><br><strong id="modal-dest" style="word-break: break-all;">---</strong></p>
-            <p style="margin-top: 20px;"><small class="label" style="margin-bottom: 5px; font-size: 0.65rem;">AUTHORIZED AMOUNT:</small><br><strong id="modal-amount" style="font-size: 1.5rem; color: var(--primary);">$0.00</strong></p>
+        <div class="transfer-grid animate-up">
+            <section class="stat-card">
+                <h3 style="margin-bottom: 2rem;">Nueva Operación</h3>
+                <form id="transferForm" class="flex flex-direction-column gap-4">
+                    <div class="form-group">
+                        <label class="label">Cuenta de Origen</label>
+                        <select id="sourceAccount" class="form-control" required>
+                            <option value="">Selecciona cuenta de origen</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">Cuenta de Destino (ID / Clave)</label>
+                        <input type="text" id="destinationAccount" class="form-control" placeholder="ID de cuenta receptora" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">Monto de la Operación (USD)</label>
+                        <div class="amount-display">
+                            <span>$</span>
+                            <input type="number" id="amount" class="amount-field" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">Referencia / Concepto</label>
+                        <input type="text" id="description" class="form-control" placeholder="Descripción opcional">
+                    </div>
+
+                    <div style="margin-top: 1rem; padding: 1.5rem; background: var(--bg-alt); border-radius: var(--radius-md); border: 1px solid var(--border);">
+                        <div class="flex align-center gap-2" style="color: var(--primary); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 1rem;">
+                            <span>🛡️</span> AtlasShield™ Verificación Activa
+                        </div>
+                        <select id="location" class="form-control" style="background: white;">
+                            <option value="Colombia">Nodo Confiable: Colombia</option>
+                            <option value="Otros">Nodo Externo: Global</option>
+                        </select>
+                    </div>
+                </form>
+            </section>
+
+            <aside class="flex flex-direction-column gap-4">
+                <div class="stat-card summary-card">
+                    <h3 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">Resumen de Ejecución</h3>
+                    
+                    <div class="flex flex-direction-column gap-3">
+                        <div class="flex justify-between">
+                            <span class="label" style="margin-bottom: 0;">Destino</span>
+                            <span id="sum-dest" style="font-weight: 700;">---</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="label" style="margin-bottom: 0;">Monto Bruto</span>
+                            <span id="sum-amount" style="font-weight: 700;">$0.00</span>
+                        </div>
+                        <div class="flex justify-between" style="color: var(--primary);">
+                            <span class="label" style="margin-bottom: 0; color: inherit;">Comisión de Red</span>
+                            <span style="font-weight: 700;">$0.00</span>
+                        </div>
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
+                            <span class="label">Total a Debitar</span>
+                            <div id="sum-total" style="font-size: 2.5rem; font-weight: 700; color: var(--bg-dark);">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" style="width: 100%; padding: 1.5rem; font-size: 1rem;" onclick="showConfirmation()">
+                    AUTORIZAR OPERACIÓN
+                </button>
+                <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted);">
+                    🔒 Encriptación de Grado Institucional
+                </p>
+            </aside>
         </div>
-
-        <div class="flex gap-3">
-            <button class="btn btn-outline" style="flex: 1; border-radius: var(--radius-sm);" onclick="hideModal()">Review Ledger</button>
-            <button class="btn btn-primary" style="flex: 2; border-radius: var(--radius-sm);" onclick="executeTransfer(event)">Sign & Transmit</button>
-        </div>
-    </div>
+    </main>
 </div>
 
-<div id="systemModal">
-    <div class="modal-box">
-        <div id="modalIcon" style="font-size: 3rem; margin-bottom: 20px;">✅</div>
-        <h3 id="modalTitle" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 10px;">Notification</h3>
-        <p id="modalMsg" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px;">System response message.</p>
-        <button class="btn btn-primary" style="width: 100%; border-radius: var(--radius-sm);" onclick="closeSystemModal()">Acknowledge</button>
+<!-- Modal de Confirmación -->
+<div id="systemModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
+    <div class="stat-card" style="max-width: 400px; text-align: center; padding: 3rem;">
+        <div id="modalIcon" style="font-size: 4rem; margin-bottom: 1rem;">⚖️</div>
+        <h2 id="modalTitle" style="margin-bottom: 1rem;">Confirmar Envío</h2>
+        <p id="modalMsg" style="color: var(--text-muted); margin-bottom: 2rem;">¿Estás seguro de que deseas autorizar esta transferencia? Esta operación es irreversible.</p>
+        <div class="flex gap-3">
+            <button onclick="closeModal()" class="btn btn-outline" style="flex: 1;">Cancelar</button>
+            <button onclick="executeTransfer()" class="btn btn-primary" style="flex: 1;">Confirmar</button>
+        </div>
     </div>
 </div>
 
 <script>
 const customerId = sessionStorage.getItem('customerId');
+const fullName = sessionStorage.getItem('fullName');
+
 if (!customerId) window.location.href = '/auth/login.html';
 
-let accounts = [];
+document.getElementById('userDisplay').textContent = fullName || customerId;
+
+function logout() {
+    sessionStorage.clear();
+    window.location.href = '/auth/login.html';
+}
 
 async function loadAccounts() {
     try {
         const res = await fetch(`/api/accounts/customer/${customerId}`);
         if (res.ok) {
-            accounts = await res.json();
+            const accounts = await res.json();
             const select = document.getElementById('sourceAccount');
-            select.innerHTML = '<option value="">Select funding source</option>';
             accounts.forEach(acc => {
-                const formattedBalance = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(acc.balance);
-                select.innerHTML += `<option value="${acc.id}">${acc.accountType} Corporate Account (...${acc.accountNumber.slice(-4)}) — ${formattedBalance}</option>`;
+                const opt = document.createElement('option');
+                opt.value = acc.id;
+                opt.textContent = `${acc.accountNumber} - Balance: $${acc.balance.toFixed(2)}`;
+                select.appendChild(opt);
             });
         }
-    } catch (err) {
-        console.error('Account data acquisition failure:', err);
-    }
+    } catch (err) { console.error(err); }
 }
 
-document.getElementById('sourceAccount').addEventListener('change', updatePreview);
-document.getElementById('destinationAccount').addEventListener('input', updatePreview);
-document.getElementById('amount').addEventListener('input', updatePreview);
+// Live summary updates
+document.getElementById('destinationAccount').addEventListener('input', (e) => {
+    document.getElementById('sum-dest').textContent = e.target.value || '---';
+});
 
-function updatePreview() {
-    const dest = document.getElementById('destinationAccount').value || '---';
-    const amount = parseFloat(document.getElementById('amount').value) || 0;
-    const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-    
-    document.getElementById('sum-dest').textContent = dest;
+document.getElementById('amount').addEventListener('input', (e) => {
+    const val = parseFloat(e.target.value) || 0;
+    const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
     document.getElementById('sum-amount').textContent = formatted;
     document.getElementById('sum-total').textContent = formatted;
-}
+});
 
-function showSystemModal(title, msg, type = 'success') {
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalMsg').textContent = msg;
-    document.getElementById('modalIcon').textContent = type === 'success' ? '✅' : '🛡️';
+function showConfirmation() {
+    const form = document.getElementById('transferForm');
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
     document.getElementById('systemModal').style.display = 'flex';
 }
 
-function closeSystemModal() {
+function closeModal() {
     document.getElementById('systemModal').style.display = 'none';
 }
 
-function showModal() {
-    const dest = document.getElementById('destinationAccount').value;
+async function executeTransfer() {
+    const sourceId = document.getElementById('sourceAccount').value;
+    const targetId = document.getElementById('destinationAccount').value;
     const amount = parseFloat(document.getElementById('amount').value);
-    const source = document.getElementById('sourceAccount').value;
+    const description = document.getElementById('description').value;
 
-    if (!source || !dest || !amount || amount <= 0) {
-        showSystemModal('Missing Operational Data', 'Full recipient identity and authorized amount required.', 'error');
-        return;
-    }
-
-    document.getElementById('modal-dest').textContent = dest;
-    document.getElementById('modal-amount').textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-    document.getElementById('modal-overlay').style.display = 'flex';
-}
-
-function hideModal() {
-    document.getElementById('modal-overlay').style.display = 'none';
-}
-
-async function executeTransfer(event) {
-    const btn = event ? event.target : document.querySelector('.summary-side .btn-primary');
-    btn.disabled = true;
-    const originalText = btn.textContent;
-    btn.textContent = 'Transmitting Signature...';
-
-    const sourceAccountId = document.getElementById('sourceAccount').value;
-    const destAccount = document.getElementById('destinationAccount').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const location = document.getElementById('location').value;
-    const description = document.getElementById('description').value || 'Fund Transmission';
+    closeModal();
 
     try {
         const res = await fetch('/api/transactions/transfer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                sourceAccountId: parseInt(sourceAccountId),
-                targetAccountNumber: destAccount,
-                amount,
-                location,
-                description
-            })
+            body: JSON.stringify({ sourceId, targetId, amount, description })
         });
 
-        if (res.status === 400 || res.status === 500) {
-            const errorData = await res.json();
-            if (errorData.message && errorData.message.includes('antifraude')) {
-                hideModal();
-                showSystemModal('SECURITY BLOCK', errorData.message, 'error');
-                setTimeout(() => {
-                    sessionStorage.clear();
-                    window.location.href = '/auth/login.html';
-                }, 4000);
-                return;
-            }
-        }
-
-        hideModal();
-
         if (res.ok) {
-            const tx = await res.json();
-            window.location.href = `/common/exito.html?txId=${encodeURIComponent(tx.id || '')}`;
+            alert('Transferencia autorizada y procesada con éxito.');
+            window.location.href = '/customer/movimientos.html';
         } else {
-            window.location.href = '/common/fallo.html';
+            const error = await res.json();
+            alert('Fallo en la operación: ' + (error.message || 'Error desconocido'));
         }
     } catch (err) {
-        hideModal();
-        window.location.href = '/common/fallo.html';
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Sign & Transmit';
+        alert('Error de red: No se pudo conectar con el servidor.');
     }
 }
 

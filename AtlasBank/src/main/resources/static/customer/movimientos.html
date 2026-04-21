@@ -4,185 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlasBank | Historial de Movimientos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        :root {
-            --primario: #15803d;
-            --primario-soft: #f0fdf4;
-            --negro: #111827;
-            --blanco: #ffffff;
-            --gris-borde: #e5e7eb;
-            --gris-fondo: #f9fafb;
-            --gris-texto: #4b5563;
+        .filter-bar {
+            background: var(--bg-main);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
-        body { background: var(--blanco); color: var(--negro); }
-
-        header {
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .nav-meta { font-size: 0.75rem; font-weight: 600; color: var(--gris-texto); }
-
-        main { padding: 40px 5%; }
-
-        .page-header {
-            display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 40px;
-        }
-        .page-header h1 { font-size: 3rem; letter-spacing: -2px; line-height: 1; }
-
-        .toolbar {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 20px;
-            padding: 20px;
-            background: var(--gris-fondo);
-            border: 1px solid var(--gris-borde);
-            margin-bottom: 2px;
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        .filters { display: flex; gap: 20px; align-items: center; }
-
-        .filter-group { display: flex; flex-direction: column; gap: 5px; }
-        .filter-group label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--gris-texto); }
-
-        select, input[type="date"] {
-            padding: 8px 12px;
-            border: 1px solid var(--gris-borde);
-            background: white;
-            font-size: 0.85rem;
-            outline: none;
-            cursor: pointer;
-        }
-        select:focus { border-color: var(--primario); }
-
-        .export-tools { display: flex; gap: 10px; }
-        .btn-tool {
-            padding: 10px 20px;
-            border: 1px solid var(--negro);
-            background: white;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-tool:hover { background: var(--negro); color: white; }
-        .btn-tool.pdf { border-color: var(--primario); color: var(--primario); }
-        .btn-tool.pdf:hover { background: var(--primario); color: white; }
-
-        .table-container { border: 1px solid var(--gris-borde); }
-        table { width: 100%; border-collapse: collapse; }
-
-        thead { background: var(--negro); color: white; }
-        th { text-align: left; padding: 15px 20px; font-size: 0.75rem; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; }
-
-        tbody tr { border-bottom: 1px solid var(--gris-borde); transition: 0.2s; }
-        tbody tr:hover { background: var(--primario-soft); }
-
-        td { padding: 20px; font-size: 0.95rem; }
-
-        .date-cell { color: var(--gris-texto); font-size: 0.85rem; width: 120px; }
-        .type-tag { font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border: 1px solid; text-transform: uppercase; }
-        .type-in { color: var(--primario); border-color: var(--primario); }
-        .type-out { color: var(--negro); border-color: var(--negro); }
-
-        .amount-cell { font-weight: 600; text-align: right; font-size: 1.1rem; }
-        .amount-in { color: var(--primario); }
-
-        .pagination {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px; border: 1px solid var(--gris-borde); border-top: none;
-            font-size: 0.8rem; font-weight: 600;
-        }
-        .page-link { color: var(--negro); text-decoration: none; margin: 0 10px; }
-        .page-link.active { color: var(--primario); text-decoration: underline; }
-
-        @media (max-width: 900px) {
-            .toolbar { grid-template-columns: 1fr; }
-            .filters { flex-wrap: wrap; }
+        @media (max-width: 768px) {
+            .filter-bar { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">MOVIMIENTOS</span></div>
-    <a href="/customer/dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
-</header>
-
-<main>
-    <div class="page-header">
-        <div>
-            <p style="color: var(--primario); font-weight: 600; margin-bottom: 5px;">[ CONSULTA DE ACTIVIDAD ]</p>
-            <h1>Movimientos</h1>
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
+        <nav class="sidebar-nav">
+            <a href="/customer/dashboard.html" class="sidebar-link">📊 Dashboard</a>
+            <a href="/customer/cuentas.html" class="sidebar-link">🏦 Cuentas</a>
+            <a href="/customer/movimientos.html" class="sidebar-link active">📄 Movimientos</a>
+            <a href="/customer/transferencias.html" class="sidebar-link">💸 Transferencias</a>
+            <a href="/customer/tarjetas.html" class="sidebar-link">💳 Tarjetas</a>
+            <a href="/customer/ahorro_metas.html" class="sidebar-link">🌱 Metas de Ahorro</a>
+            <a href="/customer/perfil.html" class="sidebar-link">⚙️ Configuración</a>
+        </nav>
+        
+        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
+            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
         </div>
-        <div style="text-align: right;">
-            <p class="nav-meta">SALDO ACTUAL</p>
-            <p id="currentBalance" style="font-size: 1.8rem; font-weight: 600;">$0.00</p>
-        </div>
-    </div>
+    </aside>
 
-    <section class="toolbar">
-        <div class="filters">
+    <main class="app-content">
+        <header class="content-header">
+            <div>
+                <h1 style="font-size: 1.75rem;">Historial de Movimientos</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Consulta de actividad y flujo de capital institucional.</p>
+            </div>
+            <div style="text-align: right;">
+                <span class="label">Saldo Consolidado</span>
+                <div id="currentBalance" style="font-size: 1.5rem; font-weight: 700; color: var(--bg-dark);">$0.00</div>
+            </div>
+        </header>
+
+        <section class="filter-bar animate-up">
             <div class="filter-group">
-                <label>Desde</label>
-                <input type="date" id="dateFrom">
+                <label class="label">Desde</label>
+                <input type="date" id="dateFrom" class="form-control" style="padding: 0.5rem 0.75rem;">
             </div>
             <div class="filter-group">
-                <label>Hasta</label>
-                <input type="date" id="dateTo">
+                <label class="label">Hasta</label>
+                <input type="date" id="dateTo" class="form-control" style="padding: 0.5rem 0.75rem;">
             </div>
             <div class="filter-group">
-                <label>Tipo</label>
-                <select id="typeFilter">
-                    <option value="">Todos los flujos</option>
+                <label class="label">Tipo de Flujo</label>
+                <select id="typeFilter" class="form-control" style="padding: 0.5rem 0.75rem;">
+                    <option value="">Todos</option>
                     <option value="DEPOSIT">Ingresos (+)</option>
-                    <option value="WITHDRAWAL">Egresos (-)</option>
+                    <option value="WITHDRAW">Egresos (-)</option>
+                    <option value="TRANSFER">Transferencias</option>
                 </select>
             </div>
-        </div>
+            <div class="flex gap-2" style="margin-left: auto;">
+                <button class="btn btn-outline" onclick="exportCSV()" style="font-size: 0.8rem;">Exportar CSV</button>
+                <button class="btn btn-primary" onclick="alert('Generando reporte PDF certificado...')" style="font-size: 0.8rem;">Generar PDF</button>
+            </div>
+        </section>
 
-        <div class="export-tools">
-            <button class="btn-tool" onclick="exportCSV()">Exportar CSV</button>
-            <button class="btn-tool pdf" onclick="alert('Generando PDF de movimientos...')">Generar PDF</button>
-        </div>
-    </section>
+        <section class="table-container animate-up">
+            <table class="app-table">
+                <thead>
+                    <tr>
+                        <th>Fecha y Hora</th>
+                        <th>Operación</th>
+                        <th>Referencia</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Monto (USD)</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsBody">
+                    <tr><td colspan="5" style="text-align:center; padding:40px; color: var(--text-muted);">Iniciando protocolos de auditoría...</td></tr>
+                </tbody>
+            </table>
+        </section>
 
-    <section class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Tipo</th>
-                    <th>Concepto / Referencia</th>
-                    <th>Estado</th>
-                    <th style="text-align: right;">Monto</th>
-                </tr>
-            </thead>
-            <tbody id="transactionsBody">
-            </tbody>
-        </table>
-    </section>
-
-    <div class="pagination">
-        <span>Mostrando <span id="txCount">0</span> transacciones</span>
-        <div>
-            <a href="#" class="page-link active">1</a>
+        <div class="flex justify-between align-center" style="margin-top: 2rem; font-size: 0.85rem; color: var(--text-muted);">
+            <span>Mostrando <span id="txCount">0</span> transacciones certificadas</span>
+            <div class="flex gap-2">
+                <button class="btn btn-ghost" style="font-size: 0.8rem;" disabled>Anterior</button>
+                <button class="btn btn-outline" style="font-size: 0.8rem; background: var(--bg-dark); color: white;">1</button>
+                <button class="btn btn-ghost" style="font-size: 0.8rem;" disabled>Siguiente</button>
+            </div>
         </div>
-    </div>
-</main>
+    </main>
+</div>
 
 <script>
 const customerId = sessionStorage.getItem('customerId');
+const fullName = sessionStorage.getItem('fullName');
+
 if (!customerId) window.location.href = '/auth/login.html';
 
-const customerIdDisplay = document.getElementById('customerIdDisplay');
-if (customerIdDisplay) {
-    customerIdDisplay.textContent = customerId;
+document.getElementById('userDisplay').textContent = fullName || customerId;
+
+function logout() {
+    sessionStorage.clear();
+    window.location.href = '/auth/login.html';
 }
 
 let allTransactions = [];
@@ -193,68 +136,69 @@ async function loadTransactions() {
         if (accRes.ok) {
             const accounts = await accRes.json();
             if (accounts.length > 0) {
-                document.getElementById('currentBalance').textContent = '$' + accounts[0].balance.toFixed(2);
+                const total = accounts.reduce((sum, acc) => sum + acc.balance, 0);
+                document.getElementById('currentBalance').textContent = '$' + total.toFixed(2);
+                
+                const txPromises = accounts.map(acc => fetch(`/api/transactions/account/${acc.id}`).then(r => r.json()));
+                const txResults = await Promise.all(txPromises);
+                allTransactions = txResults.flat().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                renderTransactions(allTransactions);
             }
         }
-
-        const res = await fetch('/api/transactions');
-        if (res.ok) {
-            allTransactions = await res.json();
-            renderTransactions();
-        }
-    } catch (err) {
-        console.error('Error loading transactions:', err);
-    }
+    } catch (err) { console.error(err); }
 }
 
-function renderTransactions() {
+function renderTransactions(txs) {
     const tbody = document.getElementById('transactionsBody');
     tbody.innerHTML = '';
+    
+    if (txs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:40px; color: var(--text-muted);">No se encontraron registros en el ledger.</td></tr>';
+        document.getElementById('txCount').textContent = '0';
+        return;
+    }
 
-    allTransactions.forEach(tx => {
+    txs.forEach(tx => {
         const tr = document.createElement('tr');
-        const isDeposit = tx.type === 'DEPOSIT';
-        const date = new Date(tx.createdAt || new Date());
-        const desc = tx.type === 'DEPOSIT' ? 'DEPÓSITO EN CUENTA' : 'RETIRO / TRANSFERENCIA';
+        const isDebit = tx.type === 'WITHDRAW' || (tx.type === 'TRANSFER' && tx.sourceAccount && tx.sourceAccount.customerId === customerId);
+        const amountColor = isDebit ? 'var(--error)' : 'var(--primary)';
+        const amountPrefix = isDebit ? '-' : '+';
+        
+        let reference = tx.description || `${tx.type} Protocol`;
+        if (tx.type === 'TRANSFER') {
+            reference = tx.sourceAccount.customerId === customerId 
+                ? `Transferencia enviada a ${tx.targetAccount ? tx.targetAccount.accountNumber : 'N/A'}`
+                : `Transferencia recibida de ${tx.sourceAccount.accountNumber}`;
+        }
 
         tr.innerHTML = `
-            <td class="date-cell">${date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}</td>
-            <td><span class="type-tag ${isDeposit ? 'type-in' : 'type-out'}">${isDeposit ? 'Ingreso' : 'Egreso'}</span></td>
-            <td>${desc}<br><small style="color: var(--gris-texto);">REF: ${tx.id || '-'}</small></td>
-            <td><small>COMPLETADO</small></td>
-            <td class="amount-cell ${isDeposit ? 'amount-in' : ''}">${isDeposit ? '+' : '-'}$${(tx.amount || 0).toFixed(2)}</td>
+            <td class="date-cell">${new Date(tx.createdAt).toLocaleString()}</td>
+            <td><span class="badge" style="background: var(--bg-alt); color: var(--bg-dark); border: 1px solid var(--border);">${tx.type}</span></td>
+            <td style="font-size: 0.85rem; color: var(--text-muted);">${reference}</td>
+            <td><span class="badge badge-success">CERTIFICADO</span></td>
+            <td style="text-align: right; font-weight: 700; color: ${amountColor}">${amountPrefix} $${tx.amount.toFixed(2)}</td>
         `;
         tbody.appendChild(tr);
     });
-
-    document.getElementById('txCount').textContent = allTransactions.length;
+    document.getElementById('txCount').textContent = txs.length;
 }
 
 function exportCSV() {
-    let csv = 'Fecha,Tipo,Concepto,Monto\n';
+    if (allTransactions.length === 0) return;
+    let csv = 'Fecha,Tipo,Referencia,Monto\n';
     allTransactions.forEach(tx => {
-        const isDeposit = tx.type === 'DEPOSIT';
-        const desc = isDeposit ? 'DEPÓSITO' : 'RETIRO';
-        csv += `${new Date(tx.createdAt || new Date()).toISOString()},${tx.type},${desc},${isDeposit ? '+' : '-'}${tx.amount}\n`;
+        csv += `${new Date(tx.createdAt).toLocaleString()},${tx.type},${tx.description || tx.type},${tx.amount}\n`;
     });
-
     const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
+    const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'movimientos_atlasbank.csv';
+    a.download = `movimientos_atlasbank_${new Date().getTime()}.csv`;
     a.click();
 }
 
-document.getElementById('typeFilter').addEventListener('change', function() {
-    const type = this.value;
-    if (type) {
-        renderTransactions();
-    }
-});
-
 loadTransactions();
 </script>
-
 </body>
 </html>

@@ -4,139 +4,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlasBank | Privacidad</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        :root {
-            --primario: #15803d;
-            --primario-soft: #f0fdf4;
-            --alerta: #ef4444;
-            --negro: #111827;
-            --blanco: #ffffff;
-            --gris-borde: #e5e7eb;
-            --gris-fondo: #f9fafb;
-            --gris-texto: #6b7280;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
-        body { background: var(--blanco); color: var(--negro); }
-
-        header { padding: 20px 5%; border-bottom: 1px solid var(--gris-borde); display: flex; justify-content: space-between; align-items: center; }
-
-        main {
+        .settings-layout {
             display: grid;
-            grid-template-columns: 300px 1fr;
-            min-height: calc(100vh - 76px);
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+            align-items: start;
         }
 
-        .settings-nav {
-            padding: 40px 15% 40px 5%;
-            border-right: 1px solid var(--gris-borde);
-            background: var(--gris-fondo);
+        .settings-nav-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: sticky;
+            top: 2rem;
         }
-        .settings-nav a {
+
+        .settings-nav-item {
             display: block;
+            padding: 1.25rem 1.5rem;
+            color: var(--text-muted);
             text-decoration: none;
-            color: var(--gris-texto);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .settings-nav a.active { color: var(--primario); border-right: 2px solid var(--primario); }
-        .settings-nav a.logout { color: var(--alerta); margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--gris-borde); }
-
-        .settings-content { padding: 60px 10%; }
-        .settings-section { margin-bottom: 80px; max-width: 600px; }
-        .settings-section h2 { font-size: 1.8rem; letter-spacing: -1px; margin-bottom: 30px; border-bottom: 1px solid var(--negro); padding-bottom: 10px; }
-
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--gris-texto); }
-
-        input {
-            width: auto;
-            margin-right: 10px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
         }
 
-        .btn-save {
-            padding: 14px 28px;
-            background: var(--negro);
-            color: white;
-            border: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
+        .settings-nav-item:last-child { border-bottom: none; }
+
+        .settings-nav-item:hover, .settings-nav-item.active {
+            background: var(--bg-alt);
+            color: var(--primary);
+        }
+
+        .settings-nav-item.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        .privacy-option {
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .privacy-option:hover {
+            border-color: var(--primary);
+            background: var(--bg-alt);
+        }
+
+        .privacy-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 0.25rem;
             cursor: pointer;
-            transition: 0.3s;
         }
-        .btn-save:hover { background: var(--primario); }
 
-        @media (max-width: 900px) {
-            main { grid-template-columns: 1fr; }
-            .settings-nav { display: none; }
+        .danger-zone {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: var(--radius-lg);
+        }
+
+        @media (max-width: 1024px) {
+            .settings-layout { grid-template-columns: 1fr; }
+            .settings-nav-card { position: static; display: flex; flex-wrap: wrap; }
+            .settings-nav-item { border-bottom: none; border-right: 1px solid var(--border); }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">AtlasBank</div>
-    <a href="/customer/dashboard.html" class="back-link" style="text-decoration:none; color:var(--negro); font-size:0.8rem; font-weight:600; text-transform:uppercase;">← Volver al Dashboard</a>
-</header>
-
-<main>
-    <aside class="settings-nav">
-        <a href="/customer/perfil.html">Datos Personales</a>
-        <a href="/customer/seguridad.html">Seguridad y Llaves</a>
-        <a href="/customer/privacidad.html" class="active">Privacidad</a>
-        <a href="#" onclick="sessionStorage.clear(); window.location.href='/auth/login.html'; return false;" class="logout">Finalizar Sesión</a>
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
+        <nav class="sidebar-nav">
+            <a href="/customer/dashboard.html" class="sidebar-link">📊 Dashboard</a>
+            <a href="/customer/cuentas.html" class="sidebar-link">🏦 Cuentas</a>
+            <a href="/customer/movimientos.html" class="sidebar-link">📄 Movimientos</a>
+            <a href="/customer/transferencias.html" class="sidebar-link">💸 Transferencias</a>
+            <a href="/customer/tarjetas.html" class="sidebar-link">💳 Tarjetas</a>
+            <a href="/customer/ahorro_metas.html" class="sidebar-link">🌱 Metas de Ahorro</a>
+            <a href="/customer/perfil.html" class="sidebar-link active">⚙️ Configuración</a>
+        </nav>
+        
+        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
+            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
+        </div>
     </aside>
 
-    <section class="settings-content">
-        <div class="settings-section" id="privacidad">
-            <h2>Políticas y Privacidad</h2>
-            <form id="privacyForm">
-                <div class="form-group" style="display:flex; align-items:center; gap: 10px;">
-                    <input type="checkbox" id="marketing" checked>
-                    <label style="margin:0;">Acepto recibir correos y notificaciones sobre nuevos productos</label>
-                </div>
-                <div class="form-group" style="display:flex; align-items:center; gap: 10px;">
-                    <input type="checkbox" id="dataSharing">
-                    <label style="margin:0;">Permitir compartir mis datos con terceros afiliados para mejores ofertas</label>
-                </div>
-                <br>
-                <button type="submit" class="btn-save">Guardar Preferencias</button>
-            </form>
-            
-            <div style="margin-top:40px; font-size:0.85rem;">
-                <p><strong>Uso de Datos Personales (AtlasBank)</strong></p>
-                <p>Tu información se encuentra encriptada bajo estándares internacionales. Puedes descargar tu información en cualquier momento según las disposiciones de la ley general de datos.</p>
-                <br>
-                <a href="#" style="color:var(--alerta);">Solicitar Eliminación de Cuenta y Datos (Irreversible)</a>
+    <main class="app-content">
+        <header class="content-header">
+            <div>
+                <h1 style="font-size: 1.75rem;">Políticas y Privacidad</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Gestiona cómo AtlasBank protege y utiliza tu información.</p>
             </div>
+        </header>
+
+        <div class="settings-layout animate-up">
+            <aside class="settings-nav-card">
+                <a href="/customer/perfil.html" class="settings-nav-item">Datos Personales</a>
+                <a href="/customer/seguridad.html" class="settings-nav-item">Seguridad y Llaves</a>
+                <a href="/customer/privacidad.html" class="settings-nav-item active">Privacidad</a>
+            </aside>
+
+            <section class="stat-card">
+                <h2 style="font-size: 1.25rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">Preferencias de Privacidad</h2>
+
+                <form id="privacyForm">
+                    <div class="privacy-option">
+                        <input type="checkbox" id="marketing" class="privacy-checkbox" checked>
+                        <div>
+                            <label for="marketing" style="font-weight: 700; display: block; margin-bottom: 0.25rem; cursor: pointer;">Comunicaciones de Marketing</label>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Recibe notificaciones sobre nuevos productos, beneficios y ofertas exclusivas de AtlasBank.</p>
+                        </div>
+                    </div>
+
+                    <div class="privacy-option">
+                        <input type="checkbox" id="dataSharing" class="privacy-checkbox">
+                        <div>
+                            <label for="dataSharing" style="font-weight: 700; display: block; margin-bottom: 0.25rem; cursor: pointer;">Intercambio de Datos con Afiliados</label>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Permite que compartamos información anonimizada con terceros afiliados para mejorar tu experiencia bancaria.</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary" style="padding: 1rem 2.5rem;">Guardar Preferencias</button>
+                    </div>
+                </form>
+
+                <div class="danger-zone">
+                    <h3 style="color: #c53030; font-size: 1.1rem; margin-bottom: 0.75rem;">Zona de Riesgo</h3>
+                    <p style="font-size: 0.85rem; color: #742a2a; margin-bottom: 1.5rem;">La eliminación de la cuenta es un proceso irreversible que borrará todos tus registros financieros y activos de forma permanente.</p>
+                    <button class="btn btn-outline" style="color: #c53030; border-color: #feb2b2; background: white;" onclick="confirmDelete()">Solicitar Eliminación de Cuenta</button>
+                </div>
+            </section>
         </div>
-    </section>
-</main>
+    </main>
+</div>
 
 <script>
 const role = (sessionStorage.getItem('role') || '').toUpperCase();
+const fullName = sessionStorage.getItem('fullName');
 const isAdmin = role === 'ADMIN' || role === 'EXECUTIVE';
 const userId = isAdmin ? sessionStorage.getItem('adminUser') : sessionStorage.getItem('customerId');
 
 if (!userId) window.location.href = '/auth/login.html';
 
-// Update context-sensitive UI
-const backLink = document.querySelector('.back-link');
-if (isAdmin) {
-    backLink.href = '/admin/panel_admin.html';
-    backLink.textContent = '← Volver al Panel Admin';
+document.getElementById('userDisplay').textContent = fullName || userId;
+
+function logout() {
+    sessionStorage.clear();
+    window.location.href = '/auth/login.html';
 }
 
 document.getElementById('privacyForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    alert('Tus preferencias de privacidad han sido guardadas y actualizadas.');
+    alert('Tus preferencias de privacidad han sido cifradas y actualizadas en el nodo central.');
 });
-</script>
 
+function confirmDelete() {
+    if (confirm('⚠️ ADVERTENCIA: Esta acción es irreversible. ¿Realmente deseas proceder con la eliminación de tu identidad digital en AtlasBank?')) {
+        alert('Solicitud enviada a auditoría de seguridad. Se procesará en 24-48 horas.');
+    }
+}
+</script>
 </body>
 </html>

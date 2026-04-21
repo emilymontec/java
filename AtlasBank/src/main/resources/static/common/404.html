@@ -3,32 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Página no encontrada</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>AtlasBank | 404</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        :root {
-            --primario: #15803d;
-            --negro: #111827;
-            --blanco: #ffffff;
-            --gris-texto: #6b7280;
+        body {
+            background: var(--bg-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 2rem;
         }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
-        body { background: var(--blanco); display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .error-container { text-align: center; }
-        .error-code { font-size: 8rem; font-weight: 600; color: var(--gris-texto); line-height: 1; }
-        .error-code span { color: var(--primario); }
-        h1 { font-size: 2rem; letter-spacing: -1px; margin: 20px 0; }
-        p { color: var(--gris-texto); margin-bottom: 40px; }
-        .btn-home { padding: 18px 40px; background: var(--primario); color: white; text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-        .btn-home:hover { background: var(--negro); }
+        .error-code {
+            font-size: 10rem;
+            font-weight: 700;
+            color: var(--bg-dark);
+            line-height: 1;
+            margin-bottom: 1rem;
+            letter-spacing: -5px;
+        }
+        .error-code span {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
-    <div class="error-container">
+    <div class="animate-up">
         <div class="error-code">4<span>0</span>4</div>
-        <h1>Página no encontrada</h1>
-        <p>La página que buscas no existe o fue movida.</p>
-        <a href="/inicio.html" class="btn-home">Volver al Inicio</a>
+        <h1 style="font-size: 2rem; margin-bottom: 1rem;">Protocolo No Encontrado</h1>
+        <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+            La dirección solicitada no existe en el nodo central de AtlasBank o ha sido movida permanentemente.
+        </p>
+        <a href="/inicio.html" class="btn btn-primary" style="padding: 1.25rem 3rem;">REESTABLECER CONEXIÓN</a>
     </div>
 </body>
 </html>
