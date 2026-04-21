@@ -61,7 +61,15 @@ public class TransactionService {
     @Transactional
     public BankTransaction transfer(TransferRequest request) {
         Account source = accountService.findById(request.sourceAccountId());
-        Account target = accountService.findById(request.targetAccountId());
+        
+        Account target;
+        if (request.targetAccountId() != null) {
+            target = accountService.findById(request.targetAccountId());
+        } else if (request.targetAccountNumber() != null) {
+            target = accountService.findByAccountNumber(request.targetAccountNumber());
+        } else {
+            throw new BusinessException("Debe proporcionar targetAccountId o targetAccountNumber");
+        }
 
         // Anti-fraud check
         if (source.getCustomer() != null) {
@@ -94,5 +102,9 @@ public class TransactionService {
 
     public List<BankTransaction> findAll() {
         return transactionRepository.findAll();
+    }
+
+    public List<BankTransaction> findByAccountId(Long accountId) {
+        return transactionRepository.findBySourceAccountIdOrTargetAccountIdOrderByCreatedAtDesc(accountId, accountId);
     }
 }

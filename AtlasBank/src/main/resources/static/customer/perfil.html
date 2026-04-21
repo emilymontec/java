@@ -162,7 +162,7 @@ async function loadProfile() {
             document.getElementById('phone').disabled = true;
             document.querySelector('.btn-save').style.display = 'none';
         } else {
-            const res = await fetch(`/api/customers/${userId}`);
+            const res = await fetch(`/api/customers/by-id/${userId}`);
             if (res.ok) {
                 const customer = await res.json();
                 document.getElementById('firstName').value = customer.firstName || customer.fullName.split(' ')[0] || '';

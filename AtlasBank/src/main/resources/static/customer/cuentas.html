@@ -4,24 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlasBank | Gestión de Cuentas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
         :root {
-            --primario: #15803d;
-            --primario-soft: #f0fdf4;
-            --negro: #111827;
-            --blanco: #ffffff;
-            --gris-borde: #e5e7eb;
-            --gris-fondo: #f9fafb;
-            --gris-texto: #4b5563;
+            /* Override or supplement global variables if needed */
         }
 
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
-        body { background: var(--blanco); color: var(--negro); }
+        body { background: var(--bg-main); color: var(--text-main); }
 
         header {
             padding: 20px 5%;
-            border-bottom: 1px solid var(--gris-borde);
+            border-bottom: 1px solid var(--border);
             display: flex; justify-content: space-between; align-items: center;
         }
 
@@ -29,7 +24,7 @@
 
         .section-intro { margin-bottom: 60px; }
         .section-intro h1 { font-size: 3rem; letter-spacing: -2px; margin-bottom: 10px; }
-        .section-intro p { color: var(--gris-texto); font-size: 1.1rem; }
+        .section-intro p { color: var(--text-muted); font-size: 1.1rem; }
 
         .accounts-container {
             display: flex;
@@ -38,7 +33,7 @@
         }
 
         .account-card {
-            border: 1px solid var(--negro);
+            border: 1px solid var(--bg-dark);
             display: grid;
             grid-template-columns: 300px 1fr;
             transition: 0.3s;
@@ -46,18 +41,18 @@
 
         .account-summary {
             padding: 40px;
-            background: var(--negro);
+            background: var(--bg-dark);
             color: white;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
-        .account-type { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--primario); }
+        .account-type { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); }
         .account-balance { font-size: 2.2rem; font-weight: 600; margin: 20px 0; }
         .status-pill {
             display: inline-block;
             padding: 4px 10px;
-            background: var(--primario);
+            background: var(--primary);
             font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
@@ -68,7 +63,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            background: var(--blanco);
+            background: var(--bg-main);
         }
 
         .detail-group { position: relative; }
@@ -76,7 +71,7 @@
             display: block;
             font-size: 0.65rem;
             font-weight: 700;
-            color: var(--gris-texto);
+            color: var(--text-muted);
             text-transform: uppercase;
             margin-bottom: 8px;
         }
@@ -91,7 +86,7 @@
 
         .copy-btn {
             background: none;
-            border: 1px solid var(--gris-borde);
+            border: 1px solid var(--border);
             padding: 4px 8px;
             font-size: 0.6rem;
             font-weight: 600;
@@ -99,27 +94,27 @@
             text-transform: uppercase;
             transition: 0.2s;
         }
-        .copy-btn:hover { background: var(--negro); color: white; border-color: var(--negro); }
+        .copy-btn:hover { background: var(--bg-dark); color: white; border-color: var(--bg-dark); }
 
         .account-actions {
             grid-column: span 2;
             margin-top: 10px;
             padding-top: 20px;
-            border-top: 1px solid var(--gris-borde);
+            border-top: 1px solid var(--border);
             display: flex;
             gap: 20px;
         }
-        .action-link { text-decoration: none; color: var(--negro); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; border-bottom: 2px solid var(--primario); padding-bottom: 2px; }
-        .action-link:hover { color: var(--primario); }
+        .action-link { text-decoration: none; color: var(--bg-dark); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; border-bottom: 2px solid var(--primary); padding-bottom: 2px; }
+        .action-link:hover { color: var(--primary); }
 
         .create-account-section {
             margin-top: 60px;
             padding-top: 40px;
-            border-top: 1px solid var(--gris-borde);
+            border-top: 1px solid var(--border);
         }
         .btn-create {
             padding: 18px 40px;
-            background: var(--primario);
+            background: var(--primary);
             color: white;
             border: none;
             font-weight: 600;
@@ -128,7 +123,7 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
-        .btn-create:hover { background: var(--negro); }
+        .btn-create:hover { background: var(--bg-dark); }
 
         /* Modal Sistema - Estilo Exito/Fallo */
         #systemModal {
@@ -142,23 +137,23 @@
             text-align: center; border-radius: 0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
         #modalIcon { font-size: 5rem; line-height: 1; margin-bottom: 20px; display: block; }
-        .success-type #modalIcon { color: var(--primario); }
+        .success-type #modalIcon { color: var(--primary); }
         .error-type #modalIcon { color: #b91c1c; }
         
         #modalLabel { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: block; }
-        .success-type #modalLabel { color: var(--primario); }
+        .success-type #modalLabel { color: var(--primary); }
         .error-type #modalLabel { color: #b91c1c; }
 
-        #modalTitle { font-size: 2.5rem; letter-spacing: -2px; margin-bottom: 20px; line-height: 1; color: var(--negro); text-transform: uppercase; }
-        #modalMsg { color: var(--gris-texto); margin-bottom: 40px; font-size: 1rem; line-height: 1.5; }
+        #modalTitle { font-size: 2.5rem; letter-spacing: -2px; margin-bottom: 20px; line-height: 1; color: var(--bg-dark); text-transform: uppercase; }
+        #modalMsg { color: var(--text-muted); margin-bottom: 40px; font-size: 1rem; line-height: 1.5; }
         
         .btn-modal {
-            padding: 18px 45px; background: var(--negro); color: white;
+            padding: 18px 45px; background: var(--bg-dark); color: white;
             border: none; font-weight: 600; text-transform: uppercase;
             cursor: pointer; font-size: 0.8rem; letter-spacing: 1px;
             transition: 0.3s;
         }
-        .btn-modal:hover { background: var(--primario); }
+        .btn-modal:hover { background: var(--primary); }
 
         @media (max-width: 900px) {
             .account-card { grid-template-columns: 1fr; }
@@ -190,7 +185,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                 <div class="form-group">
                     <label>Tipo de Cuenta</label>
-                    <select id="accountType" style="width: 100%; padding: 15px; border: 1px solid var(--gris-borde); font-size: 1rem;">
+                    <select id="accountType" style="width: 100%; padding: 15px; border: 1px solid var(--border); font-size: 1rem;">
                         <option value="SAVINGS">Ahorro</option>
                         <option value="CHECKING">Corriente</option>
                         <option value="INVESTMENT">Inversión</option>
@@ -198,7 +193,7 @@
                 </div>
                 <div class="form-group">
                     <label>Monto Inicial</label>
-                    <input type="number" id="initialBalance" placeholder="0.00" step="0.01" value="0" style="width: 100%; padding: 15px; border: 1px solid var(--gris-borde); font-size: 1rem;">
+                    <input type="number" id="initialBalance" placeholder="0.00" step="0.01" value="0" style="width: 100%; padding: 15px; border: 1px solid var(--border); font-size: 1rem;">
                 </div>
                 <div style="display: flex; align-items: flex-end;">
                     <button type="submit" class="btn-create" style="width: 100%;">Crear Cuenta</button>

@@ -180,7 +180,10 @@
 const customerId = sessionStorage.getItem('customerId');
 if (!customerId) window.location.href = '/auth/login.html';
 
-document.getElementById('customerIdDisplay').textContent = customerId;
+const customerIdDisplay = document.getElementById('customerIdDisplay');
+if (customerIdDisplay) {
+    customerIdDisplay.textContent = customerId;
+}
 
 let allTransactions = [];
 

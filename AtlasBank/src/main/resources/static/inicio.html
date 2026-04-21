@@ -3,179 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Simulador Bancario</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>AtlasBank | Private & Sustainable Banking</title>
+    <meta name="description" content="AtlasBank - Institutional digital banking for the conscious investor. Security, ethics, and sustainability.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        :root {
-            --primario: #15803d;
-            --primario-soft: #f0fdf4;
-            --negro: #111827;
-            --blanco: #ffffff;
-            --gris-borde: #e5e7eb;
-            --gris-texto: #4b5563;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
-        body { background: var(--blanco); color: var(--negro); -webkit-font-smoothing: antialiased; }
-
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 25px 5%;
-            border-bottom: 1px solid var(--gris-borde);
-        }
-        .logo { font-weight: 600; font-size: 1.3rem; letter-spacing: -1px; color: var(--primario); }
-        .nav-links a { text-decoration: none; color: var(--negro); margin-left: 35px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primario); }
-
         .hero {
+            padding: 120px 5% 80px;
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
+            grid-template-columns: 1fr 450px;
+            align-items: center;
+            gap: 5%;
             min-height: 80vh;
-            border-bottom: 1px solid var(--gris-borde);
+            background: linear-gradient(to right, #ffffff, var(--bg-alt));
         }
 
-        .hero-content {
-            padding: 8% 8%;
-            border-right: 1px solid var(--gris-borde);
-            display: flex; flex-direction: column; justify-content: center;
+        .hero-title {
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 2rem;
+            color: var(--bg-dark);
+            letter-spacing: -2px;
         }
 
-        .hero-content h1 {
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            line-height: 0.85;
-            font-weight: 600;
-            margin-bottom: 35px;
-            letter-spacing: -4px;
-            color: var(--negro);
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 550px;
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.6;
         }
 
-        .hero-content p { font-size: 1.25rem; color: var(--gris-texto); max-width: 450px; line-height: 1.5; font-weight: 300; }
-
-        .hero-cta {
-            padding: 50px;
-            display: flex; align-items: center; justify-content: center;
-            background-color: var(--primario-soft);
+        .cta-container {
+            border: 1px solid var(--border);
+            padding: 40px;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
         }
 
-        .circle-btn {
-            width: 200px; height: 200px;
-            border-radius: 50%;
-            background: var(--primario);
-            color: var(--blanco);
-            display: flex; align-items: center; justify-content: center;
-            text-align: center; text-decoration: none;
-            font-weight: 600; font-size: 1rem;
-            line-height: 1.2;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            border: 1px solid transparent;
-        }
-        .circle-btn:hover {
-            transform: scale(1.1) rotate(5deg);
-            background: var(--negro);
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: block;
         }
 
-        .services-grid {
+        .feature-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
-        .service-card {
+        .feature-item {
             padding: 60px 40px;
-            border-right: 1px solid var(--gris-borde);
-            border-bottom: 1px solid var(--gris-borde);
-            transition: 0.4s;
-            position: relative;
+            border-right: 1px solid var(--border);
+            transition: var(--transition);
         }
-        .service-card:last-child { border-right: none; }
-        .service-card:hover { background: var(--blanco); }
-        .service-card:hover h3 { color: var(--primario); }
 
-        .service-card span {
-            font-size: 0.75rem;
-            color: var(--primario);
-            font-weight: 600;
-            display: block;
-            margin-bottom: 30px;
+        .feature-item:last-child { border-right: none; }
+
+        .feature-item:hover {
+            background: var(--bg-alt);
         }
-        .service-card h3 { font-size: 1.4rem; font-weight: 400; line-height: 1.3; }
+
+        .feature-num {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--bg-dark);
+        }
+
+        .feature-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        nav {
+            border-bottom: 1px solid var(--border);
+            background: white;
+        }
 
         footer {
-            padding: 120px 5% 60px;
-            display: flex; justify-content: space-between; align-items: flex-end;
-            position: relative; overflow: hidden;
+            padding: 80px 5%;
+            background: var(--bg-dark);
+            color: white;
         }
-        .footer-bg-text {
-            font-size: 12vw;
-            font-weight: 600;
-            color: var(--primario-soft);
-            position: absolute;
-            bottom: -2vw; left: -1vw;
-            z-index: -1;
-            letter-spacing: -10px;
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
         }
-        .footer-info { color: var(--gris-texto); font-size: 0.85rem; font-weight: 500; }
-        .footer-info a { color: var(--negro); text-decoration: none; margin-left: 20px; }
 
         @media (max-width: 1024px) {
-            .hero, .services-grid { grid-template-columns: 1fr; }
-            .hero-content { border-right: none; border-bottom: 1px solid var(--gris-borde); padding: 60px 5%; }
-            .service-card { border-right: none; padding: 40px 5%; }
-            .hero-cta { padding: 80px 0; }
-            footer { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 60px; }
+            .hero-desc { margin: 0 auto 3rem; }
+            .feature-grid { grid-template-columns: 1fr 1fr; }
+            .feature-item:nth-child(2n) { border-right: none; }
         }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo">AtlasBank</div>
-    <div class="nav-links">
-        <a href="#banca">Banca</a>
-        <a href="#etica">Ética</a>
-        <a href="/auth/login.html" style="color: var(--primario);">Acceso Clientes</a>
+    <div class="container flex justify-between align-center" style="padding: 20px 0;">
+        <div class="logo">Atlas<span>Bank</span></div>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Institutional</a>
+            <a href="#" class="nav-link">Sustainability</a>
+            <a href="#" class="nav-link">Transparency</a>
+        </div>
+        <a href="/auth/login.html" class="btn btn-primary">Client Portal</a>
     </div>
 </nav>
 
 <main>
     <section class="hero">
-        <div class="hero-content">
-            <h1>UN BANCO<br>PARA EL<br>MAÑANA.</h1>
-            <p>Capitalismo consciente. Tecnología financiera diseñada para regenerar el planeta, no solo para transaccionar.</p>
+        <div class="hero-content animate-up">
+            <span class="section-label">Institutional Asset Management</span>
+            <h1 class="hero-title">Financial stability for a sustainable future.</h1>
+            <p class="hero-desc">AtlasBank provides a secure digital infrastructure for high-impact capital. We combine institutional security with absolute ethical transparency.</p>
+            <div class="flex gap-4">
+                <a href="/auth/registro.html" class="btn btn-primary" style="padding: 1rem 2rem;">Apply for Account</a>
+                <a href="#features" class="btn btn-outline" style="padding: 1rem 2rem;">Annual Report 2026</a>
+            </div>
         </div>
-        <div class="hero-cta">
-            <a href="/auth/login.html" class="circle-btn">EMPEZAR<br>REGISTRO</a>
+        <div class="cta-container animate-up" style="animation-delay: 0.2s">
+            <h3 style="margin-bottom: 1rem; font-size: 1.4rem;">Start Investigation</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem;">Experience the first fully traceable banking system in the region.</p>
+            <a href="/auth/registro.html" class="btn btn-primary" style="width: 100%; border-radius: var(--radius-sm);">Create Digital Profile</a>
+            <p style="font-size: 0.7rem; text-align: center; margin-top: 1.5rem; color: var(--text-muted);">Member of the Global Impact Investing Network.</p>
         </div>
     </section>
 
-    <section class="services-grid">
-        <div class="service-card">
-            <span>[ 01 ] AHORRO</span>
-            <h3>Cuentas con propósito ambiental.</h3>
+    <section id="features" class="feature-grid">
+        <div class="feature-item animate-up" style="animation-delay: 0.1s">
+            <span class="feature-num">[ 01 ]</span>
+            <h3 class="feature-title">Asset Security</h3>
+            <p class="feature-text">End-to-end encryption and multi-sig authorization for institutional asset protection.</p>
         </div>
-        <div class="service-card">
-            <span>[ 02 ] CRÉDITO</span>
-            <h3>Financiación de impacto positivo.</h3>
+        <div class="feature-item animate-up" style="animation-delay: 0.2s">
+            <span class="feature-num">[ 02 ]</span>
+            <h3 class="feature-title">Impact Credit</h3>
+            <p class="feature-text">Optimized financing for sustainable infrastructure and certified green ventures.</p>
         </div>
-        <div class="service-card">
-            <span>[ 03 ] DIGITAL</span>
-            <h3>Gestión nativa desde nuestra app.</h3>
+        <div class="feature-item animate-up" style="animation-delay: 0.3s">
+            <span class="feature-num">[ 03 ]</span>
+            <h3 class="feature-title">Native Digital</h3>
+            <p class="feature-text">Direct access to the global banking network via our proprietary secure architecture.</p>
         </div>
-        <div class="service-card">
-            <span>[ 04 ] REPORTE</span>
-            <h3>Trazabilidad total de tu dinero.</h3>
+        <div class="feature-item animate-up" style="animation-delay: 0.4s">
+            <span class="feature-num">[ 04 ]</span>
+            <h3 class="feature-title">Audit Trail</h3>
+            <p class="feature-text">Real-time visibility into the environmental impact of your capital allocation.</p>
         </div>
     </section>
 </main>
 
 <footer>
-    <div class="footer-bg-text">AtlasBank</div>
-    <div class="footer-info">
-        <p>© 2026 AtlasBank. OPERACIONES CERTIFICADAS B-CORP.</p>
-    </div>
-    <div class="footer-info">
-        <a href="#">INSTAGRAM</a>
-        <a href="#">LINKEDIN</a>
-        <a href="#">X / TWITTER</a>
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <div class="logo" style="color: white; margin-bottom: 1.5rem;">Atlas<span style="color: var(--primary-light);">Bank</span></div>
+                <p style="font-size: 0.85rem; opacity: 0.6; line-height: 1.6; max-width: 300px;">Providing institutional-grade digital banking services focused on the regeneration of global ecosystems.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Governance</h4>
+                <div class="flex flex-direction-column gap-2" style="font-size: 0.8rem; opacity: 0.7; display: flex; flex-direction: column;">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Security Protocol</a>
+                    <a href="#">B-Corp Status</a>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Network</h4>
+                <div class="flex flex-direction-column gap-2" style="font-size: 0.8rem; opacity: 0.7; display: flex; flex-direction: column;">
+                    <a href="#">LinkedIn</a>
+                    <a href="#">Annual Report</a>
+                    <a href="#">Investor Relations</a>
+                </div>
+            </div>
+        </div>
+        <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 60px; padding-top: 30px; font-size: 0.75rem; opacity: 0.5;">
+            <p>© 2026 AtlasBank. All rights reserved. Member of FDIC Simulation.</p>
+        </div>
     </div>
 </footer>
 

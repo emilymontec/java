@@ -3,179 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Acceso Seguro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>AtlasBank | Institutional Entrance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        :root {
-            --primario: #15803d;
-            --negro: #111827;
-            --blanco: #ffffff;
-            --gris-borde: #e5e7eb;
-            --gris-texto: #6b7280;
-            --fondo: #f9fafb;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
         body {
-            background: var(--fondo);
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
+            background-color: var(--bg-alt);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
         }
 
         .login-card {
-            background: var(--blanco);
             width: 100%;
-            max-width: 450px;
-            border: 1px solid var(--gris-borde);
-            padding: 60px 50px;
+            max-width: 420px;
+            padding: 50px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
+            background: white;
+            border: 1px solid var(--border);
             position: relative;
         }
 
-        .login-card::before {
+        .login-card::after {
             content: "";
             position: absolute;
-            top: -1px; left: -1px;
-            width: 100%; height: 4px;
-            background: var(--primario);
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary);
         }
 
-        .brand {
-            font-weight: 600;
-            font-size: 1.2rem;
-            letter-spacing: -1px;
+        .brand-header {
             margin-bottom: 40px;
-            color: var(--negro);
-            display: flex; justify-content: space-between;
+            text-align: center;
         }
 
-        .brand span { color: var(--primario); font-size: 0.8rem; letter-spacing: 1px; }
-
-        h1 { font-size: 2rem; font-weight: 600; letter-spacing: -1.5px; margin-bottom: 10px; }
-        p.subtitle { color: var(--gris-texto); font-size: 0.9rem; margin-bottom: 35px; }
-
-        .form-group { margin-bottom: 25px; }
-
-        label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -1px;
             margin-bottom: 8px;
-            color: var(--negro);
+            color: var(--bg-dark);
         }
 
-        input {
-            width: 100%;
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .error-msg {
+            background: #fef2f2;
+            color: #991b1b;
             padding: 15px;
-            border: 1px solid var(--gris-borde);
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            border-color: var(--primario);
-            background: var(--fondo);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 18px;
-            background: var(--primario);
-            color: white;
-            border: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-login:hover {
-            background: var(--negro);
-            transform: translateY(-2px);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            margin-bottom: 25px;
+            display: none;
+            border: 1px solid #fee2e2;
         }
 
         .login-footer {
-            margin-top: 30px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
         }
 
-        .login-footer a {
-            text-decoration: none;
-            color: var(--gris-texto);
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .login-footer a:hover { color: var(--primario); }
-
-        .bg-text {
-            position: absolute;
-            font-size: 20vw;
-            font-weight: 600;
-            color: rgba(0,0,0,0.02);
+        .bg-decoration {
+            position: fixed;
+            font-size: 30vw;
+            font-weight: 800;
+            color: rgba(0,0,0,0.01);
             z-index: -1;
-            bottom: -5vw;
-            left: -2vw;
+            bottom: -10vw;
+            left: -5vw;
+            letter-spacing: -2vw;
             pointer-events: none;
-            letter-spacing: -1vw;
-        }
-
-        .error-msg {
-            color: #ef4444;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            display: none;
+            user-select: none;
         }
     </style>
 </head>
 <body>
 
-<div class="bg-text">AtlasBank</div>
+<div class="bg-decoration">ATLAS</div>
 
-<div class="login-card">
-    <div class="brand">
-        AtlasBank <span style="font-size: 0.6rem; opacity: 0.4;">v1.0.3</span>
+<div class="login-card animate-up">
+    <div class="brand-header">
+        <div class="logo" style="margin-bottom: 15px;">Atlas<span>Bank</span></div>
+        <p class="subtitle">Secure institutional session terminal.</p>
     </div>
 
-    <h1>Acceso al sistema</h1>
-    <p class="subtitle">Introduce tus credenciales para continuar.</p>
+    <div id="errorMessage" class="error-msg"></div>
 
     <form id="loginForm">
         <div class="form-group">
-            <label for="customerId">Usuario o Documento de Identidad (ID)</label>
-            <input type="text" id="customerId" placeholder="Ej. carlos.garcia o 12345678" required>
+            <label class="label" for="customerId">User Digital ID</label>
+            <input type="text" id="customerId" class="form-control" style="border-radius: var(--radius-sm);" placeholder="Identification Number" required>
         </div>
 
         <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" placeholder="••••••••" required>
+            <label class="label" for="password">Security Protocol Key</label>
+            <input type="password" id="password" class="form-control" style="border-radius: var(--radius-sm);" placeholder="••••••••" required>
         </div>
 
-        <div id="errorMessage" class="error-msg"></div>
-
-        <button type="submit" class="btn-login">Verificar Identidad</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; border-radius: var(--radius-sm);">
+            Execute Authentication
+        </button>
     </form>
 
     <div class="login-footer">
-        <a href="#">¿Olvidaste tu acceso?</a>
-        <a href="/auth/registro.html" style="color: var(--primario);">Abrir cuenta</a>
+        <a href="#" class="nav-link">Access Recovery</a>
+        <a href="/auth/registro.html" class="nav-link" style="color: var(--primary); font-weight: 700;">Establish Account</a>
     </div>
 </div>
 
 <script>
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.textContent;
+    
+    btn.disabled = true;
+    btn.textContent = 'Verifying...';
 
     const username = document.getElementById('customerId').value;
     const password = document.getElementById('password').value;
     const errorMsg = document.getElementById('errorMessage');
+    errorMsg.style.display = 'none';
 
     try {
         const response = await fetch('/api/admin/login', {
@@ -205,15 +168,17 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             sessionStorage.setItem('role', (data.role || 'USER').toUpperCase());
             window.location.href = '/customer/dashboard.html';
         } else {
-            errorMsg.textContent = 'Credenciales inválidas. Verifica tu información.';
+            errorMsg.textContent = 'Invalid credentials. Access denied.';
             errorMsg.style.display = 'block';
         }
     } catch (err) {
-        errorMsg.textContent = 'Error de conexión. Intenta más tarde.';
+        errorMsg.textContent = 'Network communication failure. Intricate error.';
         errorMsg.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
     }
 });
 </script>
-
 </body>
 </html>
