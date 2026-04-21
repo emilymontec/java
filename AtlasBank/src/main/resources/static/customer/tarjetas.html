@@ -3,64 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Gestión de Tarjetas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>AtlasBank | Mis Tarjetas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        .card-management-grid {
-            display: grid;
-            grid-template-columns: 420px 1fr;
-            gap: 3rem;
-            align-items: start;
-        }
-
         .card-visual {
-            width: 100%;
-            height: 240px;
-            background: var(--bg-dark);
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
+            width: 380px;
+            height: 230px;
+            background: var(--negro);
+            padding: 30px;
             color: white;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
             overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-        }
-
-        .card-visual.blocked {
-            filter: grayscale(1) opacity(0.5);
-        }
-
-        .card-visual.blocked::after {
-            content: "BLOQUEADA";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            border: 4px solid var(--error);
-            color: var(--error);
-            padding: 0.5rem 1rem;
-            font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
+            border-radius: 0;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .card-chip {
-            width: 45px;
-            height: 35px;
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            border-radius: 4px;
-            margin-bottom: 1rem;
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #d4af37, #f9d71c);
+            margin-bottom: 20px;
         }
 
         .card-number {
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            font-family: monospace;
-            margin-top: 1rem;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         .switch {
@@ -76,7 +48,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--border);
+            background-color: var(--gris-borde);
             transition: .4s;
             border-radius: 34px;
         }
@@ -91,34 +63,15 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider { background-color: var(--primario); }
         input:checked + .slider:before { transform: translateX(24px); }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--bg-alt);
-            border-radius: var(--radius-full);
-            overflow: hidden;
-            margin-top: 0.75rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-            width: 65%;
-        }
-
-        @media (max-width: 1024px) {
-            .card-management-grid { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <aside class="app-sidebar">
-        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
+        <div class="logo" style="color: white">AtlasBank</div>
         <nav class="sidebar-nav">
             <a href="/customer/dashboard.html" class="sidebar-link">📊 Dashboard</a>
             <a href="/customer/cuentas.html" class="sidebar-link">🏦 Cuentas</a>
@@ -128,123 +81,83 @@
             <a href="/customer/ahorro_metas.html" class="sidebar-link">🌱 Metas de Ahorro</a>
             <a href="/customer/perfil.html" class="sidebar-link">⚙️ Configuración</a>
         </nav>
-        
-        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div style="margin-top: auto; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
             <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
-            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
+            <button class="btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="sessionStorage.clear(); window.location.href='/auth/login.html';">Cerrar Sesión</button>
         </div>
     </aside>
 
     <main class="app-content">
         <header class="content-header">
             <div>
-                <h1 style="font-size: 1.75rem;">Gestión de Tarjetas</h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Control de seguridad y límites para tus instrumentos de pago.</p>
+                <h1 style="font-size: 2.5rem; letter-spacing: -2px;">Mis Tarjetas</h1>
+                <p style="color: var(--gris-texto);">Administra tus tarjetas de débito y crédito AtlasBank.</p>
             </div>
         </header>
 
-        <div class="card-management-grid animate-up">
-            <section class="flex flex-direction-column gap-4">
-                <div class="card-visual" id="physicalCard">
+        <div class="grid" style="grid-template-columns: 1fr 400px; gap: 40px;">
+            <section>
+                <div class="card-visual animate-up">
                     <div class="flex justify-between align-center">
-                        <div style="font-weight: 600; font-size: 0.8rem; color: var(--primary-light);">ATLASBANK DEBIT</div>
-                        <div style="font-weight: 700; font-size: 1.2rem;">VISA</div>
+                        <span style="font-size: 0.7rem; font-weight: 700; color: var(--primario);">ATLAS DEBIT</span>
+                        <span style="font-style: italic; font-weight: 800; font-size: 1.2rem;">VISA</span>
                     </div>
                     <div class="card-chip"></div>
-                    <div id="displayCardNumber" class="card-number">**** **** **** 8821</div>
-                    <div class="flex justify-between align-center" style="margin-top: 1rem;">
+                    <div class="card-number">**** **** **** 4492</div>
+                    <div class="flex justify-between" style="font-size: 0.8rem; text-transform: uppercase;">
                         <div>
-                            <div style="font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.25rem;">Titular</div>
-                            <div id="cardHolder" style="font-size: 0.85rem; font-weight: 500;">CARGANDO...</div>
+                            <div style="font-size: 0.5rem; opacity: 0.6;">Titular</div>
+                            <div id="cardName">CARGANDO...</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.25rem;">Expira</div>
-                            <div style="font-size: 0.85rem; font-weight: 500;">12/28</div>
+                            <div style="font-size: 0.5rem; opacity: 0.6;">Expira</div>
+                            <div>09/29</div>
                         </div>
                     </div>
                 </div>
 
+                <div class="stat-card" style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4 style="margin-bottom: 5px;">Bloqueo Temporal</h4>
+                        <p style="font-size: 0.8rem; color: var(--gris-texto);">Desactiva compras y retiros al instante.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </section>
+
+            <aside>
                 <div class="stat-card">
-                    <div class="flex justify-between align-center" style="margin-bottom: 1.5rem;">
-                        <div>
-                            <h3 style="font-size: 1rem;">Bloqueo Temporal</h3>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">Desactiva compras y retiros al instante.</p>
+                    <h3 style="font-size: 1rem; margin-bottom: 20px;">Límites de Gasto</h3>
+                    <div style="margin-bottom: 25px;">
+                        <div class="flex justify-between" style="font-size: 0.8rem; margin-bottom: 8px;">
+                            <span>Cajeros (ATM)</span>
+                            <strong>$500 / $1,000</strong>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="cardBlock">
-                            <span class="slider"></span>
-                        </label>
+                        <div style="height: 6px; background: var(--gris-fondo);"><div style="width: 50%; height: 100%; background: var(--primario);"></div></div>
                     </div>
-
-                    <div style="padding-top: 1.5rem; border-top: 1px solid var(--border);">
-                        <div class="flex justify-between align-center" style="margin-bottom: 0.5rem;">
-                            <span class="label" style="margin-bottom: 0;">Límite de Gasto Mensual</span>
-                            <span style="font-weight: 700; font-size: 0.85rem;">$2,500 / $5,000</span>
+                    <div style="margin-bottom: 25px;">
+                        <div class="flex justify-between" style="font-size: 0.8rem; margin-bottom: 8px;">
+                            <span>Compras Online</span>
+                            <strong>$1,200 / $2,500</strong>
                         </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 50%;"></div>
-                        </div>
+                        <div style="height: 6px; background: var(--gris-fondo);"><div style="width: 48%; height: 100%; background: var(--primario);"></div></div>
                     </div>
+                    <button class="btn-outline" style="width: 100%; font-size: 0.75rem;">SOLICITAR NUEVA TARJETA</button>
                 </div>
-            </section>
-
-            <section class="table-container">
-                <div class="table-header">
-                    <h2 style="font-size: 1rem;">Actividad Reciente</h2>
-                </div>
-                <table class="app-table">
-                    <thead>
-                        <tr>
-                            <th>Establecimiento</th>
-                            <th>Fecha</th>
-                            <th style="text-align: right;">Monto</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Supermercado Orgánico</strong></td>
-                            <td style="color: var(--text-muted); font-size: 0.85rem;">20 FEB 2026</td>
-                            <td style="text-align: right; font-weight: 700;">-$85.20</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Farmacia Verde</strong></td>
-                            <td style="color: var(--text-muted); font-size: 0.85rem;">18 FEB 2026</td>
-                            <td style="text-align: right; font-weight: 700;">-$42.50</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Transporte Público</strong></td>
-                            <td style="color: var(--text-muted); font-size: 0.85rem;">15 FEB 2026</td>
-                            <td style="text-align: right; font-weight: 700;">-$15.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+            </aside>
         </div>
     </main>
 </div>
 
 <script>
-const customerId = sessionStorage.getItem('customerId');
-const fullName = sessionStorage.getItem('fullName');
-
-if (!customerId) window.location.href = '/auth/login.html';
-
-document.getElementById('userDisplay').textContent = fullName || customerId;
-document.getElementById('cardHolder').textContent = (fullName || 'USUARIO').toUpperCase();
-
-function logout() {
-    sessionStorage.clear();
-    window.location.href = '/auth/login.html';
-}
-
-document.getElementById('cardBlock').addEventListener('change', function() {
-    const card = document.getElementById('physicalCard');
-    if (this.checked) {
-        card.classList.add('blocked');
-    } else {
-        card.classList.remove('blocked');
-    }
-});
+const userId = sessionStorage.getItem('customerId');
+if (!userId) window.location.href = '/auth/login.html';
+const fullName = sessionStorage.getItem('fullName') || userId;
+document.getElementById('userDisplay').textContent = fullName;
+document.getElementById('cardName').textContent = fullName.toUpperCase();
 </script>
 </body>
 </html>

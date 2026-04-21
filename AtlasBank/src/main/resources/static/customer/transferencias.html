@@ -3,177 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Operation Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>AtlasBank | Nueva Transferencia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
+        :root {
+            --primario: #15803d;
+            --primario-soft: #f0fdf4;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-texto: #4b5563;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        body { background: var(--blanco); color: var(--negro); }
+
+        header {
+            padding: 20px 5%;
+            border-bottom: 1px solid var(--gris-borde);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
         .transfer-grid {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 2.5rem;
-            align-items: start;
+            grid-template-columns: 1fr 400px;
+            min-height: calc(100vh - 76px);
         }
 
-        .amount-display {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            border-bottom: 2px solid var(--bg-dark);
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .form-section {
+            padding: 60px 10%;
+            border-right: 1px solid var(--gris-borde);
         }
+        .step-indicator { font-size: 0.7rem; font-weight: 600; color: var(--primario); margin-bottom: 10px; display: block; }
+        h1 { font-size: 2.5rem; letter-spacing: -2px; margin-bottom: 40px; }
 
-        .amount-field {
-            background: transparent;
-            border: none;
-            color: inherit;
-            font: inherit;
+        .input-group { margin-bottom: 35px; }
+        label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; color: var(--gris-texto); }
+
+        select, input {
             width: 100%;
+            padding: 18px;
+            border: 1px solid var(--gris-borde);
+            font-size: 1.1rem;
             outline: none;
+            transition: 0.2s;
+            background: var(--blanco);
         }
+        select:focus, input:focus { border-color: var(--primario); border-width: 2px; }
 
+        .amount-input { font-size: 2rem; font-weight: 600; color: var(--primario); }
+
+        .summary-panel {
+            background: var(--primario-soft);
+            padding: 60px 40px;
+            display: flex; flex-direction: column;
+        }
         .summary-card {
-            position: sticky;
-            top: 2rem;
+            background: var(--blanco);
+            padding: 30px;
+            border: 1px solid var(--primario);
+            margin-bottom: auto;
+        }
+        .summary-card h2 { font-size: 0.8rem; text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 10px; }
+
+        .summary-item { margin-bottom: 20px; }
+        .summary-item label { margin-bottom: 4px; color: var(--gris-texto); }
+        .summary-item p { font-weight: 600; font-size: 1rem; }
+
+        .btn-confirm {
+            width: 100%;
+            padding: 20px;
+            background: var(--primario);
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-confirm:hover { background: var(--negro); }
+
+        #modal-overlay {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000;
+        }
+        .confirm-modal {
+            background: white;
+            padding: 50px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
         }
 
-        @media (max-width: 1024px) {
+        #systemModal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(17, 24, 39, 0.8);
+            display: none; justify-content: center; align-items: center;
+            z-index: 9999; backdrop-filter: blur(4px);
+        }
+        .system-modal-content {
+            background: white; padding: 40px; max-width: 450px; width: 90%;
+            text-align: center; border-radius: 2px; border: 1px solid var(--negro);
+        }
+
+        @media (max-width: 900px) {
             .transfer-grid { grid-template-columns: 1fr; }
+            .form-section { border-right: none; border-bottom: 1px solid var(--gris-borde); }
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <aside class="app-sidebar">
-        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
-        <nav class="sidebar-nav">
-            <a href="/customer/dashboard.html" class="sidebar-link">📊 Dashboard</a>
-            <a href="/customer/cuentas.html" class="sidebar-link">🏦 Cuentas</a>
-            <a href="/customer/movimientos.html" class="sidebar-link">📄 Movimientos</a>
-            <a href="/customer/transferencias.html" class="sidebar-link active">💸 Transferencias</a>
-            <a href="/customer/tarjetas.html" class="sidebar-link">💳 Tarjetas</a>
-            <a href="/customer/ahorro_metas.html" class="sidebar-link">🌱 Metas de Ahorro</a>
-            <a href="/customer/perfil.html" class="sidebar-link">⚙️ Configuración</a>
-        </nav>
-        
-        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
-            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
-        </div>
-    </aside>
+<header>
+    <div class="logo"><a href="/customer/dashboard.html">AtlasBank</a></div>
+    <a href="/customer/dashboard.html" style="text-decoration: none; color: var(--negro); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">← Volver</a>
+</header>
 
-    <main class="app-content">
-        <header class="content-header">
-            <div>
-                <h1 style="font-size: 1.75rem;">Transmisión de Capital</h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Protocolo de transferencia segura entre nodos bancarios.</p>
+<main class="transfer-grid">
+    <section class="form-section">
+        <span class="step-indicator">PASO 01 / CONFIGURACIÓN</span>
+        <h1>Nueva Transferencia</h1>
+
+        <form id="transferForm">
+            <div class="input-group">
+                <label>Cuenta de Origen</label>
+                <select id="sourceAccount" required>
+                    <option value="">Selecciona una cuenta</option>
+                </select>
             </div>
-        </header>
 
-        <div class="transfer-grid animate-up">
-            <section class="stat-card">
-                <h3 style="margin-bottom: 2rem;">Nueva Operación</h3>
-                <form id="transferForm" class="flex flex-direction-column gap-4">
-                    <div class="form-group">
-                        <label class="label">Cuenta de Origen</label>
-                        <select id="sourceAccount" class="form-control" required>
-                            <option value="">Selecciona cuenta de origen</option>
-                        </select>
-                    </div>
+            <div class="input-group">
+                <label>Cuenta de Destino (ID / Número)</label>
+                <input type="text" id="destinationAccount" placeholder="ID de cuenta o número de cuenta" required>
+            </div>
 
-                    <div class="form-group">
-                        <label class="label">Cuenta de Destino (ID / Clave)</label>
-                        <input type="text" id="destinationAccount" class="form-control" placeholder="ID de cuenta receptora" required>
-                    </div>
+            <div class="input-group">
+                <label>Monto a transferir (USD)</label>
+                <input type="number" id="amount" class="amount-input" placeholder="0.00" step="0.01" min="0.01" required>
+            </div>
 
-                    <div class="form-group">
-                        <label class="label">Monto de la Operación (USD)</label>
-                        <div class="amount-display">
-                            <span>$</span>
-                            <input type="number" id="amount" class="amount-field" placeholder="0.00" step="0.01" required>
-                        </div>
-                    </div>
+            <div class="input-group">
+                <label>Concepto de pago</label>
+                <input type="text" id="description" placeholder="ej. Pago de Renta">
+            </div>
 
-                    <div class="form-group">
-                        <label class="label">Referencia / Concepto</label>
-                        <input type="text" id="description" class="form-control" placeholder="Descripción opcional">
-                    </div>
+            <div class="input-group" style="background: var(--primario-soft); padding: 20px;">
+                <label style="color: var(--primario);">[ SEGURIDAD ] Ubicación de Transacción</label>
+                <select id="location">
+                    <option value="Colombia">Colombia (Ubicación Habitual)</option>
+                    <option value="Rusia">Rusia (Riesgo Alto)</option>
+                    <option value="Islas Caiman">Islas Caimán (Paraíso Fiscal)</option>
+                </select>
+            </div>
+        </form>
+    </section>
 
-                    <div style="margin-top: 1rem; padding: 1.5rem; background: var(--bg-alt); border-radius: var(--radius-md); border: 1px solid var(--border);">
-                        <div class="flex align-center gap-2" style="color: var(--primary); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 1rem;">
-                            <span>🛡️</span> AtlasShield™ Verificación Activa
-                        </div>
-                        <select id="location" class="form-control" style="background: white;">
-                            <option value="Colombia">Nodo Confiable: Colombia</option>
-                            <option value="Otros">Nodo Externo: Global</option>
-                        </select>
-                    </div>
-                </form>
-            </section>
-
-            <aside class="flex flex-direction-column gap-4">
-                <div class="stat-card summary-card">
-                    <h3 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; color: var(--text-muted); border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">Resumen de Ejecución</h3>
-                    
-                    <div class="flex flex-direction-column gap-3">
-                        <div class="flex justify-between">
-                            <span class="label" style="margin-bottom: 0;">Destino</span>
-                            <span id="sum-dest" style="font-weight: 700;">---</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="label" style="margin-bottom: 0;">Monto Bruto</span>
-                            <span id="sum-amount" style="font-weight: 700;">$0.00</span>
-                        </div>
-                        <div class="flex justify-between" style="color: var(--primary);">
-                            <span class="label" style="margin-bottom: 0; color: inherit;">Comisión de Red</span>
-                            <span style="font-weight: 700;">$0.00</span>
-                        </div>
-                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
-                            <span class="label">Total a Debitar</span>
-                            <div id="sum-total" style="font-size: 2.5rem; font-weight: 700; color: var(--bg-dark);">$0.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="button" class="btn btn-primary" style="width: 100%; padding: 1.5rem; font-size: 1rem;" onclick="showConfirmation()">
-                    AUTORIZAR OPERACIÓN
-                </button>
-                <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted);">
-                    🔒 Encriptación de Grado Institucional
-                </p>
-            </aside>
+    <aside class="summary-panel">
+        <div class="summary-card">
+            <h2>Vista Previa</h2>
+            <div class="summary-item">
+                <label>Destinatario</label>
+                <p id="sum-dest">No especificado</p>
+            </div>
+            <div class="summary-item">
+                <label>Importe</label>
+                <p id="sum-amount">$0.00</p>
+            </div>
+            <div style="border-top: 1px solid var(--negro); padding-top: 15px; margin-top: 10px;">
+                <label style="color: var(--negro);">TOTAL A DEBITAR</label>
+                <p id="sum-total" style="font-size: 1.5rem; color: var(--primario);">$0.00</p>
+            </div>
         </div>
-    </main>
+
+        <button type="button" class="btn-confirm" onclick="showConfirmModal()">Confirmar Envío</button>
+    </aside>
+</main>
+
+<div id="modal-overlay">
+    <div class="confirm-modal">
+        <h3>¿Confirmar envío?</h3>
+        <p style="color: var(--gris-texto); margin-bottom: 20px;">Esta operación es irreversible.</p>
+        <div style="background: var(--primario-soft); padding: 20px; text-align: left; margin-bottom: 20px;">
+            <p><small>DESTINO:</small><br><strong id="modal-dest">---</strong></p>
+            <p style="margin-top: 10px;"><small>MONTO:</small><br><strong id="modal-amount" style="font-size: 1.2rem; color: var(--primario);">$0.00</strong></p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="hideConfirmModal()" style="flex: 1; padding: 15px; border: 1px solid var(--negro); background: none; font-weight: 600; cursor: pointer;">Corregir</button>
+            <button onclick="executeTransfer()" style="flex: 2; padding: 15px; background: var(--primario); color: white; border: none; font-weight: 600; cursor: pointer;">Enviar</button>
+        </div>
+    </div>
 </div>
 
-<!-- Modal de Confirmación -->
-<div id="systemModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
-    <div class="stat-card" style="max-width: 400px; text-align: center; padding: 3rem;">
-        <div id="modalIcon" style="font-size: 4rem; margin-bottom: 1rem;">⚖️</div>
-        <h2 id="modalTitle" style="margin-bottom: 1rem;">Confirmar Envío</h2>
-        <p id="modalMsg" style="color: var(--text-muted); margin-bottom: 2rem;">¿Estás seguro de que deseas autorizar esta transferencia? Esta operación es irreversible.</p>
-        <div class="flex gap-3">
-            <button onclick="closeModal()" class="btn btn-outline" style="flex: 1;">Cancelar</button>
-            <button onclick="executeTransfer()" class="btn btn-primary" style="flex: 1;">Confirmar</button>
-        </div>
+<div id="systemModal">
+    <div class="system-modal-content">
+        <span id="sysModalIcon" style="font-size: 3rem; display: block; margin-bottom: 15px;">✅</span>
+        <h3 id="sysModalTitle">Título</h3>
+        <p id="sysModalMsg">Mensaje.</p>
+        <button onclick="closeSystemModal()" style="padding: 12px 30px; background: var(--negro); color: white; border: none; font-weight: 600; cursor: pointer;">Entendido</button>
     </div>
 </div>
 
 <script>
 const customerId = sessionStorage.getItem('customerId');
-const fullName = sessionStorage.getItem('fullName');
-
 if (!customerId) window.location.href = '/auth/login.html';
-
-document.getElementById('userDisplay').textContent = fullName || customerId;
-
-function logout() {
-    sessionStorage.clear();
-    window.location.href = '/auth/login.html';
-}
 
 async function loadAccounts() {
     try {
@@ -184,62 +221,78 @@ async function loadAccounts() {
             accounts.forEach(acc => {
                 const opt = document.createElement('option');
                 opt.value = acc.id;
-                opt.textContent = `${acc.accountNumber} - Balance: $${acc.balance.toFixed(2)}`;
+                opt.textContent = `${acc.accountNumber} ($${acc.balance.toFixed(2)})`;
                 select.appendChild(opt);
             });
         }
     } catch (err) { console.error(err); }
 }
 
-// Live summary updates
 document.getElementById('destinationAccount').addEventListener('input', (e) => {
-    document.getElementById('sum-dest').textContent = e.target.value || '---';
+    document.getElementById('sum-dest').textContent = e.target.value || 'No especificado';
 });
 
 document.getElementById('amount').addEventListener('input', (e) => {
     const val = parseFloat(e.target.value) || 0;
-    const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+    const formatted = '$' + val.toLocaleString('es-MX', { minimumFractionDigits: 2 });
     document.getElementById('sum-amount').textContent = formatted;
     document.getElementById('sum-total').textContent = formatted;
 });
 
-function showConfirmation() {
+function showConfirmModal() {
     const form = document.getElementById('transferForm');
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
     }
+    document.getElementById('modal-dest').textContent = document.getElementById('destinationAccount').value;
+    document.getElementById('modal-amount').textContent = document.getElementById('sum-total').textContent;
+    document.getElementById('modal-overlay').style.display = 'flex';
+}
+
+function hideConfirmModal() {
+    document.getElementById('modal-overlay').style.display = 'none';
+}
+
+function showSystemModal(title, msg, type = 'success') {
+    document.getElementById('sysModalTitle').textContent = title;
+    document.getElementById('sysModalMsg').textContent = msg;
+    document.getElementById('sysModalIcon').textContent = type === 'success' ? '✅' : '❌';
     document.getElementById('systemModal').style.display = 'flex';
 }
 
-function closeModal() {
+function closeSystemModal() {
     document.getElementById('systemModal').style.display = 'none';
+    if (document.getElementById('sysModalIcon').textContent === '✅') {
+        window.location.href = '/customer/dashboard.html';
+    }
 }
 
 async function executeTransfer() {
-    const sourceId = document.getElementById('sourceAccount').value;
-    const targetId = document.getElementById('destinationAccount').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const description = document.getElementById('description').value;
+    const payload = {
+        sourceAccountId: parseInt(document.getElementById('sourceAccount').value),
+        targetAccountId: parseInt(document.getElementById('destinationAccount').value), // Assuming ID for now
+        amount: parseFloat(document.getElementById('amount').value),
+        description: document.getElementById('description').value || 'Transferencia AtlasBank'
+    };
 
-    closeModal();
+    hideConfirmModal();
 
     try {
         const res = await fetch('/api/transactions/transfer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sourceId, targetId, amount, description })
+            body: JSON.stringify(payload)
         });
 
         if (res.ok) {
-            alert('Transferencia autorizada y procesada con éxito.');
-            window.location.href = '/customer/movimientos.html';
+            showSystemModal('TRANSFERENCIA EXITOSA', 'Los fondos han sido enviados y validados por el nodo central.', 'success');
         } else {
-            const error = await res.json();
-            alert('Fallo en la operación: ' + (error.message || 'Error desconocido'));
+            const err = await res.json();
+            showSystemModal('OPERACIÓN FALLIDA', err.message || 'No se pudo procesar la transferencia.', 'error');
         }
     } catch (err) {
-        alert('Error de red: No se pudo conectar con el servidor.');
+        showSystemModal('ERROR DE RED', 'Fallo en la comunicación con el servidor.', 'error');
     }
 }
 

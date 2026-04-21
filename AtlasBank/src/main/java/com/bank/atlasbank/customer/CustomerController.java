@@ -60,9 +60,4 @@ public class CustomerController {
     public Customer findById(@PathVariable Long id) {
         return service.findById(id);
     }
-
-    @GetMapping("/by-id/{customerId}")
-    public Customer findByCustomerId(@PathVariable String customerId) {
-        return service.findByCustomerId(customerId);
-    }
 }

@@ -4,51 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlasBank | Gestión de Cuentas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        .accounts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
+        :root {
+            --primario: #15803d;
+            --primario-soft: #f0fdf4;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-fondo: #f9fafb;
+            --gris-texto: #4b5563;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        body { background: var(--blanco); color: var(--negro); }
+
+        header {
+            padding: 20px 5%;
+            border-bottom: 1px solid var(--gris-borde);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        main { padding: 60px 8%; max-width: 1200px; margin: 0 auto; }
+
+        .section-intro { margin-bottom: 60px; }
+        .section-intro h1 { font-size: 3rem; letter-spacing: -2px; margin-bottom: 10px; }
+        .section-intro p { color: var(--gris-texto); font-size: 1.1rem; }
+
+        .accounts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
         }
 
         .account-card {
+            border: 1px solid var(--negro);
             display: grid;
             grid-template-columns: 280px 1fr;
-            border-radius: var(--radius-lg);
+            border-radius: 0;
             overflow: hidden;
-            border: 1px solid var(--border);
-            background: var(--bg-main);
-            box-shadow: var(--shadow-sm);
+            background: var(--blanco);
         }
 
         .account-summary {
-            padding: 2rem;
-            background: var(--bg-dark);
+            padding: 40px;
+            background: var(--negro);
             color: white;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
-
-        .account-details {
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
+        .account-type { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--primario); }
+        .account-balance { font-size: 2.2rem; font-weight: 600; margin: 20px 0; }
         .status-pill {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
+            padding: 4px 10px;
+            background: var(--primario);
+            font-size: 0.65rem;
             font-weight: 700;
-            border-radius: var(--radius-sm);
             text-transform: uppercase;
         }
+
+        .account-details {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: var(--blanco);
+        }
+
+        .detail-group { position: relative; }
+        .detail-group label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--gris-texto);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--gris-borde);
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+        .copy-btn:hover { background: var(--negro); color: white; border-color: var(--negro); }
+
+        .account-actions {
+            grid-column: span 2;
+            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gris-borde);
+            display: flex;
+            gap: 20px;
+        }
+        .action-link { text-decoration: none; color: var(--negro); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; border-bottom: 2px solid var(--primario); padding-bottom: 2px; }
+        .action-link:hover { color: var(--primario); }
+
+        .create-account-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid var(--gris-borde);
+        }
+        .btn-create {
+            padding: 18px 40px;
+            background: var(--primario);
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-create:hover { background: var(--negro); }
+
+        /* Modal Sistema - Estilo Exito/Fallo */
+        #systemModal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(17, 24, 39, 0.95);
+            display: none; justify-content: center; align-items: center;
+            z-index: 9999; backdrop-filter: blur(8px);
+        }
+        .system-modal-content {
+            background: white; padding: 60px 40px; max-width: 500px; width: 95%;
+            text-align: center; border-radius: 0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+        #modalIcon { font-size: 5rem; line-height: 1; margin-bottom: 20px; display: block; }
+        .success-type #modalIcon { color: var(--primario); }
+        .error-type #modalIcon { color: #b91c1c; }
+        
+        #modalLabel { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: block; }
+        .success-type #modalLabel { color: var(--primario); }
+        .error-type #modalLabel { color: #b91c1c; }
+
+        #modalTitle { font-size: 2.5rem; letter-spacing: -2px; margin-bottom: 20px; line-height: 1; color: var(--negro); text-transform: uppercase; }
+        #modalMsg { color: var(--gris-texto); margin-bottom: 40px; font-size: 1rem; line-height: 1.5; }
+        
+        .btn-modal {
+            padding: 18px 45px; background: var(--negro); color: white;
+            border: none; font-weight: 600; text-transform: uppercase;
+            cursor: pointer; font-size: 0.8rem; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-modal:hover { background: var(--primario); }
 
         @media (max-width: 900px) {
             .account-card { grid-template-columns: 1fr; }
@@ -57,83 +171,56 @@
 </head>
 <body>
 
-<div class="app-container">
-    <aside class="app-sidebar">
-        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
-        <nav class="sidebar-nav">
-            <a href="/customer/dashboard.html" class="sidebar-link">📊 Dashboard</a>
-            <a href="/customer/cuentas.html" class="sidebar-link active">🏦 Cuentas</a>
-            <a href="/customer/movimientos.html" class="sidebar-link">📄 Movimientos</a>
-            <a href="/customer/transferencias.html" class="sidebar-link">💸 Transferencias</a>
-            <a href="/customer/tarjetas.html" class="sidebar-link">💳 Tarjetas</a>
-            <a href="/customer/ahorro_metas.html" class="sidebar-link">🌱 Metas de Ahorro</a>
-            <a href="/customer/perfil.html" class="sidebar-link">⚙️ Configuración</a>
-        </nav>
-        
-        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
-            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
-        </div>
-    </aside>
+<header>
+    <div class="logo"><a href="/customer/dashboard.html">AtlasBank</a></div>
+    <nav style="display: flex; gap: 30px; align-items: center;">
+        <a href="/customer/dashboard.html" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Volver al Dashboard</a>
+    </nav>
+</header>
 
-    <main class="app-content">
-        <header class="content-header">
-            <div>
-                <h1 style="font-size: 1.75rem;">Mis Cuentas Bancarias</h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Resumen detallado de tus activos y credenciales de sistema.</p>
+<main>
+    <section class="section-intro">
+        <h1>Tus Cuentas</h1>
+        <p>Administra tus productos financieros y consulta tus credenciales bancarias.</p>
+    </section>
+
+    <div id="accountsContainer" class="accounts-container">
+        <!-- Cuentas cargadas dinámicamente -->
+    </div>
+
+    <section class="create-account-section">
+        <h2 style="font-size: 1.5rem; margin-bottom: 30px;">Abrir un nuevo producto</h2>
+        <form id="createAccountForm" style="display: grid; grid-template-columns: 1fr 1fr 200px; gap: 20px; align-items: end;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Tipo de Cuenta</label>
+                <select id="accountType" style="width: 100%; padding: 15px; border: 1px solid var(--gris-borde); font-size: 1rem;">
+                    <option value="SAVINGS">Cuenta de Ahorros (Eco-Sostenible)</option>
+                    <option value="CHECKING">Cuenta Corriente (Empresarial)</option>
+                </select>
             </div>
-            <button onclick="document.getElementById('createAccountSection').scrollIntoView({behavior: 'smooth'})" class="btn btn-primary">Nueva Cuenta</button>
-        </header>
-
-        <div id="accountsContainer" class="accounts-grid animate-up">
-            <!-- Cuentas se cargan aquí -->
-        </div>
-
-        <section id="createAccountSection" class="stat-card animate-up" style="margin-top: 4rem; max-width: 800px;">
-            <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Solicitar Nueva Cuenta</h2>
-            <form id="createAccountForm" class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <div class="form-group">
-                    <label class="label">Tipo de Cuenta</label>
-                    <select id="accountType" class="form-control">
-                        <option value="SAVINGS">Ahorro</option>
-                        <option value="CHECKING">Corriente</option>
-                        <option value="INVESTMENT">Inversión</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="label">Monto Inicial (USD)</label>
-                    <input type="number" id="initialBalance" class="form-control" placeholder="0.00" step="0.01" value="0">
-                </div>
-                <div style="grid-column: span 2;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Confirmar Apertura</button>
-                </div>
-            </form>
-        </section>
-    </main>
-</div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Monto de Apertura</label>
+                <input type="number" id="initialBalance" placeholder="0.00" step="0.01" min="0" value="0" style="width: 100%; padding: 15px; border: 1px solid var(--gris-borde); font-size: 1rem;">
+            </div>
+            <button type="submit" class="btn-create">Aperturar</button>
+        </form>
+    </section>
+</main>
 
 <!-- Modal de Sistema -->
-<div id="systemModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(4px);">
-    <div class="stat-card" style="max-width: 400px; text-align: center; padding: 3rem;">
-        <div id="modalIcon" style="font-size: 4rem; margin-bottom: 1rem;"></div>
-        <h2 id="modalTitle" style="margin-bottom: 1rem;"></h2>
-        <p id="modalMsg" style="color: var(--text-muted); margin-bottom: 2rem;"></p>
-        <button onclick="closeModal()" class="btn btn-primary" style="width: 100%;">Entendido</button>
+<div id="systemModal">
+    <div class="system-modal-content" id="modalContent">
+        <span id="modalIcon">✓</span>
+        <span id="modalLabel">NOTIFICACIÓN DEL SISTEMA</span>
+        <h2 id="modalTitle">OPERACIÓN EXITOSA</h2>
+        <p id="modalMsg">Tu solicitud ha sido procesada correctamente por nuestros servidores.</p>
+        <button class="btn-modal" onclick="closeModal()">Continuar</button>
     </div>
 </div>
 
 <script>
 const customerId = sessionStorage.getItem('customerId');
-const fullName = sessionStorage.getItem('fullName');
-
 if (!customerId) window.location.href = '/auth/login.html';
-
-document.getElementById('userDisplay').textContent = fullName || customerId;
-
-function logout() {
-    sessionStorage.clear();
-    window.location.href = '/auth/login.html';
-}
 
 async function loadAccounts() {
     try {
@@ -149,47 +236,52 @@ async function loadAccounts() {
                 card.innerHTML = `
                     <div class="account-summary">
                         <div>
-                            <span class="status-pill">${acc.type}</span>
-                            <div style="font-size: 2rem; font-weight: 700; margin-top: 1rem;">$${acc.balance.toFixed(2)}</div>
-                            <div style="font-size: 0.8rem; opacity: 0.6; margin-top: 0.5rem;">Balance Certificado</div>
+                            <span class="account-type">${acc.type === 'SAVINGS' ? 'Cuenta de Ahorros' : 'Cuenta Corriente'}</span>
+                            <div class="account-balance">$${acc.balance.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
                         </div>
-                        <div class="badge badge-success" style="align-self: flex-start;">ACTIVA</div>
+                        <span class="status-pill">ACTIVA / AUDITADA</span>
                     </div>
                     <div class="account-details">
                         <div class="detail-group">
-                            <label class="label">Número de Cuenta</label>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <label>Número de Cuenta (IBAN Simulado)</label>
+                            <div class="detail-value">
                                 <strong>${acc.accountNumber}</strong>
-                                <button class="btn btn-ghost" style="padding: 0.25rem;" onclick="copyText('${acc.accountNumber}')">📋</button>
+                                <button class="copy-btn" onclick="copyText('${acc.accountNumber}')">Copiar</button>
                             </div>
                         </div>
                         <div class="detail-group">
-                            <label class="label">ID de Sistema</label>
-                            <div>#${acc.id}</div>
+                            <label>Identificador Interno</label>
+                            <div class="detail-value">#${acc.id}</div>
                         </div>
-                        <div style="grid-column: span 2; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 1rem;">
-                            <a href="/customer/movimientos.html?account=${acc.id}" class="btn btn-outline" style="font-size: 0.75rem;">Ver Historial</a>
-                            <a href="/customer/transferencias.html?from=${acc.id}" class="btn btn-primary" style="font-size: 0.75rem;">Transferir</a>
+                        <div class="account-actions">
+                            <a href="/customer/movimientos.html?account=${acc.id}" class="action-link">Ver historial completo</a>
+                            <a href="/customer/transferencias.html?from=${acc.id}" class="action-link">Realizar transferencia</a>
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
-    } catch (err) { console.error(err); }
+    } catch (err) {
+        console.error('Error al cargar cuentas:', err);
+    }
 }
 
 function copyText(text) {
     navigator.clipboard.writeText(text);
-    alert('Copiado al portapapeles');
+    showModal('COPIADO', 'El número de cuenta ha sido copiado al portapapeles.', 'success');
 }
 
 function showModal(title, msg, type) {
     const modal = document.getElementById('systemModal');
+    const content = document.getElementById('modalContent');
     const icon = document.getElementById('modalIcon');
-    icon.innerHTML = type === 'success' ? '✅' : '❌';
+    
+    content.className = 'system-modal-content ' + (type === 'success' ? 'success-type' : 'error-type');
+    icon.textContent = type === 'success' ? '✓' : '✕';
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalMsg').textContent = msg;
+    
     modal.style.display = 'flex';
 }
 
@@ -208,14 +300,15 @@ document.getElementById('createAccountForm').addEventListener('submit', async (e
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ customerId, type, initialBalance })
         });
+        
         if (res.ok) {
-            showModal('¡ÉXITO!', 'Tu nueva cuenta ha sido creada y certificada.', 'success');
+            showModal('APERTURA EXITOSA', 'Tu nueva cuenta ha sido creada y está lista para operar.', 'success');
             loadAccounts();
         } else {
-            showModal('ERROR', 'No se pudo procesar la solicitud de apertura.', 'error');
+            showModal('ERROR DE SOLICITUD', 'No se pudo crear la cuenta. Verifica los límites de tu perfil.', 'error');
         }
     } catch (err) {
-        showModal('FALLO DE RED', 'Error de comunicación con el nodo central.', 'error');
+        showModal('FALLO DE CONEXIÓN', 'No pudimos contactar con el servidor central.', 'error');
     }
 });
 

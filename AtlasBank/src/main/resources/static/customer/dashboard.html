@@ -1,198 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Client Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>AtlasBank | Mi Cuenta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        .balance-card {
-            grid-column: span 2;
-            background: var(--primary);
-            color: white;
-            border: none;
+        :root {
+            --primario: #15803d;
+            --primario-soft: #f0fdf4;
+            --negro: #111827;
+            --blanco: #ffffff;
+            --gris-borde: #e5e7eb;
+            --gris-texto: #4b5563;
         }
 
-        .balance-display {
-            font-size: 3.5rem;
-            font-weight: 700;
-            letter-spacing: -2px;
-            margin-top: 15px;
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        body { background: var(--blanco); color: var(--negro); }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%;
+            border-bottom: 1px solid var(--gris-borde);
+        }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 35px; height: 35px; background: var(--primario); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.8rem; }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            min-height: calc(100vh - 76px);
         }
 
-        .alert-strip {
-            background: var(--error);
-            color: white;
-            padding: 12px 25px;
-            font-size: 0.8rem;
+        .main-panel {
+            padding: 5% 8%;
+            border-right: 1px solid var(--gris-borde);
+        }
+        .balance-label { font-size: 0.8rem; font-weight: 600; color: var(--primario); text-transform: uppercase; letter-spacing: 1px; }
+        .balance-amount { font-size: 4.5rem; font-weight: 600; letter-spacing: -3px; margin: 10px 0 40px; }
+
+        .transactions-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; border-bottom: 1px solid var(--negro); padding-bottom: 10px; display: inline-block; }
+
+        .transaction-item {
+            display: flex; justify-content: space-between; padding: 20px 0;
+            border-bottom: 1px solid var(--gris-borde);
+            font-size: 0.95rem;
+        }
+        .transaction-item .meta { color: var(--gris-texto); font-size: 0.8rem; text-transform: uppercase; }
+        .transaction-item .amount { font-weight: 600; }
+        .amount.negative { color: var(--negro); }
+        .amount.positive { color: var(--primario); }
+
+        .side-panel {
+            background-color: var(--primario-soft);
+            padding: 10% 12%;
+            display: flex; flex-direction: column; gap: 40px;
+        }
+
+        .impact-card {
+            background: var(--primario);
+            color: var(--blanco);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .impact-card h2 { font-size: 2.5rem; line-height: 1; margin-bottom: 10px; }
+        .impact-card p { font-size: 0.9rem; opacity: 0.8; }
+        .impact-card .icon-bg { position: absolute; right: -20px; bottom: -20px; font-size: 8rem; opacity: 0.1; transform: rotate(-15deg); }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .action-btn {
+            border: 1px solid var(--primario);
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--primario);
             font-weight: 600;
-            margin-bottom: 30px;
-            border-radius: var(--radius-md);
-            display: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: 0.3s;
         }
+        .action-btn:hover { background: var(--primario); color: var(--blanco); }
+
+        .sidebar-nav { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+        .sidebar-nav a { text-decoration: none; color: var(--gris-texto); font-size: 0.85rem; font-weight: 600; transition: 0.2s; }
+        .sidebar-nav a:hover { color: var(--primario); padding-left: 5px; }
 
         @media (max-width: 1024px) {
-            .balance-card { grid-column: span 1; }
+            .dashboard { grid-template-columns: 1fr; }
+            .main-panel { border-right: none; border-bottom: 1px solid var(--gris-borde); }
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <aside class="app-sidebar">
-        <div class="logo" style="color: white">Atlas<span style="color: var(--primary-light)">Bank</span></div>
+<header>
+    <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">DASHBOARD</span></div>
+    <div class="user-info">
+        <span id="userName" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Cargando...</span>
+        <div id="userAvatar" class="avatar">CS</div>
+    </div>
+</header>
+
+<main class="dashboard">
+    <section class="main-panel">
+        <span class="balance-label">[ SALDO DISPONIBLE ]</span>
+        <h1 id="balanceAmount" class="balance-amount">$0.00</h1>
+
+        <div id="securityAlert" style="display:none; background: #fee2e2; border: 1px solid #ef4444; padding: 20px; margin-bottom: 30px; color: #b91c1c;">
+            <strong style="display:flex; align-items:center; gap:10px;"><span style="font-size:1.5rem;">⚠️</span> CUENTA RESTRINGIDA POR SEGURIDAD</strong>
+            <p style="font-size: 0.85rem; margin-top: 5px;">Hemos detectado actividad inusual. Por tu protección, las transferencias salientes han sido bloqueadas. Contacta a soporte para verificar tu identidad.</p>
+        </div>
+
+        <div class="transactions-title">Movimientos recientes</div>
+
+        <div id="transactionContainer" class="transaction-container">
+        </div>
+    </section>
+
+    <section class="side-panel">
+        <div class="impact-card">
+            <p>IMPACTO ACUMULADO</p>
+            <h2 id="impactVal">0.0 kg</h2>
+            <p>CO2 evitado este mes mediante tus inversiones en proyectos verdes.</p>
+            <div class="icon-bg">🌿</div>
+        </div>
+
+        <div>
+            <p style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; letter-spacing: 1px;">OPERACIONES RÁPIDAS</p>
+            <div class="quick-actions" style="grid-template-columns: repeat(2, 1fr);">
+                <a href="/customer/transferencias.html" class="action-btn">Transferir</a>
+                <a href="/customer/ahorro_metas.html" class="action-btn" style="background:var(--primario); color:white; border-color:var(--primario);">Metas Ahorro</a>
+                <a href="/customer/movimientos.html" class="action-btn">Movimientos</a>
+                <a href="/customer/tarjetas.html" class="action-btn">Mis Tarjetas</a>
+                <a href="/customer/cuentas.html" class="action-btn" style="grid-column: span 2;">Mis Cuentas y Productos</a>
+            </div>
+        </div>
+
         <nav class="sidebar-nav">
-            <a href="/customer/dashboard.html" class="sidebar-link active">📊 Dashboard</a>
-            <a href="/customer/cuentas.html" class="sidebar-link">🏦 Cuentas</a>
-            <a href="/customer/movimientos.html" class="sidebar-link">📄 Movimientos</a>
-            <a href="/customer/transferencias.html" class="sidebar-link">💸 Transferencias</a>
-            <a href="/customer/tarjetas.html" class="sidebar-link">💳 Tarjetas</a>
-            <a href="/customer/ahorro_metas.html" class="sidebar-link">🌱 Metas de Ahorro</a>
-            <a href="/customer/perfil.html" class="sidebar-link">⚙️ Configuración</a>
+            <a href="/customer/perfil.html">CONFIGURACIÓN DE CUENTA</a>
+            <a href="#" onclick="sessionStorage.clear(); window.location.href='/auth/login.html'; return false;" style="color: #ef4444;">CERRAR SESIÓN SEGURA</a>
         </nav>
-        
-        <div style="padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <p id="userDisplay" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; color: rgba(255,255,255,0.7);">Verified Identity</p>
-            <button class="btn btn-outline" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3); font-size: 0.75rem;" onclick="logout()">Terminate Session</button>
-        </div>
-    </aside>
-
-    <main class="app-content">
-        <div id="securityAlertStrip" class="alert-strip">
-            ⚠️ ACCOUNT STATUS: RESTRICTED DUE TO IRREGULAR PATTERNS. SYSTEM MONITORING ACTIVE.
-        </div>
-
-        <header class="content-header">
-            <div>
-                <h1 style="font-size: 1.75rem;">Client Terminal</h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Secure connection established. <span id="currentDate"></span></p>
-            </div>
-            <div class="flex gap-3">
-                <a href="/customer/transferencias.html" class="btn btn-primary">Execute Transfer</a>
-            </div>
-        </header>
-
-        <section class="stats-grid">
-            <div class="stat-card balance-card">
-                <span class="label" style="color: rgba(255,255,255,0.8);">Certified Available Capital</span>
-                <div id="totalBalance" class="balance-display">$0.00</div>
-                <div style="margin-top: 2rem; font-size: 0.7rem; font-weight: 700; background: rgba(0,0,0,0.1); padding: 8px 15px; display: inline-block; border-radius: var(--radius-sm);">
-                    STATUS: AUDITED & SECURED
-                </div>
-            </div>
-            <div class="stat-card">
-                <span class="label">Sustainability Score</span>
-                <div class="value" style="color: var(--primary);">AAA+</div>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem;">Top-tier institutional performance in ethical asset management.</p>
-            </div>
-        </section>
-
-        <section class="table-container">
-            <div class="table-header">
-                <h2 style="font-size: 1rem;">Recent Activity</h2>
-                <a href="/customer/movimientos.html" class="btn btn-ghost" style="font-size: 0.8rem;">View Full Ledger →</a>
-            </div>
-            <table class="app-table">
-                <thead>
-                    <tr>
-                        <th>Reference</th>
-                        <th>Entity/Type</th>
-                        <th>Protocol Description</th>
-                        <th>Execution Value</th>
-                        <th>Verification</th>
-                    </tr>
-                </thead>
-                <tbody id="txBody">
-                    <tr><td colspan="5" style="text-align:center; padding:40px; color: var(--text-muted);">Decrypting ledger...</td></tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
-</div>
+    </section>
+</main>
 
 <script>
-const customerId = sessionStorage.getItem('customerId');
-const fullName = sessionStorage.getItem('fullName');
+async function loadDashboard() {
+    const customerId = sessionStorage.getItem('customerId');
+    if (!customerId) {
+        window.location.href = '/auth/login.html';
+        return;
+    }
 
-if (!customerId) window.location.href = '/auth/login.html';
-
-document.getElementById('userDisplay').textContent = fullName || customerId;
-document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-function logout() {
-    sessionStorage.clear();
-    window.location.href = '/auth/login.html';
-}
-
-async function loadLedger() {
     try {
-        // Check for restrictions
-        const custRes = await fetch(`/api/admin/customers`);
+        const fullName = sessionStorage.getItem('fullName') || customerId;
+        document.getElementById('userName').textContent = fullName.toUpperCase();
+        
+        // Fetch current customer status
+        const custRes = await fetch(`/api/customers/${customerId}`);
         if (custRes.ok) {
-            const customers = await custRes.json();
-            const me = customers.find(c => c.customerId === customerId);
-            if (me && me.status === 'BLOCKED') {
-                document.getElementById('securityAlertStrip').style.display = 'block';
+            const customer = await custRes.json();
+            if (customer.status === 'BLOCKED') {
+                document.getElementById('securityAlert').style.display = 'block';
             }
         }
+        
+        let initls = "US";
+        if(fullName.includes(" ")){
+            const parts = fullName.split(" ");
+            initls = (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+        } else {
+            initls = fullName.substring(0, 2).toUpperCase();
+        }
+        document.getElementById('userAvatar').textContent = initls;
 
         const accRes = await fetch(`/api/accounts/customer/${customerId}`);
+
         if (accRes.ok) {
             const accounts = await accRes.json();
-            const total = accounts.reduce((sum, acc) => sum + acc.balance, 0);
-            document.getElementById('totalBalance').textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
-        
             if (accounts.length > 0) {
-                // Fetch transactions for all accounts and merge
-                const allTxs = [];
-                for (const acc of accounts) {
-                    const txRes = await fetch(`/api/transactions/account/${acc.id}`);
-                    if (txRes.ok) {
-                        const txs = await txRes.json();
-                        allTxs.push(...txs);
-                    }
-                }
-                
-                // Sort by date desc
-                allTxs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
-                const body = document.getElementById('txBody');
-                body.innerHTML = allTxs.length ? '' : '<tr><td colspan="5" style="text-align:center; padding:50px; color:var(--text-muted);">No operations recorded in current ledger.</td></tr>';
-                
-                allTxs.slice(0, 10).forEach(tx => {
-                    const isTransfer = tx.type === 'TRANSFER';
-                    const isDebit = tx.type === 'WITHDRAW' || (isTransfer && accounts.some(a => a.id === tx.sourceAccount.id && (!tx.targetAccount || a.id !== tx.targetAccount.id)));
-                    const amountClass = isDebit ? 'color: var(--error)' : 'color: var(--primary)';
-                    const displayAmount = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tx.amount);
-                    
-                    let targetInfo = 'System Node';
-                    if (isTransfer) {
-                        if (accounts.some(a => a.id === tx.sourceAccount.id)) {
-                            targetInfo = tx.targetAccount ? tx.targetAccount.accountNumber : 'External Node';
-                        } else {
-                            targetInfo = tx.sourceAccount.accountNumber;
-                        }
-                    }
-                    
-                    body.innerHTML += `
-                        <tr>
-                            <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-muted);">#ID-${tx.id.toString().padStart(8, '0')}</td>
-                            <td><span style="font-weight: 700;">${targetInfo}</span></td>
-                            <td style="color: var(--text-muted); font-size: 0.85rem;">${tx.type} Protocol Execution</td>
-                            <td style="font-weight: 700; ${amountClass}">${displayAmount}</td>
-                            <td><span class="badge badge-success">Certified</span></td>
-                        </tr>
-                    `;
-                });
+                // Sum balances or show primary
+                const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
+                document.getElementById('balanceAmount').textContent = '$' + totalBalance.toLocaleString('es-MX', { minimumFractionDigits: 2 });
             }
         }
+
+        const txRes = await fetch(`/api/transactions`);
+        if (txRes.ok) {
+            const txs = await txRes.json();
+            const container = document.getElementById('transactionContainer');
+            container.innerHTML = '';
+            
+            // Filter txs for this customer's accounts if possible, or just show last 5
+            txs.slice(0, 5).forEach(tx => {
+                const div = document.createElement('div');
+                div.className = 'transaction-item';
+                const isPositive = tx.type === 'DEPOSIT';
+                const desc = tx.description || (isPositive ? 'DEPÓSITO' : 'RETIRO / TRANSFERENCIA');
+                div.innerHTML = `
+                    <div>
+                        <p>${desc}</p>
+                        <span class="meta">${new Date(tx.createdAt || new Date()).toLocaleDateString()}</span>
+                    </div>
+                    <div class="amount ${isPositive ? 'positive' : 'negative'}">${isPositive ? '+' : '-'}$${(tx.amount || 0).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+                `;
+                container.appendChild(div);
+            });
+            
+            // Random impact simulation based on txs
+            document.getElementById('impactVal').textContent = (txs.length * 2.3).toFixed(1) + ' kg';
+        }
     } catch (err) {
-        console.error('Ledger acquisition failure:', err);
+        console.error('Error loading dashboard:', err);
     }
 }
 
-loadLedger();
+loadDashboard();
 </script>
+
 </body>
 </html>

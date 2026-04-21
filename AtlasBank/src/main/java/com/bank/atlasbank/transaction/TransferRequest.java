@@ -7,12 +7,10 @@ import java.math.BigDecimal;
 
 public record TransferRequest(
         @NotNull(message = "sourceAccountId es obligatorio") Long sourceAccountId,
-        Long targetAccountId,
-        String targetAccountNumber,
+        @NotNull(message = "targetAccountId es obligatorio") Long targetAccountId,
         @NotNull(message = "amount es obligatorio")
         @DecimalMin(value = "0.01", inclusive = true, message = "El monto debe ser mayor a cero")
         BigDecimal amount,
-        String location,
-        String description
+        String location
 ) {
 }

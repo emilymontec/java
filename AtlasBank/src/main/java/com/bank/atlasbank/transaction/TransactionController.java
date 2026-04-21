@@ -34,9 +34,4 @@ public class TransactionController {
     public List<BankTransaction> findAll() {
         return service.findAll();
     }
-
-    @GetMapping("/account/{accountId}")
-    public List<BankTransaction> findByAccount(@PathVariable Long accountId) {
-        return service.findByAccountId(accountId);
-    }
 }
