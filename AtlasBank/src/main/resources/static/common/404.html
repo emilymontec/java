@@ -7,26 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
-        body {
-            background: var(--bg-alt);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            padding: 2rem;
+        :root {
+            --primario: #15803d;
+            --negro: #111827;
+            --gris-texto: #6b7280;
         }
-        .error-code {
-            font-size: 10rem;
-            font-weight: 700;
-            color: var(--bg-dark);
-            line-height: 1;
-            margin-bottom: 1rem;
-            letter-spacing: -5px;
-        }
-        .error-code span {
-            color: var(--primary);
-        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
+        body { background: var(--blanco); display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .error-container { text-align: center; }
+        .error-code { font-size: 8rem; font-weight: 600; color: var(--gris-texto); line-height: 1; }
+        .error-code span { color: var(--primario); }
+        h1 { font-size: 2rem; letter-spacing: -1px; margin: 20px 0; }
+        p { color: var(--gris-texto); margin-bottom: 40px; }
+        .btn-home { padding: 18px 40px; background: var(--primario); color: white; text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .btn-home:hover { background: var(--negro); }
     </style>
 </head>
 <body>

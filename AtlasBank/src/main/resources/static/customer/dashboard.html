@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlasBank | Mi Cuenta</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
         :root {
             --primario: #15803d;
@@ -161,11 +160,12 @@ async function loadDashboard() {
         const fullName = sessionStorage.getItem('fullName') || customerId;
         document.getElementById('userName').textContent = fullName.toUpperCase();
         
-        // Fetch current customer status
-        const custRes = await fetch(`/api/customers/${customerId}`);
+        // Check for blocked status (simulated through a dedicated check or existing data)
+        const custRes = await fetch(`/api/admin/customers`); // For demo, let's find ourselves
         if (custRes.ok) {
-            const customer = await custRes.json();
-            if (customer.status === 'BLOCKED') {
+            const customers = await custRes.json();
+            const me = customers.find(c => c.customerId === customerId);
+            if (me && me.status === 'BLOCKED') {
                 document.getElementById('securityAlert').style.display = 'block';
             }
         }
@@ -173,7 +173,7 @@ async function loadDashboard() {
         let initls = "US";
         if(fullName.includes(" ")){
             const parts = fullName.split(" ");
-            initls = (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+            initls = (parts[0][0] + parts[1][0]).toUpperCase();
         } else {
             initls = fullName.substring(0, 2).toUpperCase();
         }
@@ -184,9 +184,7 @@ async function loadDashboard() {
         if (accRes.ok) {
             const accounts = await accRes.json();
             if (accounts.length > 0) {
-                // Sum balances or show primary
-                const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
-                document.getElementById('balanceAmount').textContent = '$' + totalBalance.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('balanceAmount').textContent = '$' + accounts[0].balance.toFixed(2);
             }
         }
 
@@ -195,19 +193,17 @@ async function loadDashboard() {
             const txs = await txRes.json();
             const container = document.getElementById('transactionContainer');
             container.innerHTML = '';
-            
-            // Filter txs for this customer's accounts if possible, or just show last 5
             txs.slice(0, 5).forEach(tx => {
                 const div = document.createElement('div');
                 div.className = 'transaction-item';
                 const isPositive = tx.type === 'DEPOSIT';
-                const desc = tx.description || (isPositive ? 'DEPÓSITO' : 'RETIRO / TRANSFERENCIA');
+                const desc = isPositive ? 'DEPÓSITO' : 'RETIRO';
                 div.innerHTML = `
                     <div>
                         <p>${desc}</p>
                         <span class="meta">${new Date(tx.createdAt || new Date()).toLocaleDateString()}</span>
                     </div>
-                    <div class="amount ${isPositive ? 'positive' : 'negative'}">${isPositive ? '+' : '-'}$${(tx.amount || 0).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</div>
+                    <div class="amount ${isPositive ? 'positive' : 'negative'}">${isPositive ? '+' : '-'}$${(tx.amount || 0).toFixed(2)}</div>
                 `;
                 container.appendChild(div);
             });

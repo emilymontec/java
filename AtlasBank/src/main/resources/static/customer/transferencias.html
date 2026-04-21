@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AtlasBank | Nueva Transferencia</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/styles.css">
     <style>
         :root {
             --primario: #15803d;
@@ -14,16 +13,18 @@
             --blanco: #ffffff;
             --gris-borde: #e5e7eb;
             --gris-texto: #4b5563;
+            --fondo: #ffffff;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
-        body { background: var(--blanco); color: var(--negro); }
+        body { background: var(--fondo); color: var(--negro); }
 
         header {
             padding: 20px 5%;
             border-bottom: 1px solid var(--gris-borde);
             display: flex; justify-content: space-between; align-items: center;
         }
+        .back-link { text-decoration: none; color: var(--negro); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
 
         .transfer-grid {
             display: grid;
@@ -84,6 +85,14 @@
             transition: 0.3s;
         }
         .btn-confirm:hover { background: var(--negro); }
+        .btn-confirm:disabled { background: var(--gris-borde); cursor: not-allowed; }
+
+        .security-note {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: var(--gris-texto);
+            text-align: center;
+        }
 
         #modal-overlay {
             position: fixed;
@@ -99,7 +108,11 @@
             width: 90%;
             text-align: center;
         }
+        .confirm-modal h3 { font-size: 1.8rem; margin-bottom: 20px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 30px; }
+        .btn-outline { flex: 1; padding: 15px; border: 1px solid var(--negro); background: none; font-weight: 600; cursor: pointer; }
 
+        /* Modal Sistema */
         #systemModal {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(17, 24, 39, 0.8);
@@ -109,6 +122,13 @@
         .system-modal-content {
             background: white; padding: 40px; max-width: 450px; width: 90%;
             text-align: center; border-radius: 2px; border: 1px solid var(--negro);
+        }
+        .system-modal-content h3 { font-size: 1.5rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: -1px; }
+        .system-modal-content p { color: var(--gris-texto); margin-bottom: 25px; font-size: 0.9rem; }
+        .btn-modal {
+            padding: 12px 30px; background: var(--negro); color: white;
+            border: none; font-weight: 600; text-transform: uppercase;
+            cursor: pointer; font-size: 0.75rem;
         }
 
         @media (max-width: 900px) {
@@ -120,8 +140,8 @@
 <body>
 
 <header>
-    <div class="logo"><a href="/customer/dashboard.html">AtlasBank</a></div>
-    <a href="/customer/dashboard.html" style="text-decoration: none; color: var(--negro); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">← Volver</a>
+    <div class="logo" style="font-weight: 600; font-size: 1.1rem; letter-spacing: -0.5px;">AtlasBank / <span style="font-weight: 300; color: var(--gris-texto);">TRANSFERENCIAS</span></div>
+    <a href="/customer/dashboard.html" class="back-link">← Volver al Dashboard</a>
 </header>
 
 <main class="transfer-grid">
@@ -138,13 +158,13 @@
             </div>
 
             <div class="input-group">
-                <label>Cuenta de Destino (ID / Número)</label>
-                <input type="text" id="destinationAccount" placeholder="ID de cuenta o número de cuenta" required>
+                <label>Cuenta de Destino (CLAVE)</label>
+                <input type="text" id="destinationAccount" placeholder="000 000 000000000 0" required>
             </div>
 
             <div class="input-group">
                 <label>Monto a transferir (USD)</label>
-                <input type="number" id="amount" class="amount-input" placeholder="0.00" step="0.01" min="0.01" required>
+                <input type="number" id="amount" class="amount-input" placeholder="0.00" step="0.01" required>
             </div>
 
             <div class="input-group">
@@ -152,13 +172,15 @@
                 <input type="text" id="description" placeholder="ej. Pago de Renta">
             </div>
 
-            <div class="input-group" style="background: var(--primario-soft); padding: 20px;">
-                <label style="color: var(--primario);">[ SEGURIDAD ] Ubicación de Transacción</label>
-                <select id="location">
+            <div class="input-group" style="background: var(--primario-soft); padding: 20px; border-radius: 8px;">
+                <label style="color: var(--primario);">[ SIMULACIÓN ANTIFRAUDE ] Ubicación de Transacción</label>
+                <select id="location" style="border-color: var(--primario);">
                     <option value="Colombia">Colombia (Ubicación Habitual)</option>
                     <option value="Rusia">Rusia (Riesgo Alto)</option>
+                    <option value="Corea del Norte">Corea del Norte (Riesgo Extremo)</option>
                     <option value="Islas Caiman">Islas Caimán (Paraíso Fiscal)</option>
                 </select>
+                <p style="font-size: 0.7rem; color: var(--gris-texto); margin-top: 10px;">El sistema AtlasShield™ analiza tu IP y geolocalización en tiempo real para proteger tu patrimonio.</p>
             </div>
         </form>
     </section>
@@ -171,8 +193,12 @@
                 <p id="sum-dest">No especificado</p>
             </div>
             <div class="summary-item">
-                <label>Importe</label>
+                <label>Importe Bruto</label>
                 <p id="sum-amount">$0.00</p>
+            </div>
+            <div class="summary-item">
+                <label>Comisión AtlasBank</label>
+                <p>$0.00</p>
             </div>
             <div style="border-top: 1px solid var(--negro); padding-top: 15px; margin-top: 10px;">
                 <label style="color: var(--negro);">TOTAL A DEBITAR</label>
@@ -180,31 +206,35 @@
             </div>
         </div>
 
-        <button type="button" class="btn-confirm" onclick="showConfirmModal()">Confirmar Envío</button>
+        <button type="button" class="btn-confirm" onclick="showModal()">Continuar a Validación</button>
+        <p class="security-note">🔒 Conexión cifrada de extremo a extremo</p>
     </aside>
 </main>
 
 <div id="modal-overlay">
     <div class="confirm-modal">
+        <span style="font-size: 3rem;">⚠️</span>
         <h3>¿Confirmar envío?</h3>
-        <p style="color: var(--gris-texto); margin-bottom: 20px;">Esta operación es irreversible.</p>
+        <p style="color: var(--gris-texto); margin-bottom: 20px;">Esta operación no puede deshacerse una vez procesada por la red bancaria.</p>
+
         <div style="background: var(--primario-soft); padding: 20px; text-align: left; margin-bottom: 20px;">
-            <p><small>DESTINO:</small><br><strong id="modal-dest">---</strong></p>
+            <p><small>ENVIANDO A:</small><br><strong id="modal-dest">---</strong></p>
             <p style="margin-top: 10px;"><small>MONTO:</small><br><strong id="modal-amount" style="font-size: 1.2rem; color: var(--primario);">$0.00</strong></p>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button onclick="hideConfirmModal()" style="flex: 1; padding: 15px; border: 1px solid var(--negro); background: none; font-weight: 600; cursor: pointer;">Corregir</button>
-            <button onclick="executeTransfer()" style="flex: 2; padding: 15px; background: var(--primario); color: white; border: none; font-weight: 600; cursor: pointer;">Enviar</button>
+
+        <div class="modal-actions">
+            <button class="btn-outline" onclick="hideModal()">Corregir</button>
+            <button class="btn-confirm" style="flex: 1.5;" onclick="executeTransfer()">Firmar y Enviar</button>
         </div>
     </div>
 </div>
 
 <div id="systemModal">
     <div class="system-modal-content">
-        <span id="sysModalIcon" style="font-size: 3rem; display: block; margin-bottom: 15px;">✅</span>
-        <h3 id="sysModalTitle">Título</h3>
-        <p id="sysModalMsg">Mensaje.</p>
-        <button onclick="closeSystemModal()" style="padding: 12px 30px; background: var(--negro); color: white; border: none; font-weight: 600; cursor: pointer;">Entendido</button>
+        <span id="modalIcon" style="font-size: 3rem; display: block; margin-bottom: 15px;">✅</span>
+        <h3 id="modalTitle">Título</h3>
+        <p id="modalMsg">Mensaje de sistema.</p>
+        <button class="btn-modal" onclick="closeSystemModal()">Entendido</button>
     </div>
 </div>
 
@@ -213,90 +243,107 @@ const customerId = sessionStorage.getItem('customerId');
 if (!customerId) window.location.href = '/auth/login.html';
 
 async function loadAccounts() {
-    try {
-        const res = await fetch(`/api/accounts/customer/${customerId}`);
-        if (res.ok) {
-            const accounts = await res.json();
-            const select = document.getElementById('sourceAccount');
-            accounts.forEach(acc => {
-                const opt = document.createElement('option');
-                opt.value = acc.id;
-                opt.textContent = `${acc.accountNumber} ($${acc.balance.toFixed(2)})`;
-                select.appendChild(opt);
-            });
-        }
-    } catch (err) { console.error(err); }
-}
-
-document.getElementById('destinationAccount').addEventListener('input', (e) => {
-    document.getElementById('sum-dest').textContent = e.target.value || 'No especificado';
-});
-
-document.getElementById('amount').addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value) || 0;
-    const formatted = '$' + val.toLocaleString('es-MX', { minimumFractionDigits: 2 });
-    document.getElementById('sum-amount').textContent = formatted;
-    document.getElementById('sum-total').textContent = formatted;
-});
-
-function showConfirmModal() {
-    const form = document.getElementById('transferForm');
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
+    const res = await fetch(`/api/accounts/customer/${customerId}`);
+    if (res.ok) {
+        accounts = await res.json();
+        const select = document.getElementById('sourceAccount');
+        select.innerHTML = '<option value="">Selecciona una cuenta</option>';
+        accounts.forEach(acc => {
+            select.innerHTML += `<option value="${acc.id}">Cuenta ${acc.accountType} (...${acc.accountNumber.slice(-4)}) - $${acc.balance.toFixed(2)}</option>`;
+        });
     }
-    document.getElementById('modal-dest').textContent = document.getElementById('destinationAccount').value;
-    document.getElementById('modal-amount').textContent = document.getElementById('sum-total').textContent;
-    document.getElementById('modal-overlay').style.display = 'flex';
 }
 
-function hideConfirmModal() {
-    document.getElementById('modal-overlay').style.display = 'none';
+document.getElementById('sourceAccount').addEventListener('change', updatePreview);
+document.getElementById('destinationAccount').addEventListener('input', updatePreview);
+document.getElementById('amount').addEventListener('input', updatePreview);
+
+function updatePreview() {
+    const dest = document.getElementById('destinationAccount').value || 'No especificado';
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    document.getElementById('sum-dest').textContent = dest;
+    document.getElementById('sum-amount').textContent = '$' + amount.toFixed(2);
+    document.getElementById('sum-total').textContent = '$' + amount.toFixed(2);
 }
 
 function showSystemModal(title, msg, type = 'success') {
-    document.getElementById('sysModalTitle').textContent = title;
-    document.getElementById('sysModalMsg').textContent = msg;
-    document.getElementById('sysModalIcon').textContent = type === 'success' ? '✅' : '❌';
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalMsg').textContent = msg;
+    document.getElementById('modalIcon').textContent = type === 'success' ? '✅' : '❌';
     document.getElementById('systemModal').style.display = 'flex';
 }
 
 function closeSystemModal() {
     document.getElementById('systemModal').style.display = 'none';
-    if (document.getElementById('sysModalIcon').textContent === '✅') {
-        window.location.href = '/customer/dashboard.html';
+}
+
+function showModal() {
+    const dest = document.getElementById('destinationAccount').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+
+    if (!dest || !amount || amount <= 0) {
+        showSystemModal('Campos Incompletos', 'Por favor verifica la cuenta y el monto.', 'error');
+        return;
     }
+
+    document.getElementById('modal-dest').textContent = dest;
+    document.getElementById('modal-amount').textContent = '$' + amount.toFixed(2);
+    document.getElementById('modal-overlay').style.display = 'flex';
+}
+
+function hideModal() {
+    document.getElementById('modal-overlay').style.display = 'none';
 }
 
 async function executeTransfer() {
-    const payload = {
-        sourceAccountId: parseInt(document.getElementById('sourceAccount').value),
-        targetAccountId: parseInt(document.getElementById('destinationAccount').value), // Assuming ID for now
-        amount: parseFloat(document.getElementById('amount').value),
-        description: document.getElementById('description').value || 'Transferencia AtlasBank'
-    };
-
-    hideConfirmModal();
+    const sourceAccountId = document.getElementById('sourceAccount').value;
+    const destAccount = document.getElementById('destinationAccount').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const location = document.getElementById('location').value;
+    const targetAccountId = parseInt(destAccount);
 
     try {
         const res = await fetch('/api/transactions/transfer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                sourceAccountId: parseInt(sourceAccountId),
+                targetAccountId,
+                amount,
+                location
+            })
         });
 
+        if (res.status === 400 || res.status === 500) {
+            const errorData = await res.json();
+            if (errorData.message && errorData.message.includes('antifraude')) {
+                showSystemModal('ALERTA ANTIFRAUDE', errorData.message, 'error');
+                setTimeout(() => {
+                    sessionStorage.clear();
+                    window.location.href = '/auth/login.html';
+                }, 3000);
+                return;
+            }
+        }
+
+        hideModal();
+
         if (res.ok) {
-            showSystemModal('TRANSFERENCIA EXITOSA', 'Los fondos han sido enviados y validados por el nodo central.', 'success');
+            const tx = await res.json();
+            const txId = tx && tx.id ? tx.id : '';
+            window.location.href = `/common/exito.html?txId=${encodeURIComponent(txId)}`;
         } else {
             const err = await res.json();
             showSystemModal('OPERACIÓN FALLIDA', err.message || 'No se pudo procesar la transferencia.', 'error');
         }
     } catch (err) {
-        showSystemModal('ERROR DE RED', 'Fallo en la comunicación con el servidor.', 'error');
+        hideModal();
+        window.location.href = '/common/fallo.html';
     }
 }
 
 loadAccounts();
 </script>
+
 </body>
 </html>

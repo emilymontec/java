@@ -142,7 +142,11 @@
 const customerId = sessionStorage.getItem('customerId');
 if (!customerId) window.location.href = '/auth/login.html';
 
-async function loadData() {
+document.getElementById('customerIdDisplay').textContent = customerId;
+
+let allTransactions = [];
+
+async function loadTransactions() {
     try {
         const accRes = await fetch(`/api/accounts/customer/${customerId}`);
         if (accRes.ok) {
