@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AtlasBank | Operación Exitosa</title>
+    <title>BV. SYSTEM | Operación Exitosa</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit', sans-serif; }
@@ -31,15 +31,10 @@
         <h1>FONDOS<br>ENVIADOS.</h1>
         <p>La transferencia se ha procesado correctamente. El comprobante digital ha sido enviado a tu correo.</p>
         <div class="ref-box">
-            <p>ID DE RASTREO: ATLAS-<span id="txId"></span></p>
+            <p>ID DE RASTREO: BV-992833410</p>
         </div>
         <br>
         <a href="/customer/dashboard.html" class="btn-dashboard">Volver al Panel</a>
     </div>
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const txId = params.get('txId');
-        document.getElementById('txId').textContent = txId ? txId : '-';
-    </script>
 </body>
 </html>
